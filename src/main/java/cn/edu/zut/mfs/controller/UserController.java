@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
-@Api(tags = "UserController", description = "用户管理")
+@Api(tags = "UserController")
 @RestController
 @RequestMapping("/user/")
 public class UserController {
@@ -32,5 +32,22 @@ public class UserController {
     public String isLogin() {
         return "当前会话是否登录：" + StpUtil.isLogin();
     }
+
+    // 注销登录，浏览器访问： http://localhost:8081/user/logout
+    @RequestMapping("logout")
+    public BaseResponse<String> logout() {
+        // 当前会话注销登录
+        StpUtil.logout();
+        return BaseResponse.success("注销登录成功");
+    }
+
+    // 检验当前会话是否已经登录，浏览器访问： http://localhost:8081/user/checkLogin
+    @RequestMapping("checkLogin")
+    public BaseResponse<String> checkLogin() {
+        // 检验当前会话是否已经登录, 如果未登录，则抛出异常：`NotLoginException`
+        StpUtil.checkLogin();
+        return BaseResponse.success("当前已登录");
+    }
+
 
 }
