@@ -37,7 +37,7 @@ public class DateFormatConfig {
     }
 
     /**
-     *  LocalDate 类型全局时间格式化
+     * LocalDate 类型全局时间格式化
      */
 
     public LocalDateTimeSerializer localDateTimeDeserializer() {

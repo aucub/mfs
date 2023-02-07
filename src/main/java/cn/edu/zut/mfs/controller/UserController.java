@@ -13,11 +13,11 @@ public class UserController {
     @RequestMapping("doLogin")
     public BaseResponse<String> doLogin(String username, String password) {
         // 此处仅作模拟示例，真实项目需要从数据库中查询数据进行比对
-        if("zhang".equals(username) && "123456".equals(password)) {
+        if ("zhang".equals(username) && "123456".equals(password)) {
             StpUtil.login(10001);
             return BaseResponse.success("登录成功");
         }
-        return BaseResponse.fail("9999","登录失败");
+        return BaseResponse.fail("9999", "登录失败");
     }
 
     // 查询登录状态，浏览器访问： http://localhost:8081/user/isLogin

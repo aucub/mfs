@@ -10,7 +10,7 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(BizException.class)
     @ResponseBody
     public BaseResponse<Void> handler(BizException e) {
-        System.out.println("进入业务异常"+e.getRetCode()+e.getRetMessage());
+        System.out.println("进入业务异常" + e.getRetCode() + e.getRetMessage());
         return BaseResponse.fail(CodeEnum.ERROR.getCode(), CodeEnum.ERROR.getMessage());
     }
 }

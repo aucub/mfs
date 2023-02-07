@@ -22,12 +22,13 @@ public class BaseResponse<T> {
 
     /**
      * 成功返回
+     *
      * @param data
      * @param <T>
      * @return
      */
     public static <T> BaseResponse<T> success(T data) {
-        BaseResponse<T> response= new BaseResponse<>();
+        BaseResponse<T> response = new BaseResponse<>();
         response.setCode(CodeEnum.SUCCESS.getCode());
         response.setMessage(CodeEnum.SUCCESS.getMessage());
         response.setData(data);
@@ -35,7 +36,8 @@ public class BaseResponse<T> {
     }
 
     /**
-     *  失败返回
+     * 失败返回
+     *
      * @param code
      * @param message
      * @param <T>
