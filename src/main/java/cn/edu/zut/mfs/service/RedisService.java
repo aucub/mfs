@@ -1,4 +1,4 @@
-package cn.edu.zut.mfs.config;
+package cn.edu.zut.mfs.service;
 
 /**
  * redis操作Service,

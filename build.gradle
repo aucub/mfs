@@ -77,6 +77,9 @@ dependencies {
     implementation 'com.puppycrawl.tools:checkstyle:10.7.0'
     // https://mvnrepository.com/artifact/com.google.errorprone/error_prone_annotations
     implementation 'com.google.errorprone:error_prone_annotations:2.18.0'
+    //springfox-swagger2
+    implementation 'io.springfox:springfox-swagger2:3.0.0'
+    implementation 'io.springfox:springfox-swagger-ui:3.0.0'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'com.mysql:mysql-connector-j'
