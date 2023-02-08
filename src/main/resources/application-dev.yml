@@ -5,13 +5,6 @@ logging:
   level:
     root: DEBUG
 
-netty:
-  websocket:
-    port: 1024
-    ip: 0.0.0.0
-    max-frame-size: 10240
-    path: /channel
-
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
