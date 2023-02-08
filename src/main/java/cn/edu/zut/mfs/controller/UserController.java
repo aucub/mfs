@@ -1,6 +1,8 @@
 package cn.edu.zut.mfs.controller;
 
+import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
+import cn.dev33.satoken.util.SaResult;
 import cn.edu.zut.mfs.config.BaseResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -20,9 +22,13 @@ public class UserController {
     public BaseResponse<String> doLogin(String username, String password) {
         // 此处仅作模拟示例，真实项目需要从数据库中查询数据进行比对
         if ("zhang".equals(username) && "123456".equals(password)) {
+            // 1、先检查此账号是否已被封禁
+            StpUtil.checkDisable(username);
             StpUtil.login(10001);
             log.info(username + "登录成功");
-            return BaseResponse.success("登录成功");
+            // 获取 Token  相关参数
+            SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
+            return BaseResponse.success("登录成功,token:" + tokenInfo);
         }
         return BaseResponse.fail("9999", "登录失败");
     }
@@ -64,6 +70,25 @@ public class UserController {
         // 获取当前会话账号id, 如果未登录，则抛出异常：`NotLoginException`
         String userId = StpUtil.getLoginIdAsString();
         return BaseResponse.success("当前客户端登录的账号id是：" + userId);
+    }
+
+    // 封禁指定账号  ---- http://localhost:8081/disable/disable?userId=10001
+    @RequestMapping("disable")
+    public BaseResponse<String> disable(long userId) {
+        /*
+         * 账号封禁：
+         * 	参数1：要封禁的账号id
+         * 	参数2：要封禁的时间，单位：秒，86400秒=1天
+         */
+        StpUtil.disable(userId, 86400);
+        return BaseResponse.success("账号 " + userId + " 封禁成功");
+    }
+
+    // 解封指定账号  ---- http://localhost:8081/disable/untieDisable?userId=10001
+    @RequestMapping("untieDisable")
+    public BaseResponse<String> untieDisable(long userId) {
+        StpUtil.untieDisable(userId);
+        return BaseResponse.success("账号 " + userId + " 解封成功");
     }
 
 }
