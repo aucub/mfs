@@ -1,19 +1,14 @@
 package cn.edu.zut.mfs.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.AnnotatedElementUtils;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
-import cn.dev33.satoken.context.SaHolder;
-import cn.dev33.satoken.filter.SaServletFilter;
 import cn.dev33.satoken.interceptor.SaInterceptor;
 import cn.dev33.satoken.router.SaRouter;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.dev33.satoken.strategy.SaStrategy;
-import cn.dev33.satoken.util.SaResult;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.AnnotatedElementUtils;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 
 /**
@@ -34,25 +29,11 @@ public class SaTokenConfigure implements WebMvcConfigurer {
             // 指定一条 match 规则
             SaRouter
                     .match("/user/**")    // 拦截的 path 列表，可以写多个
-                    .notMatch("/user/doLogin", "/user/doLogin2")     // 排除掉的 path 列表，可以写多个
+                    .notMatch("/user/doLogin", "/user/isLogin")     // 排除掉的 path 列表，可以写多个
                     .check(r -> StpUtil.checkLogin());        // 要执行的校验动作，可以写完整的 lambda 表达式
 
             // 权限校验 -- 不同模块认证不同权限
             SaRouter.match("/admin/**", r -> StpUtil.checkPermission("admin"));
-            SaRouter.match("/goods/**", r -> StpUtil.checkPermission("goods"));
-            SaRouter.match("/orders/**", r -> StpUtil.checkPermission("orders"));
-            SaRouter.match("/notice/**", r -> StpUtil.checkPermission("notice"));
-            SaRouter.match("/comment/**", r -> StpUtil.checkPermission("comment"));
-
-            // 甚至你可以随意的写一个打印语句
-            SaRouter.match("/router/print", r -> System.out.println("----啦啦啦----"));
-
-            // 写一个完整的 lambda
-            SaRouter.match("/router/print2", r -> {
-                System.out.println("----啦啦啦2----");
-                // ... 其它代码
-            });
-
             /*
              * 相关路由都定义在 com.pj.cases.use.RouterCheckController 中
              */
@@ -64,7 +45,7 @@ public class SaTokenConfigure implements WebMvcConfigurer {
     /**
      * 注册 [Sa-Token 全局过滤器]
      */
-    @Bean
+    /*@Bean
     public SaServletFilter getSaServletFilter() {
         return new SaServletFilter()
 
@@ -107,7 +88,7 @@ public class SaTokenConfigure implements WebMvcConfigurer {
                     ;
                 })
                 ;
-    }
+    }*/
 
     /**
      * 重写 Sa-Token 框架内部算法策略
@@ -115,9 +96,7 @@ public class SaTokenConfigure implements WebMvcConfigurer {
     @Autowired
     public void rewriteSaStrategy() {
         // 重写Sa-Token的注解处理器，增加注解合并功能
-        SaStrategy.me.getAnnotation = (element, annotationClass) -> {
-            return AnnotatedElementUtils.getMergedAnnotation(element, annotationClass);
-        };
+        SaStrategy.me.getAnnotation = AnnotatedElementUtils::getMergedAnnotation;
     }
 
 }
