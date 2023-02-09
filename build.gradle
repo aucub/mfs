@@ -53,7 +53,6 @@ dependencies {
     implementation 'org.springframework.session:spring-session-data-redis'
     implementation 'org.springframework.session:spring-session-jdbc'
     implementation 'org.junit.jupiter:junit-jupiter:5.8.1'
-    implementation 'com.alibaba:druid-spring-boot-starter:1.2.15'
     implementation 'org.springframework.boot:spring-boot-starter-test'
     // https://mvnrepository.com/artifact/com.baomidou/mybatis-plus-boot-starter
     implementation 'com.baomidou:mybatis-plus-boot-starter:3.5.3.1'

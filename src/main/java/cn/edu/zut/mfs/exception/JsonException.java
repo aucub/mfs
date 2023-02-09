@@ -1,21 +1,16 @@
 package cn.edu.zut.mfs.exception;
 
-import cn.edu.zut.mfs.config.Status;
+import cn.edu.zut.mfs.config.ResultCode;
 import lombok.Getter;
 
 /**
- * <p>
  * JSON异常
- * </p>
- *
- * @author yangkai.shen
- * @date Created in 2018-10-02 21:18
  */
 @Getter
 public class JsonException extends BaseException {
 
-    public JsonException(Status status) {
-        super(status);
+    public JsonException(ResultCode resultCode) {
+        super(resultCode);
     }
 
     public JsonException(Integer code, String message) {

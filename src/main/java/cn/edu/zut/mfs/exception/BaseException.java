@@ -1,6 +1,6 @@
 package cn.edu.zut.mfs.exception;
 
-import cn.edu.zut.mfs.config.Status;
+import cn.edu.zut.mfs.config.ResultCode;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -13,10 +13,10 @@ public class BaseException extends RuntimeException {
     private Integer code;
     private String message;
 
-    public BaseException(Status status) {
-        super(status.getMessage());
-        this.code = status.getCode();
-        this.message = status.getMessage();
+    public BaseException(ResultCode resultCode) {
+        super(resultCode.getMessage());
+        this.code = resultCode.getCode();
+        this.message = resultCode.getMessage();
     }
 
     public BaseException(Integer code, String message) {

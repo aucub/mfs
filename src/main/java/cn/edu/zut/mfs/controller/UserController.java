@@ -25,7 +25,7 @@ public class UserController {
             SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
             return BaseResponse.success("登录成功,token:" + tokenInfo);
         }
-        return BaseResponse.fail("9999", "登录失败");
+        return BaseResponse.fail(500, "登录失败");
     }
 
     // 查询登录状态，浏览器访问： http://localhost:8081/user/isLogin

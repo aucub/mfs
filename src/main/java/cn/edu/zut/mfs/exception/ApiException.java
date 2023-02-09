@@ -1,13 +1,13 @@
-package cn.edu.zut.mfs.config;
+package cn.edu.zut.mfs.exception;
 
-import cn.edu.zut.mfs.exception.BaseException;
+import cn.edu.zut.mfs.config.ResultCode;
 import lombok.Data;
 
 /**
  * 通用的 API 接口封装
  */
 @Data
-public class ApiResponse {
+public class ApiException {
     /**
      * 状态码
      */
@@ -26,7 +26,7 @@ public class ApiResponse {
     /**
      * 无参构造函数
      */
-    private ApiResponse() {
+    private ApiException() {
 
     }
 
@@ -37,7 +37,7 @@ public class ApiResponse {
      * @param message 返回内容
      * @param data    返回数据
      */
-    private ApiResponse(Integer code, String message, Object data) {
+    private ApiException(Integer code, String message, Object data) {
         this.code = code;
         this.message = message;
         this.data = data;
@@ -51,49 +51,29 @@ public class ApiResponse {
      * @param data    返回数据
      * @return ApiResponse
      */
-    public static ApiResponse of(Integer code, String message, Object data) {
-        return new ApiResponse(code, message, data);
-    }
-
-    /**
-     * 构造一个成功且带数据的API返回
-     *
-     * @param data 返回数据
-     * @return ApiResponse
-     */
-    public static ApiResponse ofSuccess(Object data) {
-        return ofStatus(Status.OK, data);
-    }
-
-    /**
-     * 构造一个成功且自定义消息的API返回
-     *
-     * @param message 返回内容
-     * @return ApiResponse
-     */
-    public static ApiResponse ofMessage(String message) {
-        return of(Status.OK.getCode(), message, null);
+    public static ApiException of(Integer code, String message, Object data) {
+        return new ApiException(code, message, data);
     }
 
     /**
      * 构造一个有状态的API返回
      *
-     * @param status 状态 {@link Status}
+     * @param resultCode 状态 {@link ResultCode}
      * @return ApiResponse
      */
-    public static ApiResponse ofStatus(Status status) {
-        return ofStatus(status, null);
+    public static ApiException ofStatus(ResultCode resultCode) {
+        return ofStatus(resultCode, null);
     }
 
     /**
      * 构造一个有状态且带数据的API返回
      *
-     * @param status 状态 {@link Status}
-     * @param data   返回数据
+     * @param resultCode 状态 {@link ResultCode}
+     * @param data       返回数据
      * @return ApiResponse
      */
-    public static ApiResponse ofStatus(Status status, Object data) {
-        return of(status.getCode(), status.getMessage(), data);
+    public static ApiException ofStatus(ResultCode resultCode, Object data) {
+        return of(resultCode.getCode(), resultCode.getMessage(), data);
     }
 
     /**
@@ -104,7 +84,7 @@ public class ApiResponse {
      * @param <T>  {@link BaseException} 的子类
      * @return ApiResponse
      */
-    public static <T extends BaseException> ApiResponse ofException(T t, Object data) {
+    public static <T extends BaseException> ApiException ofException(T t, Object data) {
         return of(t.getCode(), t.getMessage(), data);
     }
 
@@ -115,7 +95,7 @@ public class ApiResponse {
      * @param <T> {@link BaseException} 的子类
      * @return ApiResponse
      */
-    public static <T extends BaseException> ApiResponse ofException(T t) {
+    public static <T extends BaseException> ApiException ofException(T t) {
         return ofException(t, null);
     }
 }

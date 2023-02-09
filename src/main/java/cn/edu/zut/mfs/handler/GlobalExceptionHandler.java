@@ -2,7 +2,7 @@ package cn.edu.zut.mfs.handler;
 
 import cn.dev33.satoken.exception.*;
 import cn.dev33.satoken.util.SaResult;
-import cn.edu.zut.mfs.config.ApiResponse;
+import cn.edu.zut.mfs.exception.ApiException;
 import cn.edu.zut.mfs.exception.JsonException;
 import cn.edu.zut.mfs.exception.PageException;
 import lombok.extern.slf4j.Slf4j;
@@ -27,9 +27,9 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = JsonException.class)
     @ResponseBody
-    public ApiResponse jsonErrorHandler(JsonException exception) {
+    public ApiException jsonErrorHandler(JsonException exception) {
         log.error("【JsonException】:{}", exception.getMessage());
-        return ApiResponse.ofException(exception);
+        return ApiException.ofException(exception);
     }
 
     /**

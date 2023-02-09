@@ -33,62 +33,11 @@ public class SaTokenConfigure implements WebMvcConfigurer {
                     .check(r -> StpUtil.checkLogin());        // 要执行的校验动作，可以写完整的 lambda 表达式
 
             // 权限校验 -- 不同模块认证不同权限
-            SaRouter.match("/admin/**", r -> StpUtil.checkPermission("admin"));
-            /*
-             * 相关路由都定义在 com.pj.cases.use.RouterCheckController 中
-             */
+            SaRouter.match("/user/**", r -> StpUtil.checkPermission("user"));
 
         })).addPathPatterns("/**");
 
     }
-
-    /**
-     * 注册 [Sa-Token 全局过滤器]
-     */
-    /*@Bean
-    public SaServletFilter getSaServletFilter() {
-        return new SaServletFilter()
-
-                // 指定 [拦截路由] 与 [放行路由]
-                .addInclude("/**")// .addExclude("/favicon.ico")
-
-                // 认证函数: 每次请求执行
-                .setAuth(obj -> {
-                    // System.out.println("---------- sa全局认证 " + SaHolder.getRequest().getRequestPath());
-                    // SaManager.getLog().debug("----- 请求path={}  提交token={}", SaHolder.getRequest().getRequestPath(), StpUtil.getTokenValue());
-
-                    // 权限校验 -- 不同模块认证不同权限
-                    //		这里你可以写和拦截器鉴权同样的代码，不同点在于：
-                    // 		校验失败后不会进入全局异常组件，而是进入下面的 .setError 函数
-                    SaRouter.match("/admin/**", r -> StpUtil.checkPermission("admin"));
-                    SaRouter.match("/goods/**", r -> StpUtil.checkPermission("goods"));
-                    SaRouter.match("/orders/**", r -> StpUtil.checkPermission("orders"));
-                    SaRouter.match("/notice/**", r -> StpUtil.checkPermission("notice"));
-                    SaRouter.match("/comment/**", r -> StpUtil.checkPermission("comment"));
-                })
-
-                // 异常处理函数：每次认证函数发生异常时执行此函数
-                .setError(e -> {
-                    System.out.println("---------- sa全局异常 ");
-                    return SaResult.error(e.getMessage());
-                })
-
-                // 前置函数：在每次认证函数之前执行
-                .setBeforeAuth(r -> {
-                    // ---------- 设置一些安全响应头 ----------
-                    SaHolder.getResponse()
-                            // 服务器名称
-                            .setServer("sa-server")
-                            // 是否可以在iframe显示视图： DENY=不可以 | SAMEORIGIN=同域下可以 | ALLOW-FROM uri=指定域名下可以
-                            .setHeader("X-Frame-Options", "SAMEORIGIN")
-                            // 是否启用浏览器默认XSS防护： 0=禁用 | 1=启用 | 1; mode=block 启用, 并在检查到XSS攻击时，停止渲染页面
-                            .setHeader("X-XSS-Protection", "1; mode=block")
-                            // 禁用浏览器内容嗅探
-                            .setHeader("X-Content-Type-Options", "nosniff")
-                    ;
-                })
-                ;
-    }*/
 
     /**
      * 重写 Sa-Token 框架内部算法策略
