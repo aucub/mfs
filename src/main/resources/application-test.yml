@@ -22,7 +22,7 @@ spring:
       host: 47.113.201.150
       database: 0
       port: 6379
-      password:
+      password: redis
       timeout: 3000ms
       lettuce:
         pool:

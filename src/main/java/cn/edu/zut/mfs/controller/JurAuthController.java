@@ -1,13 +1,12 @@
 package cn.edu.zut.mfs.controller;
 
 
-import java.util.List;
-
+import cn.dev33.satoken.stp.StpUtil;
+import cn.dev33.satoken.util.SaResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import cn.dev33.satoken.stp.StpUtil;
-import cn.dev33.satoken.util.SaResult;
+import java.util.List;
 
 /**
  * Sa-Token 权限认证示例
