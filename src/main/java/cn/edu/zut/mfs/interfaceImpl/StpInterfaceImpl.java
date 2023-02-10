@@ -1,12 +1,11 @@
 package cn.edu.zut.mfs.interfaceImpl;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
+import cn.dev33.satoken.stp.StpInterface;
 import org.springframework.stereotype.Component;
 
-import cn.dev33.satoken.stp.StpInterface;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 自定义权限认证接口扩展，Sa-Token 将从此实现类获取每个账号拥有的权限码

@@ -1,15 +1,13 @@
 package cn.edu.zut.mfs.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import cn.dev33.satoken.session.SaSession;
+import cn.dev33.satoken.stp.StpUtil;
 import cn.edu.zut.mfs.config.BaseResponse;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import cn.dev33.satoken.session.SaSession;
-import cn.dev33.satoken.stp.StpUtil;
-import cn.dev33.satoken.util.SaResult;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Sa-Token 会话查询示例
