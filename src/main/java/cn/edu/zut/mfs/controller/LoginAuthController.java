@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/user/")
-public class UserController {
+@RequestMapping("/acc/")
+public class LoginAuthController {
 
     // 测试登录，浏览器访问： http://localhost:8081/user/doLogin?username=zhang&password=123456
     @RequestMapping("doLogin")
@@ -22,6 +22,7 @@ public class UserController {
             StpUtil.login(10001);
             log.info(username + "登录成功");
             // 获取 Token  相关参数
+            // 与常规登录不同点之处：这里需要把 Token 信息从响应体中返回到前端
             SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
             return BaseResponse.success("登录成功,token:" + tokenInfo);
         }
@@ -65,25 +66,6 @@ public class UserController {
         // 获取当前会话账号id, 如果未登录，则抛出异常：`NotLoginException`
         String userId = StpUtil.getLoginIdAsString();
         return BaseResponse.success("当前客户端登录的账号id是：" + userId);
-    }
-
-    // 封禁指定账号  ---- http://localhost:8081/disable/disable?userId=10001
-    @RequestMapping("disable")
-    public BaseResponse<String> disable(long userId) {
-        /*
-         * 账号封禁：
-         * 	参数1：要封禁的账号id
-         * 	参数2：要封禁的时间，单位：秒，86400秒=1天
-         */
-        StpUtil.disable(userId, 86400);
-        return BaseResponse.success("账号 " + userId + " 封禁成功");
-    }
-
-    // 解封指定账号  ---- http://localhost:8081/disable/untieDisable?userId=10001
-    @RequestMapping("untieDisable")
-    public BaseResponse<String> untieDisable(long userId) {
-        StpUtil.untieDisable(userId);
-        return BaseResponse.success("账号 " + userId + " 解封成功");
     }
 
 }
