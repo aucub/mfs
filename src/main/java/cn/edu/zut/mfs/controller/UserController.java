@@ -2,7 +2,7 @@ package cn.edu.zut.mfs.controller;
 
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
-import cn.edu.zut.mfs.config.BaseResponse;
+import cn.edu.zut.mfs.pojo.BaseResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

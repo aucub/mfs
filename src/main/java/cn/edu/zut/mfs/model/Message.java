@@ -10,8 +10,11 @@ import java.time.Instant;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Message {
+    // 消息来源
     private String origin;
+    // 消息传递样式
     private String interaction;
+    // 消息序号
     private long index;
     private long created = Instant.now().getEpochSecond();
 

@@ -1,6 +1,6 @@
 package cn.edu.zut.mfs.exception;
 
-import cn.edu.zut.mfs.config.ResultCode;
+import cn.edu.zut.mfs.pojo.ResultCode;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

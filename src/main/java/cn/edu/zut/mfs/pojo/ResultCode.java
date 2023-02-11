@@ -1,4 +1,4 @@
-package cn.edu.zut.mfs.config;
+package cn.edu.zut.mfs.pojo;
 
 public enum ResultCode {
 
