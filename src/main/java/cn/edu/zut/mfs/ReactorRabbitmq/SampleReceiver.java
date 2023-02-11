@@ -41,7 +41,7 @@ public class SampleReceiver {
         return receiver.consumeAutoAck(queue)
                 .delaySubscription(sender.declareQueue(QueueSpecification.queue(queue)))
                 .subscribe(m -> {
-                    LOGGER.info("Received message {}", new String(m.getBody()));
+                    LOGGER.info("收到消息： {}", new String(m.getBody()));
                     latch.countDown();
                 });
     }

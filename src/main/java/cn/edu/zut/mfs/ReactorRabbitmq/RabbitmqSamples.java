@@ -13,11 +13,11 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.amqp.RabbitProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.rabbitmq.*;
 
+import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -27,7 +27,9 @@ public class RabbitmqSamples {
     static final String QUEUE = "reactor.rabbitmq.spring.boot";
     private static final Logger LOGGER = LoggerFactory.getLogger(RabbitmqSamples.class);
 
+
     Mono<Connection> connectionMono;
+
 
     AmqpAdmin amqpAdmin;
 
@@ -35,8 +37,7 @@ public class RabbitmqSamples {
         SpringApplication.run(RabbitmqSamples.class, args).close();
     }
 
-    // the mono for connection, it is cached to re-use the connection across sender and receiver instances
-    // this should work properly in most cases
+    // 用于连接的Mono，它被缓存以在发送方和接收方实例之间重新使用连接这在大多数情况下应该可以正常工作
     @Bean()
     Mono<Connection> connectionMono(RabbitProperties rabbitProperties) {
         ConnectionFactory connectionFactory = new ConnectionFactory();
@@ -69,13 +70,11 @@ public class RabbitmqSamples {
 
     @PreDestroy
     public void close() throws Exception {
-        connectionMono.block().close();
+        Objects.requireNonNull(connectionMono.block()).close();
     }
 
-    // a runner that publishes messages with the sender bean and consumes them with the receiver bean
-    @Component
+    // 使用发送方 bean 发布消息并使用接收方 bean 使用它们的运行器
     static class Runner implements CommandLineRunner {
-
         final Sender sender;
         final Flux<Delivery> deliveryFlux;
         final AtomicBoolean latchCompleted = new AtomicBoolean(false);
@@ -90,10 +89,10 @@ public class RabbitmqSamples {
             int messageCount = 10;
             CountDownLatch latch = new CountDownLatch(messageCount);
             deliveryFlux.subscribe(m -> {
-                LOGGER.info("Received message {}", new String(m.getBody()));
+                LOGGER.info("收到消息： {}", new String(m.getBody()));
                 latch.countDown();
             });
-            LOGGER.info("Sending messages...");
+            LOGGER.info("发送消息中...");
             sender.send(Flux.range(1, messageCount).map(i -> new OutboundMessage("", QUEUE, ("Message_" + i).getBytes())))
                     .subscribe();
             latchCompleted.set(latch.await(5, TimeUnit.SECONDS));

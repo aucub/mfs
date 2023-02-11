@@ -34,14 +34,14 @@ public class SampleSender {
 
     public void send(String queue, int count, CountDownLatch latch) {
         Flux<OutboundMessageResult> confirmations = sender.sendWithPublishConfirms(Flux.range(1, count)
-                .map(i -> new OutboundMessage("", queue, ("Message_" + i).getBytes())));
+                .map(i -> new OutboundMessage("", queue, ("消息_" + i).getBytes())));
 
         sender.declareQueue(QueueSpecification.queue(queue))
                 .thenMany(confirmations)
-                .doOnError(e -> LOGGER.error("Send failed", e))
+                .doOnError(e -> LOGGER.error("发送失败", e))
                 .subscribe(r -> {
                     if (r.isAck()) {
-                        LOGGER.info("Message {} sent successfully", new String(r.getOutboundMessage().getBody()));
+                        LOGGER.info("消息 {} 发送成功", new String(r.getOutboundMessage().getBody()));
                         latch.countDown();
                     }
                 });
