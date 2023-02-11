@@ -1,5 +1,6 @@
 package cn.edu.zut.mfs.rabbit;
 
+import cn.hutool.core.lang.UUID;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
@@ -10,9 +11,9 @@ import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.context.annotation.Bean;
 
 public class MessagingRabbitmq {
-    public static final String topicExchangeName = "spring-boot-exchange";
+    public static final String topicExchangeName = UUID.randomUUID().toString();
 
-    static final String queueName = "spring-boot";
+    static final String queueName = UUID.randomUUID().toString();
 
     @Bean
     Queue queue() {

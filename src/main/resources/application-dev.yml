@@ -6,8 +6,14 @@ logging:
     root: info
 
 spring:
+  rsocket:
+    address: localhost
+    mapping-path:
+    port: 7000
+    transport:
   main:
     web-application-type: reactive
+    lazy-initialization: true
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/mfs?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
@@ -97,3 +103,6 @@ springdoc:
     - group: 'default'
       paths-to-match: '/**'
       packages-to-scan: cn.edu.zut.mfs.controller
+
+
+
