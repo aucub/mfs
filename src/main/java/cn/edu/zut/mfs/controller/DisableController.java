@@ -2,6 +2,7 @@ package cn.edu.zut.mfs.controller;
 
 import cn.dev33.satoken.stp.StpUtil;
 import cn.edu.zut.mfs.pojo.BaseResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,13 +10,13 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * Sa-Token 账号封禁
  */
-
 @RestController
 @RequestMapping("/disable/")
 @Tag(name = "账号封禁")
 public class DisableController {
 
-    // 封禁指定账号  ---- http://localhost:8081/disable/disable?userId=10001
+
+    @Operation(summary = "封禁指定账号")
     @RequestMapping("disable")
     public BaseResponse<String> disable(long userId) {
         /*
@@ -27,7 +28,7 @@ public class DisableController {
         return BaseResponse.success("账号 " + userId + " 封禁成功");
     }
 
-    // 解封指定账号  ---- http://localhost:8081/disable/untieDisable?userId=10001
+    @Operation(summary = "解封指定账号")
     @RequestMapping("untieDisable")
     public BaseResponse<String> untieDisable(long userId) {
         StpUtil.untieDisable(userId);
