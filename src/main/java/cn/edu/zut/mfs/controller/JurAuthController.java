@@ -3,29 +3,23 @@ package cn.edu.zut.mfs.controller;
 
 import cn.dev33.satoken.stp.StpUtil;
 import cn.dev33.satoken.util.SaResult;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 /**
- * Sa-Token 权限认证示例
+ * Sa-Token 权限认证
  */
 @RestController
 @RequestMapping("/jur/")
+@Tag(name = "权限认证")
 public class JurAuthController {
 
-    /*
-     * 前提1：首先调用登录接口进行登录
-     * 		---- http://localhost:8081/acc/doLogin?name=zhang&pwd=123456
-     *
-     * 前提2：项目实现 StpInterface 接口
-     * 		Sa-Token 将从此实现类获取 每个账号拥有哪些权限。
-     *
-     * 然后我们就可以使用以下示例中的代码进行鉴权了
-     */
 
-    // 查询权限   ---- http://localhost:8081/jur/getPermission
+    @Operation(summary = "查询权限")
     @RequestMapping("getPermission")
     public SaResult getPermission() {
         // 查询权限信息 ，如果当前会话未登录，会返回一个空集合
@@ -42,7 +36,7 @@ public class JurAuthController {
                 .set("permissionList", permissionList);
     }
 
-    // 权限校验  ---- http://localhost:8081/jur/checkPermission
+    @Operation(summary = "权限校验")
     @RequestMapping("checkPermission")
     public SaResult checkPermission() {
 
@@ -62,6 +56,7 @@ public class JurAuthController {
     }
 
     // 角色校验  ---- http://localhost:8081/jur/checkRole
+    @Operation(summary = "查询权限")
     @RequestMapping("checkRole")
     public SaResult checkRole() {
 
@@ -81,6 +76,7 @@ public class JurAuthController {
     }
 
     // 权限通配符  ---- http://localhost:8081/jur/wildcardPermission
+    @Operation(summary = "查询权限")
     @RequestMapping("wildcardPermission")
     public SaResult wildcardPermission() {
 

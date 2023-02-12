@@ -3,6 +3,8 @@ package cn.edu.zut.mfs.controller;
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.edu.zut.mfs.pojo.BaseResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,26 +12,25 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequestMapping("/acc/")
+@Tag(name = "用户登录")
 public class LoginAuthController {
 
-    // 测试登录，浏览器访问： http://localhost:8081/user/doLogin?username=zhang&password=123456
+    @Operation(summary = "登录")
     @RequestMapping("doLogin")
     public BaseResponse<String> doLogin(String username, String password) {
-        // 此处仅作模拟示例，真实项目需要从数据库中查询数据进行比对
         if ("zhang".equals(username) && "123456".equals(password)) {
-            // 1、先检查此账号是否已被封禁
+            // 先检查此账号是否已被封禁
             StpUtil.checkDisable(username);
             StpUtil.login(10001);
             log.info(username + "登录成功");
-            // 获取 Token  相关参数
-            // 与常规登录不同点之处：这里需要把 Token 信息从响应体中返回到前端
+            // 获取 Token  相关参数，这里需要把 Token 信息从响应体中返回到前端
             SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
             return BaseResponse.success("登录成功,token:" + tokenInfo);
         }
         return BaseResponse.fail(500, "登录失败");
     }
 
-    // 查询登录状态，浏览器访问： http://localhost:8081/user/isLogin
+    @Operation(summary = "查询登录状态")
     @RequestMapping("isLogin")
     public BaseResponse<String> isLogin() {
         // StpUtil.isLogin() 查询当前客户端是否登录，返回 true 或 false
@@ -37,7 +38,7 @@ public class LoginAuthController {
         return BaseResponse.success("当前会话是否登录：" + isLogin);
     }
 
-    // 注销登录，浏览器访问： http://localhost:8081/user/logout
+    @Operation(summary = "注销登录")
     @RequestMapping("logout")
     public BaseResponse<String> logout() {
         // 退出登录会清除三个地方的数据：
@@ -51,7 +52,7 @@ public class LoginAuthController {
         return BaseResponse.success("注销登录成功");
     }
 
-    // 检验当前会话是否已经登录，浏览器访问： http://localhost:8081/user/checkLogin
+    @Operation(summary = "检验当前会话是否已经登录")
     @RequestMapping("checkLogin")
     public BaseResponse<String> checkLogin() {
         // 检验当前会话是否已经登录, 如果未登录，则抛出异常：`NotLoginException`
@@ -60,7 +61,7 @@ public class LoginAuthController {
         return BaseResponse.success("当前已登录");
     }
 
-    // 获取当前会话账号id，浏览器访问： http://localhost:8081/user/getLoginIdAsString
+    @Operation(summary = "获取当前会话账号id")
     @RequestMapping("getLoginIdAsString")
     public BaseResponse<String> getLoginIdAsString() {
         // 获取当前会话账号id, 如果未登录，则抛出异常：`NotLoginException`

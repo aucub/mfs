@@ -35,6 +35,7 @@ public class BaseResponse<T> {
         return response;
     }
 
+
     /**
      * 失败返回
      *
@@ -49,6 +50,7 @@ public class BaseResponse<T> {
         response.setMessage(message);
         return response;
     }
+
 
     public void setCode(Integer code) {
         this.code = code;

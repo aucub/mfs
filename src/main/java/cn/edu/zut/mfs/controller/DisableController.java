@@ -2,8 +2,17 @@ package cn.edu.zut.mfs.controller;
 
 import cn.dev33.satoken.stp.StpUtil;
 import cn.edu.zut.mfs.pojo.BaseResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Sa-Token 账号封禁
+ */
+
+@RestController
+@RequestMapping("/disable/")
+@Tag(name = "账号封禁")
 public class DisableController {
 
     // 封禁指定账号  ---- http://localhost:8081/disable/disable?userId=10001
