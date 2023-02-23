@@ -1,6 +1,8 @@
 package cn.edu.zut.mfs.controller;
 
 import cn.edu.zut.mfs.model.Message;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.PreDestroy;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -8,6 +10,7 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.rsocket.RSocketRequester;
 import org.springframework.messaging.rsocket.annotation.ConnectMapping;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -16,6 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+
+@RequestMapping("/rsocket/")
+@Tag(name = "消息转发")
 @Slf4j
 @Controller
 public class RSocketController {
@@ -29,11 +35,12 @@ public class RSocketController {
 
     @PreDestroy
     void shutdown() {
-        log.info("分离所有剩余的客户...");
+        log.info("分离所有剩余的客户端...");
         CLIENTS.forEach(requester -> Objects.requireNonNull(requester.rsocket()).dispose());
         log.info("关机.");
     }
 
+    @Operation(summary = "客户端连接")
     @ConnectMapping("client")
     void connectClientAndAskForTelemetry(RSocketRequester requester,
                                          @Payload String client) {
@@ -58,7 +65,7 @@ public class RSocketController {
         requester.route("client-status")
                 .data("OPEN")
                 .retrieveFlux(String.class)
-                .doOnNext(s -> log.info("Client: {} Free Memory: {}.", client, s))
+                .doOnNext(s -> log.info("客户端: {} Free Memory: {}.", client, s))
                 .subscribe();
     }
 
@@ -67,7 +74,6 @@ public class RSocketController {
      * 对于收到的每条消息，都会返回一条新消息，
      * 其中包含 ORIGIN=Server 和 INTERACTION=Request-Response。
      */
-
     @MessageMapping("request-response")
     Mono<Message> requestResponse(final Message request) {
         log.info("收到请求-响应请求: {}", request);

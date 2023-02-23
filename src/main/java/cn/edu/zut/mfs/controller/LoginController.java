@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/user/")
 @Tag(name = "用户登录")
-public class LoginAuthController {
+public class LoginController {
     LoginAuthService loginAuthService;
 
     @Operation(summary = "登录")
@@ -103,12 +103,12 @@ public class LoginAuthController {
         return BaseResponse.success("当前已登录");
     }
 
-    @Operation(summary = "获取当前会话账号id")
+    @Operation(summary = "获取当前会话id")
     @RequestMapping("getLoginIdAsString")
     public BaseResponse<String> getLoginIdAsString() {
         // 获取当前会话账号id, 如果未登录，则抛出异常：`NotLoginException`
-        String userId = StpUtil.getLoginIdAsString();
-        return BaseResponse.success("当前客户端登录的账号id是：" + userId);
+        String username = StpUtil.getLoginIdAsString();
+        return BaseResponse.success("当前客户端登录的账号是：" + username);
     }
 
 }

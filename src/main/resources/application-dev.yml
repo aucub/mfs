@@ -7,10 +7,11 @@ logging:
 
 spring:
   rsocket:
-    address: localhost
-    mapping-path:
-    port: 7000
-    transport:
+    server:
+      address: localhost
+      port: 9898
+      mapping-path: /rsocket # 嵌入web服务器
+      transport: websocket
   main:
     web-application-type: reactive
     lazy-initialization: true
