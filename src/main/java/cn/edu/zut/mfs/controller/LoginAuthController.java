@@ -3,6 +3,7 @@ package cn.edu.zut.mfs.controller;
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.edu.zut.mfs.pojo.BaseResponse;
+import cn.edu.zut.mfs.service.LoginAuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -14,14 +15,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/acc/")
 @Tag(name = "用户登录")
 public class LoginAuthController {
+    LoginAuthService loginAuthService;
 
     @Operation(summary = "登录")
     @RequestMapping("doLogin")
     public BaseResponse<String> doLogin(String username, String password) {
-        if ("zhang".equals(username) && "123456".equals(password)) {
+        if (loginAuthService.login(username, password)) {
             // 先检查此账号是否已被封禁
             StpUtil.checkDisable(username);
-            StpUtil.login(10001);
+            StpUtil.login(username);
             log.info(username + "登录成功");
             // 获取 Token  相关参数，这里需要把 Token 信息从响应体中返回到前端
             SaTokenInfo tokenInfo = StpUtil.getTokenInfo();

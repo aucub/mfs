@@ -37,11 +37,10 @@ public class RSocketController {
     @ConnectMapping("client")
     void connectClientAndAskForTelemetry(RSocketRequester requester,
                                          @Payload String client) {
-
         Objects.requireNonNull(requester.rsocket())
                 .onClose()
                 .doFirst(() -> {
-                    // 将所有新客户端添加到客户端列表
+                    // 将新客户端添加到客户端列表
                     log.info("客户端: {} 连接.", client);
                     CLIENTS.add(requester);
                 })
@@ -55,7 +54,6 @@ public class RSocketController {
                     log.info("客户端 {} 断开连接", client);
                 })
                 .subscribe();
-
         // 回调客户端，确认连接
         requester.route("client-status")
                 .data("OPEN")
