@@ -32,6 +32,46 @@ public class LoginAuthController {
         return BaseResponse.fail(500, "登录失败");
     }
 
+    @Operation(summary = "记住我登录")
+    @RequestMapping("doLogin1")
+    public BaseResponse<String> doLogin1(String username, String password) {
+        if (loginAuthService.login(username, password)) {
+            StpUtil.checkDisable(username);
+            StpUtil.login(username, true);
+            log.info(username + "登录成功");
+            SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
+            return BaseResponse.success("登录成功,token:" + tokenInfo);
+        }
+        return BaseResponse.fail(500, "登录失败");
+    }
+
+    @Operation(summary = "不记住我登录")
+    @RequestMapping("doLogin2")
+    public BaseResponse<String> doLogin2(String username, String password) {
+        if (loginAuthService.login(username, password)) {
+            StpUtil.checkDisable(username);
+            StpUtil.login(username, false);
+            log.info(username + "登录成功");
+            SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
+            return BaseResponse.success("登录成功,token:" + tokenInfo);
+        }
+        return BaseResponse.fail(500, "登录失败");
+    }
+
+    @Operation(summary = "七天免登录")
+    @RequestMapping("doLogin3")
+    public BaseResponse<String> doLogin3(String username, String password) {
+        if (loginAuthService.login(username, password)) {
+            StpUtil.checkDisable(username);
+            StpUtil.login(username, 60 * 60 * 24 * 7);
+            log.info(username + "登录成功");
+            SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
+            return BaseResponse.success("登录成功,token:" + tokenInfo);
+        }
+        return BaseResponse.fail(500, "登录失败");
+    }
+
+
     @Operation(summary = "查询登录状态")
     @RequestMapping("isLogin")
     public BaseResponse<String> isLogin() {

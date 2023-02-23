@@ -27,8 +27,6 @@ public class SaTokenConfigure implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         // 注册 Sa-Token 拦截器打开注解鉴权功能
         registry.addInterceptor(new SaInterceptor(handle -> {
-            // SaManager.getLog().debug("----- 请求path={}  提交token={}", SaHolder.getRequest().getRequestPath(), StpUtil.getTokenValue());
-
             // 指定一条 match 规则
             SaRouter
                     .match("/user/**")    // 拦截的 path 列表，可以写多个
@@ -54,12 +52,10 @@ public class SaTokenConfigure implements WebMvcConfigurer {
                 .addExclude("/favicon.ico", "/user/doLogin", "/user/isLogin")
                 // 指定[认证函数]: 每次请求执行
                 .setAuth(obj -> {
-                    System.out.println("---------- sa全局认证");
                     SaRouter.match("/user/**", () -> StpUtil.checkLogin());
                 })
                 // 指定[异常处理函数]：每次[认证函数]发生异常时执行此函数
                 .setError(e -> {
-                    System.out.println("---------- sa全局异常 ");
                     return SaResult.error(e.getMessage());
                 })
                 ;
