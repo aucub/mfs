@@ -43,5 +43,4 @@ public class KickoutController {
         // 返回
         return BaseResponse.success("");
     }
-
 }

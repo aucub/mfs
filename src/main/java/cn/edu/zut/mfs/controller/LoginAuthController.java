@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/acc/")
+@RequestMapping("/user/")
 @Tag(name = "用户登录")
 public class LoginAuthController {
     LoginAuthService loginAuthService;
