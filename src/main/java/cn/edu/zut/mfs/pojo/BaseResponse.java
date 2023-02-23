@@ -6,21 +6,6 @@ package cn.edu.zut.mfs.pojo;
 public class BaseResponse<T> {
 
     /**
-     * 响应状态码 200表示成功，500表示失败
-     */
-    private Integer code;
-
-    /**
-     * 响应结果描述
-     */
-    private String message;
-
-    /**
-     * 返回的数据
-     */
-    private T data;
-
-    /**
      * 成功返回
      *
      * @param data
@@ -53,14 +38,20 @@ public class BaseResponse<T> {
 
 
     public void setCode(Integer code) {
-        this.code = code;
+        /*
+          响应状态码 200表示成功，500表示失败
+         */
     }
 
     public void setMessage(String message) {
-        this.message = message;
+        /*
+          响应结果描述
+         */
     }
 
     public void setData(T data) {
-        this.data = data;
+        /*
+          返回的数据
+         */
     }
 }

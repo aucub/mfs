@@ -19,9 +19,8 @@ public class StpInterfaceImpl implements StpInterface {
     @Override
     public List<String> getPermissionList(Object loginId, String loginType) {
         // 查询权限list
-        List<String> list = new ArrayList<>();
 
-        return list;
+        return new ArrayList<>();
     }
 
     /**
@@ -30,8 +29,7 @@ public class StpInterfaceImpl implements StpInterface {
     @Override
     public List<String> getRoleList(Object loginId, String loginType) {
         // 查询角色list
-        List<String> list = new ArrayList<>();
-        return list;
+        return new ArrayList<>();
     }
 
 }

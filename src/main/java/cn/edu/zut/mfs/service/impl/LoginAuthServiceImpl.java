@@ -17,8 +17,8 @@ public class LoginAuthServiceImpl implements LoginAuthService {
             throw new BaseException(500, "");
         }
         Map<String, Object> params = new HashMap<>();
-        params.put(new String("username"), username);
-        params.put(new String("password"), password);
+        params.put("username", username);
+        params.put("password", password);
         if (!loginDao.selectByMap(params).isEmpty()) {
             return true;
         } else throw new BaseException(500, "");
