@@ -16,9 +16,8 @@ public class RabbitMQSender {
 
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RabbitMQSender.class);
-
-    private final Sender sender;
     final AtomicBoolean latchCompleted = new AtomicBoolean(false);
+    private final Sender sender;
 
     public RabbitMQSender() {
         this.sender = RabbitFlux.createSender();

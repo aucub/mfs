@@ -22,6 +22,7 @@ public class Message {
     private int count;
     private String exchange;
     private String queue;
+
     private List<RabbitMQMessage> rabbitMQMessages;
 
     public Message(String origin, String interaction) {

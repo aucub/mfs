@@ -40,6 +40,7 @@ public class RabbitMQ {
     Receiver receiver(Mono<Connection> connectionMono) {
         return RabbitFlux.createReceiver(new ReceiverOptions().connectionMono(connectionMono));
     }
+
     @PostConstruct
     public void init() {
         amqpAdmin.declareQueue(new Queue(UUID.randomUUID().toString(), false, false, true));
@@ -49,4 +50,4 @@ public class RabbitMQ {
     public void close() throws Exception {
         Objects.requireNonNull(connectionMono.block()).close();
     }
-    }
+}
