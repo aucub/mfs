@@ -4,11 +4,15 @@ import cn.edu.zut.mfs.dao.LoginDao;
 import cn.edu.zut.mfs.exception.BaseException;
 import cn.edu.zut.mfs.service.LoginAuthService;
 import cn.hutool.core.util.StrUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Service
 public class LoginAuthServiceImpl implements LoginAuthService {
+    @Autowired
     LoginDao loginDao;
 
     @Override

@@ -10,7 +10,7 @@ spring:
     server:
       address: localhost
       port: 9898
-      mapping-path: /rsocket # 嵌入web服务器
+      mapping-path: /rsocket
       transport: websocket
   main:
     web-application-type: reactive

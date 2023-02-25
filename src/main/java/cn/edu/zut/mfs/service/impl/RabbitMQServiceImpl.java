@@ -1,10 +1,7 @@
 package cn.edu.zut.mfs.service.impl;
 
-import cn.edu.zut.mfs.RabbitMQ.RabbitMQ;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.Delivery;
-import jakarta.annotation.PostConstruct;
-import jakarta.annotation.PreDestroy;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.core.Queue;
@@ -13,9 +10,9 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.rabbitmq.OutboundMessage;
+import reactor.rabbitmq.Receiver;
 import reactor.rabbitmq.Sender;
 
-import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -25,23 +22,21 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class RabbitMQServiceImpl {
     static final String QUEUE = "reactor.rabbitmq.spring.boot";
     final Sender sender;
-    final Flux<Delivery> deliveryFlux;
+    final Receiver receiver;
     final AtomicBoolean latchCompleted = new AtomicBoolean(false);
-    final
-    AmqpAdmin amqpAdmin;
-    RabbitMQ rabbitMQ = new RabbitMQ();
-    Mono<Connection> connectionMono = rabbitMQ.connectionMono();
+    final AmqpAdmin amqpAdmin;
+    final Mono<Connection> connectionMono;
 
     @Autowired
-    RabbitMQServiceImpl(Sender sender, Flux<Delivery> deliveryFlux, RabbitMQ rabbitMQ, Mono<Connection> connectionMono, AmqpAdmin amqpAdmin) {
+    public RabbitMQServiceImpl(Sender sender, Receiver receiver, AmqpAdmin amqpAdmin, Mono<Connection> connectionMono) {
         this.sender = sender;
-        this.deliveryFlux = deliveryFlux;
-        this.rabbitMQ = rabbitMQ;
-        this.connectionMono = connectionMono;
+        this.receiver = receiver;
         this.amqpAdmin = amqpAdmin;
+        this.connectionMono = connectionMono;
     }
 
     public void test() throws InterruptedException {
+        Flux<Delivery> deliveryFlux = receiver.consumeNoAck(QUEUE);
         amqpAdmin.declareQueue(new Queue(QUEUE, false, false, true));
         int messageCount = 10;
         CountDownLatch latch = new CountDownLatch(messageCount);
@@ -53,14 +48,5 @@ public class RabbitMQServiceImpl {
         sender.send(Flux.range(1, messageCount).map(i -> new OutboundMessage("", QUEUE, ("Message_" + i).getBytes())))
                 .subscribe();
         latchCompleted.set(latch.await(5, TimeUnit.SECONDS));
-    }
-
-    @PostConstruct
-    public void init() {
-    }
-
-    @PreDestroy
-    public void close() throws Exception {
-        Objects.requireNonNull(connectionMono.block()).close();
     }
 }

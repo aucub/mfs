@@ -32,7 +32,7 @@
             <!--用来指定日志文件的上限大小，那么到了这个值，就会删除旧的日志-->
             <!--<totalSizeCap>1GB</totalSizeCap>-->
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <!-- maxFileSize:这是活动文件的大小，默认值是10MB,本篇设置为1KB，只是为了演示 -->
+                <!-- maxFileSize:这是活动文件的大小，默认值是10MB -->
                 <maxFileSize>2MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
@@ -59,7 +59,7 @@
             <!--只保留最近90天的日志-->
             <maxHistory>90</maxHistory>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <!-- maxFileSize:这是活动文件的大小，默认值是10MB,本篇设置为1KB，只是为了演示 -->
+                <!-- maxFileSize:这是活动文件的大小，默认值是10MB -->
                 <maxFileSize>2MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
