@@ -36,4 +36,9 @@ public class Message {
         this.interaction = interaction;
         this.index = index;
     }
+
+    public Message(int count, String queue) {
+        this.count = count;
+        this.queue = queue;
+    }
 }
