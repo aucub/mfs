@@ -1,9 +1,9 @@
 package cn.edu.zut.mfs.service;
 
-import cn.edu.zut.mfs.model.Message;
+import org.springframework.stereotype.Service;
 
+@Service
 public interface RabbitMQService {
-    void Sender(Message message);
+    void Sender();
 
-    void Receiver(String QUEUE, int count);
 }

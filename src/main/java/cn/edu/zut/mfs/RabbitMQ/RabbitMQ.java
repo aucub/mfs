@@ -1,34 +1,28 @@
 package cn.edu.zut.mfs.RabbitMQ;
 
-import cn.hutool.core.lang.UUID;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
-import jakarta.annotation.PostConstruct;
-import jakarta.annotation.PreDestroy;
-import org.springframework.amqp.core.AmqpAdmin;
-import org.springframework.amqp.core.Queue;
-import org.springframework.boot.autoconfigure.amqp.RabbitProperties;
+import com.rabbitmq.client.Delivery;
 import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.rabbitmq.*;
 
-import java.util.Objects;
-
+@Component
 public class RabbitMQ {
 
-    Mono<Connection> connectionMono;
+    static final String QUEUE = "reactor.rabbitmq.spring.boot";
 
-    AmqpAdmin amqpAdmin;
-
-    // 用于连接的Mono，它被缓存以在发送方和接收方实例之间重新使用连接这在大多数情况下应该可以正常工作
     @Bean()
-    Mono<Connection> connectionMono(RabbitProperties rabbitProperties) {
+    public Mono<Connection> connectionMono() {
         ConnectionFactory connectionFactory = new ConnectionFactory();
-        connectionFactory.setHost(rabbitProperties.getHost());
-        connectionFactory.setPort(rabbitProperties.getPort());
-        connectionFactory.setUsername(rabbitProperties.getUsername());
-        connectionFactory.setPassword(rabbitProperties.getPassword());
-        return Mono.fromCallable(() -> connectionFactory.newConnection("reactor-rabbit")).cache();
+        connectionFactory.setHost("47.113.201.150");
+        connectionFactory.setPort(5672);
+        connectionFactory.setUsername("root");
+        connectionFactory.setPassword("root");
+        connectionFactory.setVirtualHost("/mfs");
+        return Mono.fromCallable(() -> connectionFactory.newConnection("reactor-rabbit"));
     }
 
     @Bean
@@ -41,13 +35,9 @@ public class RabbitMQ {
         return RabbitFlux.createReceiver(new ReceiverOptions().connectionMono(connectionMono));
     }
 
-    @PostConstruct
-    public void init() {
-        amqpAdmin.declareQueue(new Queue(UUID.randomUUID().toString(), false, false, true));
+    @Bean
+    Flux<Delivery> deliveryFlux(Receiver receiver) {
+        return receiver.consumeNoAck(QUEUE);
     }
 
-    @PreDestroy
-    public void close() throws Exception {
-        Objects.requireNonNull(connectionMono.block()).close();
-    }
 }
