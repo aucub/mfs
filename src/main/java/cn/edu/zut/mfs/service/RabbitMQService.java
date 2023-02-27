@@ -1,10 +1,9 @@
 package cn.edu.zut.mfs.service;
 
-
-import cn.edu.zut.mfs.model.Message;
+import cn.edu.zut.mfs.domain.ForwardMessage;
 
 public interface RabbitMQService {
-    void sender() throws InterruptedException;
+    void sender(ForwardMessage forwardMessage) throws InterruptedException;
 
-    void receiver(Message message);
+    void receiver(ForwardMessage forwardMessage) throws InterruptedException;
 }

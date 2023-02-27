@@ -1,5 +1,6 @@
 package cn.edu.zut.mfs.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.session.SaSession;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.edu.zut.mfs.pojo.BaseResponse;
@@ -16,12 +17,13 @@ import java.util.List;
  */
 @Tag(name = "会话查询")
 @RestController
-@RequestMapping("/search/")
+@RequestMapping("/searchSession/")
 public class SearchSessionController {
 
     @Operation(summary = "会话查询接口----根据分页参数获取会话列表")
+    @SaCheckPermission("admin:getList")
     @RequestMapping("getList")
-    public BaseResponse<List> getList(int start, int size) {
+    public BaseResponse<List<SaSession>> getList(int start, int size) {
         // 创建集合
         List<SaSession> sessionList = new ArrayList<>();
         // 分页查询数据

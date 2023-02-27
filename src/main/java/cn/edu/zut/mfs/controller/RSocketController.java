@@ -9,7 +9,9 @@ import reactor.core.publisher.Flux;
 
 import java.time.Duration;
 
-
+/**
+ * RSocket
+ */
 @Tag(name = "消息转发")
 @Slf4j
 @Controller
@@ -28,6 +30,16 @@ public class RSocketController {
                 .interval(Duration.ofSeconds(3))
                 // 使用索引的 Flux 创建新消息的 Flux
                 .map(index -> "test").log();
+    }
+
+    @MessageMapping("channel")
+    Flux<String> channel(final Flux<Duration> settings) {
+        log.info("Received channel request...");
+        return settings
+                .doOnNext(setting -> log.info("Channel frequency setting is {} second(s).", setting.getSeconds()))
+                .doOnCancel(() -> log.warn("The client cancelled the channel."))
+                .switchMap(setting -> Flux.interval(setting)
+                        .map(index -> ""));
     }
 }
 

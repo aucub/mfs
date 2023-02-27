@@ -1,5 +1,6 @@
 package cn.edu.zut.mfs.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.edu.zut.mfs.pojo.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,6 +18,7 @@ public class DisableController {
 
 
     @Operation(summary = "封禁指定账号")
+    @SaCheckPermission("user:disable")
     @RequestMapping("disable")
     public BaseResponse<String> disable(long userId) {
         /*
@@ -29,6 +31,7 @@ public class DisableController {
     }
 
     @Operation(summary = "解封指定账号")
+    @SaCheckPermission("user:untieDisable")
     @RequestMapping("untieDisable")
     public BaseResponse<String> untieDisable(long userId) {
         StpUtil.untieDisable(userId);

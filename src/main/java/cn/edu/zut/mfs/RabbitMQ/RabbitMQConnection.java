@@ -10,7 +10,7 @@ import reactor.core.publisher.Mono;
 import reactor.rabbitmq.*;
 
 @Component
-public class RabbitMQ {
+public class RabbitMQConnection {
     RabbitProperties rabbitProperties;
 
     @Autowired

@@ -1,13 +1,14 @@
-package cn.edu.zut.mfs.model;
+package cn.edu.zut.mfs.domain;
 
-import cn.edu.zut.mfs.domain.RabbitMQMessage;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
-import java.util.List;
 
+/**
+ * 消息
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,10 +21,6 @@ public class Message {
     private long index;
     private long created = Instant.now().getEpochSecond();
     private int count;
-    private String exchange;
-    private String queue;
-
-    private List<RabbitMQMessage> rabbitMQMessages;
 
     public Message(String origin, String interaction) {
         this.origin = origin;
@@ -37,8 +34,4 @@ public class Message {
         this.index = index;
     }
 
-    public Message(int count, String queue) {
-        this.count = count;
-        this.queue = queue;
-    }
 }
