@@ -1,5 +1,6 @@
 package cn.edu.zut.mfs.service.impl;
 
+import cn.edu.zut.mfs.domain.FanoutMessage;
 import cn.edu.zut.mfs.domain.ForwardMessage;
 import cn.edu.zut.mfs.service.RabbitMQService;
 import com.rabbitmq.client.Connection;
@@ -7,6 +8,8 @@ import com.rabbitmq.client.Delivery;
 import jakarta.annotation.PreDestroy;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.AmqpAdmin;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.core.Queue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -58,7 +61,21 @@ public class RabbitMQServiceImpl implements RabbitMQService {
             latch.countDown();
         });
         latchCompleted.set(latch.await(5, TimeUnit.SECONDS));
+    }
 
+    public void sendFanout(FanoutMessage fanoutMessage) throws InterruptedException {
+        FanoutExchange fanoutExchange = new FanoutExchange(fanoutMessage.getFanoutExchangeName(), true, fanoutMessage.getAutoDelete());
+        amqpAdmin.declareExchange(fanoutExchange);
+        fanoutMessage.getConsumers().forEach(consumer -> {
+            Queue queue = new Queue("", true, true, fanoutMessage.getAutoDelete());
+            amqpAdmin.declareQueue(queue);
+            amqpAdmin.declareBinding(BindingBuilder.bind(queue).to(fanoutExchange));
+        });
+        int messageCount = 10;
+        CountDownLatch latch = new CountDownLatch(messageCount);
+        sender.send(Flux.range(1, messageCount).map(i -> new OutboundMessage(fanoutExchange.getName(), "", ("Message_" + i).getBytes())))
+                .subscribe();
+        latchCompleted.set(latch.await(5, TimeUnit.SECONDS));
     }
 
     @PreDestroy
