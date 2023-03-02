@@ -1,6 +1,5 @@
 package cn.edu.zut.mfs.controller;
 
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -12,7 +11,7 @@ import java.time.Duration;
 /**
  * RSocket
  */
-@Tag(name = "消息转发")
+@Tag(name = "消息")
 @Slf4j
 @Controller
 @MessageMapping("message")
@@ -21,7 +20,6 @@ public class RSocketController {
     /**
      * 当收到一个新的请求命令时，一个新的事件流被启动并返回给客户端。
      */
-    @Operation(summary = "订阅消息")
     @MessageMapping("subscribe")
     public Flux<String> subscribe() {
         log.info("收到流请求");

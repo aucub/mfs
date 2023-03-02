@@ -32,7 +32,7 @@ public class LoginController {
             SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
             return BaseResponse.success("登录成功,token:" + tokenInfo);
         }
-        return BaseResponse.fail(500, "登录失败");
+        return BaseResponse.fail("登录失败");
     }
 
     @Operation(summary = "记住我登录")
@@ -45,7 +45,7 @@ public class LoginController {
             SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
             return BaseResponse.success("登录成功,token:" + tokenInfo);
         }
-        return BaseResponse.fail(500, "登录失败");
+        return BaseResponse.fail("登录失败");
     }
 
     @Operation(summary = "不记住我登录")
@@ -58,7 +58,7 @@ public class LoginController {
             SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
             return BaseResponse.success("登录成功,token:" + tokenInfo);
         }
-        return BaseResponse.fail(500, "登录失败");
+        return BaseResponse.fail("登录失败");
     }
 
     @Operation(summary = "七天免登录")
@@ -71,7 +71,7 @@ public class LoginController {
             SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
             return BaseResponse.success("登录成功,token:" + tokenInfo);
         }
-        return BaseResponse.fail(500, "登录失败");
+        return BaseResponse.fail("登录失败");
     }
 
 
