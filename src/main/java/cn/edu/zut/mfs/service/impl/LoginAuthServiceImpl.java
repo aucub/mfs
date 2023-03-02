@@ -18,13 +18,13 @@ public class LoginAuthServiceImpl implements LoginAuthService {
     @Override
     public Boolean login(String username, String password) {
         if (StrUtil.isEmpty(username) || StrUtil.isEmpty(password)) {
-            throw new BaseException(500, "");
+            throw new BaseException("");
         }
         Map<String, Object> params = new HashMap<>();
         params.put("username", username);
         params.put("password", password);
         if (!loginDao.selectByMap(params).isEmpty()) {
             return true;
-        } else throw new BaseException(500, "");
+        } else throw new BaseException("");
     }
 }

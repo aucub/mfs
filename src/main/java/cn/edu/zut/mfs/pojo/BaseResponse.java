@@ -7,7 +7,6 @@ public class BaseResponse<T> {
 
     /**
      * 成功返回
-     *
      * @param data
      * @param <T>
      * @return
@@ -24,15 +23,71 @@ public class BaseResponse<T> {
     /**
      * 失败返回
      *
-     * @param code
-     * @param message
      * @param <T>
      * @return
      */
-    public static <T> BaseResponse<T> fail(Integer code, String message) {
+    public static <T> BaseResponse<T> fail(T data) {
         BaseResponse<T> response = new BaseResponse<>();
-        response.setCode(code);
-        response.setMessage(message);
+        response.setCode(ResultCode.FAILED.getCode());
+        response.setMessage(ResultCode.FAILED.getMessage());
+        response.setData(data);
+        return response;
+    }
+
+    /**
+     * JSON 解析错误返回
+     *
+     * @param <T>
+     * @return
+     */
+    public static <T> BaseResponse<T> jsonError(T data) {
+        BaseResponse<T> response = new BaseResponse<>();
+        response.setCode(ResultCode.JSONError.getCode());
+        response.setMessage(ResultCode.JSONError.getMessage());
+        response.setData(data);
+        return response;
+    }
+
+
+    /**
+     * Api异常 返回
+     *
+     * @param <T>
+     * @return
+     */
+    public static <T> BaseResponse<T> apiException(T data) {
+        BaseResponse<T> response = new BaseResponse<>();
+        response.setCode(ResultCode.APIException.getCode());
+        response.setMessage(ResultCode.APIException.getMessage());
+        response.setData(data);
+        return response;
+    }
+
+    /**
+     * SaToken异常 返回
+     *
+     * @param <T>
+     * @return
+     */
+    public static <T> BaseResponse<T> saTokenException(T data) {
+        BaseResponse<T> response = new BaseResponse<>();
+        response.setCode(ResultCode.SaTokenException.getCode());
+        response.setMessage(ResultCode.SaTokenException.getMessage());
+        response.setData(data);
+        return response;
+    }
+
+    /**
+     * 异常 返回
+     *
+     * @param <T>
+     * @return
+     */
+    public static <T> BaseResponse<T> baseException(T data) {
+        BaseResponse<T> response = new BaseResponse<>();
+        response.setCode(ResultCode.BaseException.getCode());
+        response.setMessage(ResultCode.BaseException.getMessage());
+        response.setData(data);
         return response;
     }
 

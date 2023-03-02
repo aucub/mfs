@@ -1,6 +1,5 @@
 package cn.edu.zut.mfs.exception;
 
-import cn.edu.zut.mfs.pojo.ResultCode;
 import lombok.Getter;
 
 /**
@@ -8,12 +7,7 @@ import lombok.Getter;
  */
 @Getter
 public class JsonException extends BaseException {
-
-    public JsonException(ResultCode resultCode) {
-        super(resultCode);
-    }
-
-    public JsonException(Integer code, String message) {
-        super(code, message);
+    public JsonException(String exceptionMessage) {
+        super(exceptionMessage);
     }
 }

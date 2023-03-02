@@ -1,6 +1,5 @@
 package cn.edu.zut.mfs.exception;
 
-import cn.edu.zut.mfs.pojo.ResultCode;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -10,18 +9,17 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class BaseException extends RuntimeException {
-    private Integer code;
-    private String message;
+    private String exceptionMessage;
+    private Object data;
 
-    public BaseException(ResultCode resultCode) {
-        super(resultCode.getMessage());
-        this.code = resultCode.getCode();
-        this.message = resultCode.getMessage();
+    public BaseException(String exceptionMessage) {
+        super(exceptionMessage);
+        this.exceptionMessage = exceptionMessage;
     }
 
-    public BaseException(Integer code, String message) {
-        super(message);
-        this.code = code;
-        this.message = message;
+    public BaseException(String exceptionMessage, Object data) {
+        super(exceptionMessage);
+        this.exceptionMessage = exceptionMessage;
+        this.data = data;
     }
 }
