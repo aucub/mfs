@@ -9,7 +9,7 @@ import org.springframework.messaging.rsocket.annotation.support.RSocketMessageHa
 import org.springframework.web.util.pattern.PathPatternRouteMatcher;
 
 @Configuration
-public class ServerConfig {
+public class RSocketServerConfig {
 
     @Bean
     public RSocketMessageHandler rsocketMessageHandler() {

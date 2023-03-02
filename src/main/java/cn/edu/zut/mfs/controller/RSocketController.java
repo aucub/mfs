@@ -12,6 +12,7 @@ import reactor.core.publisher.Flux;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * RSocket
@@ -25,25 +26,20 @@ public class RSocketController {
     private final List<RSocketRequester> CLIENTS = new ArrayList<>();
 
 
-    @ConnectMapping("client")
-    void connectShellClientAndAskForTelemetry(RSocketRequester requester,
-                                              @Payload String client) {
+    @ConnectMapping("connect")
+    public void connect(RSocketRequester requester,
+                        @Payload String client) {
 
-        requester.rsocket()
+        Objects.requireNonNull(requester.rsocket())
                 .onClose()
                 .doFirst(() -> {
-                    // Add all new clients to a client list
-                    log.info("Client: {} CONNECTED.", client);
+                    log.info("客户端: {} 连接", client);
                     CLIENTS.add(requester);
                 })
-                .doOnError(error -> {
-                    // Warn when channels are closed by clients
-                    log.warn("Channel to client {} CLOSED", client);
-                })
+                .doOnError(error -> log.warn("通道被客户端： {} 关闭", client))
                 .doFinally(consumer -> {
-                    // Remove disconnected clients from the client list
                     CLIENTS.remove(requester);
-                    log.info("Client {} DISCONNECTED", client);
+                    log.info("客户端： {} 断开连接", client);
                 })
                 .subscribe();
     }
@@ -52,14 +48,14 @@ public class RSocketController {
     /**
      * 当收到一个新的请求命令时，一个新的事件流被启动并返回给客户端。
      */
-    @MessageMapping("subscribe")
-    public Flux<String> subscribe() {
+    @MessageMapping("stream")
+    public Flux<String> stream() {
         log.info("收到流请求");
         return Flux
                 // 创建一个新的索引 Flux 每秒发射一个元素
                 .interval(Duration.ofSeconds(1))
                 // 使用索引的 Flux 创建新消息的 Flux
-                .map(index -> new String("test" + index));
+                .map(index -> "test" + index);
 
     }
 
@@ -67,9 +63,7 @@ public class RSocketController {
     Flux<String> channel(final Flux<String> msg) {
         return msg
                 .doOnNext(in -> log.info("收到消息：  {}", in))
-                .map(in -> {
-                    return new String("发送的消息：" + in);
-                });
+                .map(in -> "发送的消息：" + in);
     }
 
 }
