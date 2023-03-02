@@ -12,14 +12,20 @@ public enum ResultCode {
      **/
     FAILED(500, "操作失败"),
     /**
-     * JSON 解析错误
+     * JSON解析错误
      **/
     JSONError(301, "JSON解析错误"),
     /**
      * Api异常
      **/
     APIException(302, "API异常"),
+    /**
+     * SaToken异常
+     **/
     SaTokenException(303, "SaToken异常"),
+    /**
+     * 异常
+     **/
     BaseException(300, "异常");
 
     /**

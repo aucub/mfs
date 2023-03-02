@@ -94,7 +94,7 @@ public class BaseResponse<T> {
 
     public void setCode(Integer code) {
         /*
-          响应状态码 200表示成功，500表示失败
+          响应状态码
          */
     }
 

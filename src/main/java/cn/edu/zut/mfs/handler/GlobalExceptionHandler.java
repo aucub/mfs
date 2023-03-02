@@ -9,18 +9,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
- * 统一异常处理
+ * 异常处理
  */
 @ControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
 
-    /**
-     * 统一 json 异常处理
-     *
-     * @param exception JsonException
-     * @return 统一返回 json 格式
-     */
+
+    // json 异常处理
     @ExceptionHandler(value = JsonException.class)
     @ResponseBody
     public BaseResponse<JsonException> jsonErrorHandler(JsonException exception) {
@@ -29,7 +25,7 @@ public class GlobalExceptionHandler {
     }
 
 
-    // 拦截：未登录异常
+    // 未登录异常
     @ExceptionHandler(NotLoginException.class)
     public BaseResponse<String> handlerException(NotLoginException e) {
 
@@ -40,42 +36,42 @@ public class GlobalExceptionHandler {
         return BaseResponse.saTokenException(e.getMessage());
     }
 
-    // 拦截：缺少权限异常
+    // 缺少权限异常
     @ExceptionHandler(NotPermissionException.class)
     public BaseResponse<String> handlerException(NotPermissionException e) {
         e.printStackTrace();
         return BaseResponse.saTokenException("缺少权限：" + e.getPermission());
     }
 
-    // 拦截：缺少角色异常
+    // 缺少角色异常
     @ExceptionHandler(NotRoleException.class)
     public BaseResponse<String> handlerException(NotRoleException e) {
         e.printStackTrace();
         return BaseResponse.saTokenException("缺少角色：" + e.getRole());
     }
 
-    // 拦截：二级认证校验失败异常
+    // 二级认证校验失败异常
     @ExceptionHandler(NotSafeException.class)
     public BaseResponse<String> handlerException(NotSafeException e) {
         e.printStackTrace();
         return BaseResponse.saTokenException("二级认证校验失败：" + e.getService());
     }
 
-    // 拦截：服务封禁异常
+    // 服务封禁异常
     @ExceptionHandler(DisableServiceException.class)
     public BaseResponse<String> handlerException(DisableServiceException e) {
         e.printStackTrace();
         return BaseResponse.saTokenException("当前账号 " + e.getService() + " 服务已被封禁 (level=" + e.getLevel() + ")：" + e.getDisableTime() + "秒后解封");
     }
 
-    // 拦截：Http Basic 校验失败异常
+    // Http Basic 校验失败异常
     @ExceptionHandler(NotBasicAuthException.class)
     public BaseResponse<String> handlerException(NotBasicAuthException e) {
         e.printStackTrace();
         return BaseResponse.saTokenException(e.getMessage());
     }
 
-    // 拦截：其它所有异常
+    // 其它所有异常
     @ExceptionHandler(Exception.class)
     public BaseResponse<String> handlerException(Exception e) {
         e.printStackTrace();
