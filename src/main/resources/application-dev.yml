@@ -6,15 +6,17 @@ logging:
     root: info
 
 spring:
-  rsocket:
-    server:
-      address: localhost
-      port: 9898
-      mapping-path: /rsocket
-      transport: websocket
+  webflux:
+    base-path:
   main:
     web-application-type: reactive
     lazy-initialization: true
+  rsocket:
+    server:
+      # address: 127.0.0.1
+      port: 9898
+      # mapping-path: /rsocket/
+      # transport: websocket
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/mfs?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai

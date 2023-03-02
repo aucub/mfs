@@ -1,2 +1,0 @@
-STREAM message.subscribe
-Host: ws://127.0.0.1:9898/rsocket
