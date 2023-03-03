@@ -1,6 +1,5 @@
 package cn.edu.zut.mfs.service.impl;
 
-import cn.edu.zut.mfs.domain.FanoutMessage;
 import cn.edu.zut.mfs.domain.ForwardMessage;
 import cn.edu.zut.mfs.service.RabbitMQService;
 import com.rabbitmq.client.Connection;
@@ -65,17 +64,18 @@ public class RabbitMQServiceImpl implements RabbitMQService {
         return null;*/
     }
 
-    public void sendFanout(FanoutMessage fanoutMessage) throws InterruptedException {
-        FanoutExchange fanoutExchange = new FanoutExchange(fanoutMessage.getFanoutExchangeName(), true, fanoutMessage.getAutoDelete());
+    @Override
+    public void createFanout(ForwardMessage forwardMessage) throws InterruptedException {
+        FanoutExchange fanoutExchange = new FanoutExchange(forwardMessage.getExchange(), true, forwardMessage.getAutoDelete());
         amqpAdmin.declareExchange(fanoutExchange);
-        fanoutMessage.getConsumers().forEach(consumer -> {
-            Queue queue = new Queue("", true, true, fanoutMessage.getAutoDelete());
+        forwardMessage.getConsumers().forEach(consumer -> {
+            Queue queue = new Queue(consumer, true, true, forwardMessage.getAutoDelete());
             amqpAdmin.declareQueue(queue);
             amqpAdmin.declareBinding(BindingBuilder.bind(queue).to(fanoutExchange));
         });
-        int messageCount = 10;
+        int messageCount = 1;
         CountDownLatch latch = new CountDownLatch(messageCount);
-        sender.send(Flux.range(1, messageCount).map(i -> new OutboundMessage(fanoutExchange.getName(), "", ("Message_" + i).getBytes())))
+        sender.send(Flux.range(1, messageCount).map(i -> new OutboundMessage(fanoutExchange.getName(), "", ("Message_" + forwardMessage.getContent()).getBytes())))
                 .subscribe();
         latchCompleted.set(latch.await(5, TimeUnit.SECONDS));
     }

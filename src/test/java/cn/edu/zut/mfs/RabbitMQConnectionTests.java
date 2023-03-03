@@ -15,7 +15,7 @@ public class RabbitMQConnectionTests {
 
     @Test
     public void SendTest() {
-        forwardMessage.setQUEUE("reactor.rabbitmq.spring.boot");
+        forwardMessage.setQueue("reactor.rabbitmq.spring.boot");
         try {
             rabbitMQService.sender(forwardMessage);
         } catch (InterruptedException e) {
@@ -25,7 +25,7 @@ public class RabbitMQConnectionTests {
 
     @Test
     public void Receiver() {
-        forwardMessage.setQUEUE("reactor.rabbitmq.spring.boot");
+        forwardMessage.setQueue("reactor.rabbitmq.spring.boot");
         try {
             rabbitMQService.receiver(forwardMessage);
         } catch (InterruptedException e) {

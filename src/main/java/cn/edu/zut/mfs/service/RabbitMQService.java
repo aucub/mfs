@@ -7,5 +7,7 @@ import reactor.core.publisher.Flux;
 public interface RabbitMQService {
     void sender(ForwardMessage forwardMessage) throws InterruptedException;
 
+    void createFanout(ForwardMessage forwardMessage) throws InterruptedException;
+
     Flux<Delivery> receiver(ForwardMessage forwardMessage) throws InterruptedException;
 }
