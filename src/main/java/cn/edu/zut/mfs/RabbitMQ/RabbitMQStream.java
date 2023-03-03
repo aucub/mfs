@@ -1,10 +1,10 @@
 package cn.edu.zut.mfs.RabbitMQ;
 
-import com.rabbitmq.stream.Consumer;
-import com.rabbitmq.stream.Environment;
-import com.rabbitmq.stream.OffsetSpecification;
-import com.rabbitmq.stream.Producer;
+import com.rabbitmq.stream.*;
+import com.rabbitmq.stream.compression.Compression;
+import org.junit.jupiter.api.BeforeAll;
 
+import java.time.Duration;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -12,27 +12,47 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.IntStream;
 
 public class RabbitMQStream {
-    String stream = UUID.randomUUID().toString();
-    Environment environment = Environment.builder()
-            .uri("rabbitmq-stream://root:root@47.113.201.150:5552/mfs")
-            .build();
+    static String stream = UUID.randomUUID().toString();
+    static Environment environment;
+
+    @BeforeAll
+    public static void createEnvironment() {
+        environment = Environment.builder()
+                .uri("rabbitmq-stream://root:root@47.113.201.150:5552/mfs")
+                .build();
+        environment.streamCreator()
+                .stream(stream)
+                .maxLengthBytes(ByteCapacity.GB(1))
+                .maxSegmentSizeBytes(ByteCapacity.MB(50))
+                .create();
+    }
+
 
     public void send() throws InterruptedException {
         int messageCount = 10000;
         CountDownLatch publishConfirmLatch = new CountDownLatch(messageCount);
         Producer producer = environment.producerBuilder()
+                .name("mfs-producer")
+                .confirmTimeout(Duration.ZERO)
+                .compression(Compression.ZSTD)
                 .stream(stream)
                 .build();
+        long nextPublishingId = producer.getLastPublishingId();
         IntStream.range(0, messageCount)
                 .forEach(i -> producer.send(
                         producer.messageBuilder()
+                                .publishingId(nextPublishingId + 1)
+                                .properties()
+                                .messageId(UUID.randomUUID())
+                                .correlationId(UUID.randomUUID())
+                                .contentType("text/plain")
+                                .messageBuilder()
                                 .addData(String.valueOf(i).getBytes())
                                 .build(),
                         confirmationStatus -> publishConfirmLatch.countDown()
                 ));
         publishConfirmLatch.await(10, TimeUnit.SECONDS);
         producer.close();
-        System.out.printf("Published %,d messages%n", messageCount);
     }
 
     public void consume() throws InterruptedException {
@@ -40,6 +60,7 @@ public class RabbitMQStream {
         AtomicLong sum = new AtomicLong(0);
         CountDownLatch consumeLatch = new CountDownLatch(messageCount);
         Consumer consumer = environment.consumerBuilder()
+                .name("mfs-consumer")
                 .stream(stream)
                 .offset(OffsetSpecification.first())
                 .messageHandler((offset, message) -> {
