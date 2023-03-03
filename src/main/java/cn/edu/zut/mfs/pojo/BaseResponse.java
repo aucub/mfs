@@ -7,9 +7,6 @@ public class BaseResponse<T> {
 
     /**
      * 成功返回
-     * @param data
-     * @param <T>
-     * @return
      */
     public static <T> BaseResponse<T> success(T data) {
         BaseResponse<T> response = new BaseResponse<>();
@@ -22,9 +19,6 @@ public class BaseResponse<T> {
 
     /**
      * 失败返回
-     *
-     * @param <T>
-     * @return
      */
     public static <T> BaseResponse<T> fail(T data) {
         BaseResponse<T> response = new BaseResponse<>();
@@ -36,9 +30,6 @@ public class BaseResponse<T> {
 
     /**
      * JSON 解析错误返回
-     *
-     * @param <T>
-     * @return
      */
     public static <T> BaseResponse<T> jsonError(T data) {
         BaseResponse<T> response = new BaseResponse<>();
@@ -51,9 +42,6 @@ public class BaseResponse<T> {
 
     /**
      * Api异常 返回
-     *
-     * @param <T>
-     * @return
      */
     public static <T> BaseResponse<T> apiException(T data) {
         BaseResponse<T> response = new BaseResponse<>();
@@ -65,9 +53,6 @@ public class BaseResponse<T> {
 
     /**
      * SaToken异常 返回
-     *
-     * @param <T>
-     * @return
      */
     public static <T> BaseResponse<T> saTokenException(T data) {
         BaseResponse<T> response = new BaseResponse<>();
@@ -79,9 +64,6 @@ public class BaseResponse<T> {
 
     /**
      * 异常 返回
-     *
-     * @param <T>
-     * @return
      */
     public static <T> BaseResponse<T> baseException(T data) {
         BaseResponse<T> response = new BaseResponse<>();

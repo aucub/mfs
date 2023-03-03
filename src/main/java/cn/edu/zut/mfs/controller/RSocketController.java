@@ -3,6 +3,7 @@ package cn.edu.zut.mfs.controller;
 import cn.edu.zut.mfs.domain.ForwardMessage;
 import cn.edu.zut.mfs.service.RabbitMQService;
 import com.rabbitmq.client.Delivery;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,19 +19,23 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * RSocket
+ * 消息转发
  */
-@Tag(name = "消息")
+@Tag(name = "消息转发")
 @Slf4j
 @Controller
 @MessageMapping("message")
 public class RSocketController {
-    @Autowired
-    private RabbitMQService rabbitMQService;
-
     private final List<RSocketRequester> CLIENTS = new ArrayList<>();
 
+    private RabbitMQService rabbitMQService;
 
+    @Autowired
+    public void setRabbitMQService(RabbitMQService rabbitMQService) {
+        this.rabbitMQService = rabbitMQService;
+    }
+
+    @Operation(summary = "客户端连接")
     @ConnectMapping("connect")
     public void connect(RSocketRequester requester,
                         @Payload String client) {
@@ -51,8 +56,9 @@ public class RSocketController {
 
 
     /**
-     * 当收到一个新的请求命令时，一个新的事件流被启动并返回给客户端。
+     * 请求消息
      */
+    @Operation(summary = "请求消息")
     @MessageMapping("stream")
     public Flux<Delivery> stream(ForwardMessage forwardMessage) {
         log.info("收到流请求");
@@ -69,6 +75,10 @@ public class RSocketController {
 
     }
 
+    /**
+     * 发送消息direct
+     */
+    @Operation(summary = "发送消息direct")
     @MessageMapping("channel")
     Flux<String> channel(final Flux<ForwardMessage> msg) {
         return msg
@@ -83,6 +93,10 @@ public class RSocketController {
                 .map(in -> "发送的消息：" + in);
     }
 
+    /**
+     * 发送消息fanout
+     */
+    @Operation(summary = "发送消息fanout")
     @MessageMapping("fanoutChannel")
     Flux<String> fanoutChannel(final Flux<ForwardMessage> msg) {
         return msg
@@ -97,8 +111,12 @@ public class RSocketController {
                 .map(in -> "发送的消息：" + in);
     }
 
-    @MessageMapping("fanoutTopic")
-    Flux<String> fanoutTopic(final Flux<ForwardMessage> msg) {
+    /**
+     * 发送消息topic
+     */
+    @Operation(summary = "发送消息topic")
+    @MessageMapping("topicChannel")
+    Flux<String> topicChannel(final Flux<ForwardMessage> msg) {
         return msg
                 .doOnNext(in -> {
                     log.info("收到消息：  {}", in);

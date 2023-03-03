@@ -12,8 +12,13 @@ import java.util.Map;
 
 @Service
 public class LoginAuthServiceImpl implements LoginAuthService {
-    @Autowired
+
     LoginDao loginDao;
+
+    @Autowired
+    public void setLoginDao(LoginDao loginDao) {
+        this.loginDao = loginDao;
+    }
 
     @Override
     public Boolean login(String username, String password) {
