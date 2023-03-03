@@ -14,8 +14,7 @@ import org.springframework.messaging.rsocket.annotation.ConnectMapping;
 import org.springframework.stereotype.Controller;
 import reactor.core.publisher.Flux;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Objects;
 
 /**
@@ -26,8 +25,7 @@ import java.util.Objects;
 @Controller
 @MessageMapping("message")
 public class RSocketController {
-    private final List<RSocketRequester> CLIENTS = new ArrayList<>();
-
+    private final HashMap<RSocketRequester, String> clients = new HashMap<>();
     private RabbitMQService rabbitMQService;
 
     @Autowired
@@ -44,11 +42,11 @@ public class RSocketController {
                 .onClose()
                 .doFirst(() -> {
                     log.info("客户端: {} 连接", client);
-                    CLIENTS.add(requester);
+                    clients.put(requester, client);
                 })
                 .doOnError(error -> log.warn("通道被客户端： {} 关闭", client))
                 .doFinally(consumer -> {
-                    CLIENTS.remove(requester);
+                    clients.remove(requester);
                     log.info("客户端： {} 断开连接", client);
                 })
                 .subscribe();

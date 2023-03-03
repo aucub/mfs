@@ -38,7 +38,8 @@ public class RabbitMQServiceImpl implements RabbitMQService {
     }
 
     public void sender(ForwardMessage forwardMessage) throws InterruptedException {
-        amqpAdmin.declareQueue(new Queue(forwardMessage.getQueue(), false, false, true));
+        //amqpAdmin.declareQueue(new Queue(forwardMessage.getQueue(), true, true, true));
+        amqpAdmin.declareQueue();
         int messageCount = 1;
         CountDownLatch latch = new CountDownLatch(messageCount);
         log.info("Sending messages...");

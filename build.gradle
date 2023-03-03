@@ -23,6 +23,12 @@ ext {
     set('snippetsDir', file("build/generated-snippets"))
 }
 
+/*dependencyManagement {
+    imports {
+        mavenBom "com.pivotal.rabbitmq:reactor-rabbitmq-streams-bom:0.0.9"
+    }
+}*/
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-amqp'
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
@@ -61,6 +67,9 @@ dependencies {
     implementation 'com.redis.om:redis-om-spring:0.6.4'
     implementation 'com.google.errorprone:error_prone_annotations:2.18.0'
     implementation 'io.projectreactor.rabbitmq:reactor-rabbitmq:1.5.5'
+    // https://mvnrepository.com/artifact/com.rabbitmq/stream-client
+    implementation 'com.rabbitmq:stream-client:0.9.0'
+    //implementation "com.pivotal.rabbitmq:reactor-rabbitmq-streams-autoconfigure"
     // implementation 'org.springframework.security:spring-security-rsocket:6.0.1'
     // implementation 'org.springframework.security:spring-security-messaging:6.0.1'
     compileOnly 'org.projectlombok:lombok'
