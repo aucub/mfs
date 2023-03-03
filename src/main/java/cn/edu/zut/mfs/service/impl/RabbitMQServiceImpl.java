@@ -42,25 +42,27 @@ public class RabbitMQServiceImpl implements RabbitMQService {
     }
 
     public void sender(ForwardMessage forwardMessage) throws InterruptedException {
-        amqpAdmin.declareQueue(new Queue(forwardMessage.getQUEUE(), false, false, true));
-        int messageCount = 10;
+        amqpAdmin.declareQueue(new Queue(forwardMessage.getQueue(), false, false, true));
+        int messageCount = 1;
         CountDownLatch latch = new CountDownLatch(messageCount);
         log.info("Sending messages...");
-        sender.send(Flux.range(1, messageCount).map(i -> new OutboundMessage("", forwardMessage.getQUEUE(), ("Message_" + i).getBytes())))
+        sender.send(Flux.range(1, messageCount).map(i -> new OutboundMessage("", forwardMessage.getRoutingKey(), ("Message:" + forwardMessage.getContent()).getBytes())))
                 .subscribe();
         latchCompleted.set(latch.await(5, TimeUnit.SECONDS));
     }
 
-    public void receiver(ForwardMessage forwardMessage) throws InterruptedException {
-        amqpAdmin.declareQueue(new Queue(forwardMessage.getQUEUE(), false, false, true));
-        Flux<Delivery> deliveryFlux = receiver.consumeNoAck(forwardMessage.getQUEUE());
-        int messageCount = 10;
+    public Flux<Delivery> receiver(ForwardMessage forwardMessage) throws InterruptedException {
+        //amqpAdmin.declareQueue(new Queue(forwardMessage.getQueue(), false, false, true));
+        Flux<Delivery> deliveryFlux = receiver.consumeNoAck(forwardMessage.getQueue());
+        int messageCount = 2;
         CountDownLatch latch = new CountDownLatch(messageCount);
-        deliveryFlux.subscribe(m -> {
+        /*deliveryFlux.subscribe(m -> {
             log.info("Received message {}", new String(m.getBody()));
             latch.countDown();
-        });
-        latchCompleted.set(latch.await(5, TimeUnit.SECONDS));
+        });*/
+        return deliveryFlux;
+        /*latchCompleted.set(latch.await(5, TimeUnit.SECONDS));
+        return null;*/
     }
 
     public void sendFanout(FanoutMessage fanoutMessage) throws InterruptedException {
