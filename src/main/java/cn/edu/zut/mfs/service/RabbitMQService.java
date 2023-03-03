@@ -9,5 +9,7 @@ public interface RabbitMQService {
 
     void createFanout(ForwardMessage forwardMessage) throws InterruptedException;
 
+    void createTopic(ForwardMessage forwardMessage) throws InterruptedException;
+
     Flux<Delivery> receiver(ForwardMessage forwardMessage) throws InterruptedException;
 }

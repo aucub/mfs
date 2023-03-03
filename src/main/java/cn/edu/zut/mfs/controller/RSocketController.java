@@ -97,5 +97,18 @@ public class RSocketController {
                 .map(in -> "发送的消息：" + in);
     }
 
+    @MessageMapping("fanoutTopic")
+    Flux<String> fanoutTopic(final Flux<ForwardMessage> msg) {
+        return msg
+                .doOnNext(in -> {
+                    log.info("收到消息：  {}", in);
+                    try {
+                        rabbitMQService.createTopic(in);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .map(in -> "发送的消息：" + in);
+    }
 }
 

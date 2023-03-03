@@ -6,10 +6,7 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.Delivery;
 import jakarta.annotation.PreDestroy;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.core.AmqpAdmin;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.FanoutExchange;
-import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -76,6 +73,22 @@ public class RabbitMQServiceImpl implements RabbitMQService {
         int messageCount = 1;
         CountDownLatch latch = new CountDownLatch(messageCount);
         sender.send(Flux.range(1, messageCount).map(i -> new OutboundMessage(fanoutExchange.getName(), "", ("Message_" + forwardMessage.getContent()).getBytes())))
+                .subscribe();
+        latchCompleted.set(latch.await(5, TimeUnit.SECONDS));
+    }
+
+    @Override
+    public void createTopic(ForwardMessage forwardMessage) throws InterruptedException {
+        TopicExchange topicExchange = new TopicExchange(forwardMessage.getExchange(), true, forwardMessage.getAutoDelete());
+        amqpAdmin.declareExchange(topicExchange);
+        forwardMessage.getConsumers().forEach(consumer -> {
+            Queue queue = new Queue(consumer, true, true, forwardMessage.getAutoDelete());
+            amqpAdmin.declareQueue(queue);
+            amqpAdmin.declareBinding(BindingBuilder.bind(queue).to(topicExchange).with(forwardMessage.getRoutingKey()));
+        });
+        int messageCount = 1;
+        CountDownLatch latch = new CountDownLatch(messageCount);
+        sender.send(Flux.range(1, messageCount).map(i -> new OutboundMessage(forwardMessage.getExchange(), forwardMessage.getRoutingKey(), ("Message_" + forwardMessage.getContent()).getBytes())))
                 .subscribe();
         latchCompleted.set(latch.await(5, TimeUnit.SECONDS));
     }
