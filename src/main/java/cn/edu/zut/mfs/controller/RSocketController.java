@@ -11,19 +11,19 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.rsocket.RSocketRequester;
 import org.springframework.messaging.rsocket.annotation.ConnectMapping;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 
 import java.util.HashMap;
 import java.util.Objects;
 
 /**
- * 消息转发
+ * RSocket
  */
-@Tag(name = "消息转发")
+@Tag(name = "RSocket")
 @Slf4j
-@Controller
-@MessageMapping("message")
+@RestController
+@MessageMapping("rSocket")
 public class RSocketController {
     private final HashMap<RSocketRequester, String> clients = new HashMap<>();
     private RabbitMQService rabbitMQService;
@@ -54,9 +54,9 @@ public class RSocketController {
 
 
     /**
-     * 请求消息
+     * 请求流
      */
-    @Operation(summary = "请求消息")
+    @Operation(summary = "请求流")
     @MessageMapping("stream")
     public Flux<Delivery> stream(ForwardMessage forwardMessage) {
         log.info("收到流请求");
@@ -74,9 +74,9 @@ public class RSocketController {
     }
 
     /**
-     * 发送消息direct
+     * channel
      */
-    @Operation(summary = "发送消息direct")
+    @Operation(summary = "channel")
     @MessageMapping("channel")
     Flux<String> channel(final Flux<ForwardMessage> msg) {
         return msg
