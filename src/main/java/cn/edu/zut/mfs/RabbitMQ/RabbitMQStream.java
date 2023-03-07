@@ -4,6 +4,7 @@ import cn.edu.zut.mfs.domain.Message;
 import com.rabbitmq.stream.*;
 import com.rabbitmq.stream.compression.Compression;
 import org.junit.jupiter.api.BeforeAll;
+import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.util.UUID;
@@ -11,6 +12,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
+@Service
 public class RabbitMQStream {
     static String stream = "mfs";
     static Environment environment;
@@ -28,7 +30,7 @@ public class RabbitMQStream {
     }
 
 
-    public void publish(Message message) throws InterruptedException {
+    public long publish(Message message) throws InterruptedException {
         CountDownLatch publishConfirmLatch = new CountDownLatch(1);
         Producer producer = environment.producerBuilder()
                 .name("mfs-producer")
@@ -50,6 +52,7 @@ public class RabbitMQStream {
                 confirmationStatus -> publishConfirmLatch.countDown());
         publishConfirmLatch.await(10, TimeUnit.SECONDS);
         producer.close();
+        return publishConfirmLatch.getCount();
     }
 
     public void consume() throws InterruptedException {
@@ -61,6 +64,7 @@ public class RabbitMQStream {
                 .stream(stream)
                 .offset(OffsetSpecification.first())
                 .messageHandler((offset, message) -> {
+
                     sum.addAndGet(Long.parseLong(new String(message.getBodyAsBinary())));
                     consumeLatch.countDown();
                 })

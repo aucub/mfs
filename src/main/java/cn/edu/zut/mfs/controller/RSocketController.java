@@ -1,10 +1,12 @@
 package cn.edu.zut.mfs.controller;
 
+import cn.edu.zut.mfs.RabbitMQ.RabbitMQStream;
 import cn.edu.zut.mfs.domain.Message;
 import com.rabbitmq.client.Delivery;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.BeforeAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -26,11 +28,20 @@ import java.util.Objects;
 @MessageMapping("rSocket")
 public class RSocketController {
     private final HashMap<RSocketRequester, String> clients = new HashMap<>();
-    private RabbitMQService rabbitMQService;
+    private static RabbitMQStream rabbitMQStream;
+
+    @BeforeAll
+    public static void startConsume() {
+        try {
+            rabbitMQStream.consume();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @Autowired
-    public void setRabbitMQService(RabbitMQService rabbitMQService) {
-        this.rabbitMQService = rabbitMQService;
+    public void setRabbitMQStream(RabbitMQStream rabbitMQStream) {
+        this.rabbitMQStream = rabbitMQStream;
     }
 
     @Operation(summary = "客户端连接")
@@ -54,8 +65,13 @@ public class RSocketController {
 
     @Operation(summary = "生产")
     @MessageMapping("publish")
-    public Mono<String> publish(Message message) {
-        log.info("收到流请求");
+    public Mono<Long> publish(Message message) {
+        log.info("收到生产请求");
+        try {
+            rabbitMQStream.publish(message);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         return null;
     }
 
