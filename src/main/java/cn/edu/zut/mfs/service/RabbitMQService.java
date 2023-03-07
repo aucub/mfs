@@ -1,15 +1,15 @@
 package cn.edu.zut.mfs.service;
 
-import cn.edu.zut.mfs.domain.ForwardMessage;
+import cn.edu.zut.mfs.domain.Message;
 import com.rabbitmq.client.Delivery;
 import reactor.core.publisher.Flux;
 
 public interface RabbitMQService {
-    void sender(ForwardMessage forwardMessage) throws InterruptedException;
+    void sender(Message message) throws InterruptedException;
 
-    void createFanout(ForwardMessage forwardMessage) throws InterruptedException;
+    void createFanout(Message message) throws InterruptedException;
 
-    void createTopic(ForwardMessage forwardMessage) throws InterruptedException;
+    void createTopic(Message message) throws InterruptedException;
 
-    Flux<Delivery> receiver(ForwardMessage forwardMessage) throws InterruptedException;
+    Flux<Delivery> receiver(Message message) throws InterruptedException;
 }

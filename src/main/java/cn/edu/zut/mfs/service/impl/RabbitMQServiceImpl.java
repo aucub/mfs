@@ -1,6 +1,6 @@
 package cn.edu.zut.mfs.service.impl;
 
-import cn.edu.zut.mfs.domain.ForwardMessage;
+import cn.edu.zut.mfs.domain.Message;
 import cn.edu.zut.mfs.service.RabbitMQService;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.Delivery;
@@ -37,20 +37,20 @@ public class RabbitMQServiceImpl implements RabbitMQService {
         this.connectionMono = connectionMono;
     }
 
-    public void sender(ForwardMessage forwardMessage) throws InterruptedException {
+    public void sender(Message message) throws InterruptedException {
         //amqpAdmin.declareQueue(new Queue(forwardMessage.getQueue(), true, true, true));
         amqpAdmin.declareQueue();
         int messageCount = 1;
         CountDownLatch latch = new CountDownLatch(messageCount);
         log.info("Sending messages...");
-        sender.send(Flux.range(1, messageCount).map(i -> new OutboundMessage("", forwardMessage.getRoutingKey(), ("Message:" + forwardMessage.getContent()).getBytes())))
+        sender.send(Flux.range(1, messageCount).map(i -> new OutboundMessage("", message.getRoutingKey(), ("Message:" + message.getContent()).getBytes())))
                 .subscribe();
         latchCompleted.set(latch.await(5, TimeUnit.SECONDS));
     }
 
-    public Flux<Delivery> receiver(ForwardMessage forwardMessage) throws InterruptedException {
+    public Flux<Delivery> receiver(Message message) throws InterruptedException {
         //amqpAdmin.declareQueue(new Queue(forwardMessage.getQueue(), false, false, true));
-        Flux<Delivery> deliveryFlux = receiver.consumeNoAck(forwardMessage.getQueue());
+        Flux<Delivery> deliveryFlux = receiver.consumeNoAck(message.getQueue());
         int messageCount = 2;
         CountDownLatch latch = new CountDownLatch(messageCount);
         /*deliveryFlux.subscribe(m -> {
@@ -63,33 +63,33 @@ public class RabbitMQServiceImpl implements RabbitMQService {
     }
 
     @Override
-    public void createFanout(ForwardMessage forwardMessage) throws InterruptedException {
-        FanoutExchange fanoutExchange = new FanoutExchange(forwardMessage.getExchange(), true, forwardMessage.getAutoDelete());
+    public void createFanout(Message message) throws InterruptedException {
+        FanoutExchange fanoutExchange = new FanoutExchange(message.getExchange(), true, message.getAutoDelete());
         amqpAdmin.declareExchange(fanoutExchange);
-        forwardMessage.getConsumers().forEach(consumer -> {
-            Queue queue = new Queue(consumer, true, true, forwardMessage.getAutoDelete());
+        message.getConsumers().forEach(consumer -> {
+            Queue queue = new Queue(consumer, true, true, message.getAutoDelete());
             amqpAdmin.declareQueue(queue);
             amqpAdmin.declareBinding(BindingBuilder.bind(queue).to(fanoutExchange));
         });
         int messageCount = 1;
         CountDownLatch latch = new CountDownLatch(messageCount);
-        sender.send(Flux.range(1, messageCount).map(i -> new OutboundMessage(fanoutExchange.getName(), "", ("Message_" + forwardMessage.getContent()).getBytes())))
+        sender.send(Flux.range(1, messageCount).map(i -> new OutboundMessage(fanoutExchange.getName(), "", ("Message_" + message.getContent()).getBytes())))
                 .subscribe();
         latchCompleted.set(latch.await(5, TimeUnit.SECONDS));
     }
 
     @Override
-    public void createTopic(ForwardMessage forwardMessage) throws InterruptedException {
-        TopicExchange topicExchange = new TopicExchange(forwardMessage.getExchange(), true, forwardMessage.getAutoDelete());
+    public void createTopic(Message message) throws InterruptedException {
+        TopicExchange topicExchange = new TopicExchange(message.getExchange(), true, message.getAutoDelete());
         amqpAdmin.declareExchange(topicExchange);
-        forwardMessage.getConsumers().forEach(consumer -> {
-            Queue queue = new Queue(consumer, true, true, forwardMessage.getAutoDelete());
+        message.getConsumers().forEach(consumer -> {
+            Queue queue = new Queue(consumer, true, true, message.getAutoDelete());
             amqpAdmin.declareQueue(queue);
-            amqpAdmin.declareBinding(BindingBuilder.bind(queue).to(topicExchange).with(forwardMessage.getRoutingKey()));
+            amqpAdmin.declareBinding(BindingBuilder.bind(queue).to(topicExchange).with(message.getRoutingKey()));
         });
         int messageCount = 1;
         CountDownLatch latch = new CountDownLatch(messageCount);
-        sender.send(Flux.range(1, messageCount).map(i -> new OutboundMessage(forwardMessage.getExchange(), forwardMessage.getRoutingKey(), ("Message_" + forwardMessage.getContent()).getBytes())))
+        sender.send(Flux.range(1, messageCount).map(i -> new OutboundMessage(message.getExchange(), message.getRoutingKey(), ("Message_" + message.getContent()).getBytes())))
                 .subscribe();
         latchCompleted.set(latch.await(5, TimeUnit.SECONDS));
     }

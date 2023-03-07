@@ -1,10 +1,9 @@
 package cn.edu.zut.mfs.RabbitMQ;
 
-import cn.edu.zut.mfs.domain.ForwardMessage;
+import cn.edu.zut.mfs.domain.Message;
 import com.rabbitmq.stream.*;
 import com.rabbitmq.stream.compression.Compression;
 import org.junit.jupiter.api.BeforeAll;
-import reactor.core.publisher.Flux;
 
 import java.time.Duration;
 import java.util.UUID;
@@ -29,9 +28,8 @@ public class RabbitMQStream {
     }
 
 
-    public void send(Flux<ForwardMessage> forwardMessageFlux) throws InterruptedException {
-        int messageCount = 10000;
-        CountDownLatch publishConfirmLatch = new CountDownLatch(messageCount);
+    public void publish(Message message) throws InterruptedException {
+        CountDownLatch publishConfirmLatch = new CountDownLatch(1);
         Producer producer = environment.producerBuilder()
                 .name("mfs-producer")
                 .confirmTimeout(Duration.ZERO)
@@ -39,7 +37,7 @@ public class RabbitMQStream {
                 .stream(stream)
                 .build();
         long nextPublishingId = producer.getLastPublishingId();
-        forwardMessageFlux.subscribe(i -> producer.send(
+        producer.send(
                 producer.messageBuilder()
                         .publishingId(nextPublishingId + 1)
                         .properties()
@@ -47,9 +45,9 @@ public class RabbitMQStream {
                         .correlationId(UUID.randomUUID())
                         .contentType("text/plain")
                         .messageBuilder()
-                        .addData(String.valueOf(i).getBytes())
+                        .addData(message.getBody())
                         .build(),
-                confirmationStatus -> publishConfirmLatch.countDown()));
+                confirmationStatus -> publishConfirmLatch.countDown());
         publishConfirmLatch.await(10, TimeUnit.SECONDS);
         producer.close();
     }
