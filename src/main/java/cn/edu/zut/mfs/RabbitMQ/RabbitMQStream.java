@@ -11,7 +11,6 @@ import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.IntStream;
 
 public class RabbitMQStream {
     static String stream = "mfs";
@@ -40,19 +39,17 @@ public class RabbitMQStream {
                 .stream(stream)
                 .build();
         long nextPublishingId = producer.getLastPublishingId();
-        IntStream.range(0, messageCount)
-                .forEach(i -> producer.send(
-                        producer.messageBuilder()
-                                .publishingId(nextPublishingId + 1)
-                                .properties()
-                                .messageId(UUID.randomUUID())
-                                .correlationId(UUID.randomUUID())
-                                .contentType("text/plain")
-                                .messageBuilder()
-                                .addData(String.valueOf(i).getBytes())
-                                .build(),
-                        confirmationStatus -> publishConfirmLatch.countDown()
-                ));
+        forwardMessageFlux.subscribe(i -> producer.send(
+                producer.messageBuilder()
+                        .publishingId(nextPublishingId + 1)
+                        .properties()
+                        .messageId(UUID.randomUUID())
+                        .correlationId(UUID.randomUUID())
+                        .contentType("text/plain")
+                        .messageBuilder()
+                        .addData(String.valueOf(i).getBytes())
+                        .build(),
+                confirmationStatus -> publishConfirmLatch.countDown()));
         publishConfirmLatch.await(10, TimeUnit.SECONDS);
         producer.close();
     }
@@ -66,7 +63,7 @@ public class RabbitMQStream {
                 .stream(stream)
                 .offset(OffsetSpecification.first())
                 .messageHandler((offset, message) -> {
-                    sum.addAndGet(Long.parseLong(new String(message.getBodyAsBinary())));  // <4>
+                    sum.addAndGet(Long.parseLong(new String(message.getBodyAsBinary())));
                     consumeLatch.countDown();
                 })
                 .build();
