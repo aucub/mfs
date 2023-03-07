@@ -1,7 +1,6 @@
 package cn.edu.zut.mfs.controller;
 
 import cn.edu.zut.mfs.domain.Message;
-import cn.edu.zut.mfs.service.RabbitMQService;
 import com.rabbitmq.client.Delivery;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
