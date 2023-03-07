@@ -43,12 +43,6 @@ spring:
           max-idle: 10
           # 连接池中的最小空闲连接
           min-idle: 0
-    mongodb:
-      host: 47.113.201.150
-      port: 27017
-      database: mfs
-      username:
-      password:
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8

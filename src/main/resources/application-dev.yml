@@ -13,10 +13,10 @@ spring:
     lazy-initialization: true
   rsocket:
     server:
-      # address: 127.0.0.1
+      address: localhost
       port: 9898
-      # mapping-path: /rsocket/
-      # transport: websocket
+      mapping-path: /rsocket/
+      transport: websocket
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/mfs?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
@@ -45,12 +45,6 @@ spring:
           max-idle: 10
           # 连接池中的最小空闲连接
           min-idle: 0
-    mongodb:
-      host: 47.113.201.150
-      port: 27017
-      database: mfs
-      username:
-      password:
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
