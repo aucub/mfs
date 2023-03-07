@@ -1,8 +1,10 @@
 package cn.edu.zut.mfs.RabbitMQ;
 
+import cn.edu.zut.mfs.domain.ForwardMessage;
 import com.rabbitmq.stream.*;
 import com.rabbitmq.stream.compression.Compression;
 import org.junit.jupiter.api.BeforeAll;
+import reactor.core.publisher.Flux;
 
 import java.time.Duration;
 import java.util.UUID;
@@ -12,7 +14,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.IntStream;
 
 public class RabbitMQStream {
-    static String stream = UUID.randomUUID().toString();
+    static String stream = "mfs";
     static Environment environment;
 
     @BeforeAll
@@ -28,7 +30,7 @@ public class RabbitMQStream {
     }
 
 
-    public void send() throws InterruptedException {
+    public void send(Flux<ForwardMessage> forwardMessageFlux) throws InterruptedException {
         int messageCount = 10000;
         CountDownLatch publishConfirmLatch = new CountDownLatch(messageCount);
         Producer producer = environment.producerBuilder()

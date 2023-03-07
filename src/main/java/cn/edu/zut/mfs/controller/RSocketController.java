@@ -1,8 +1,6 @@
 package cn.edu.zut.mfs.controller;
 
-import cn.edu.zut.mfs.domain.ForwardMessage;
 import cn.edu.zut.mfs.service.RabbitMQService;
-import com.rabbitmq.client.Delivery;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +10,6 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.rsocket.RSocketRequester;
 import org.springframework.messaging.rsocket.annotation.ConnectMapping;
 import org.springframework.web.bind.annotation.RestController;
-import reactor.core.publisher.Flux;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -53,78 +50,6 @@ public class RSocketController {
     }
 
 
-    /**
-     * 请求流
-     */
-    @Operation(summary = "请求流")
-    @MessageMapping("stream")
-    public Flux<Delivery> stream(ForwardMessage forwardMessage) {
-        log.info("收到流请求");
-        try {
-            return rabbitMQService.receiver(forwardMessage);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        /*return Flux
-                // 创建一个新的索引 Flux 每秒发射一个元素
-                .interval(Duration.ofSeconds(1))
-                // 使用索引的 Flux 创建新消息的 Flux
-                .map(index -> "test" + index);*/
 
-    }
-
-    /**
-     * channel
-     */
-    @Operation(summary = "channel")
-    @MessageMapping("channel")
-    Flux<String> channel(final Flux<ForwardMessage> msg) {
-        return msg
-                .doOnNext(in -> {
-                    log.info("收到消息：  {}", in);
-                    try {
-                        rabbitMQService.sender(in);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                })
-                .map(in -> "发送的消息：" + in);
-    }
-
-    /**
-     * 发送消息fanout
-     */
-    @Operation(summary = "发送消息fanout")
-    @MessageMapping("fanoutChannel")
-    Flux<String> fanoutChannel(final Flux<ForwardMessage> msg) {
-        return msg
-                .doOnNext(in -> {
-                    log.info("收到消息：  {}", in);
-                    try {
-                        rabbitMQService.createFanout(in);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                })
-                .map(in -> "发送的消息：" + in);
-    }
-
-    /**
-     * 发送消息topic
-     */
-    @Operation(summary = "发送消息topic")
-    @MessageMapping("topicChannel")
-    Flux<String> topicChannel(final Flux<ForwardMessage> msg) {
-        return msg
-                .doOnNext(in -> {
-                    log.info("收到消息：  {}", in);
-                    try {
-                        rabbitMQService.createTopic(in);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                })
-                .map(in -> "发送的消息：" + in);
-    }
 }
 

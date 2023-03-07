@@ -1,5 +1,8 @@
 package cn.edu.zut.mfs.domain
 
+import lombok.Data
+
+@Data
 class BindingMessage {
     private var action = "CreateBinding"//DeleteBinding
     private var bindingKey = ""//绑定键

@@ -1,5 +1,8 @@
 package cn.edu.zut.mfs.domain
 
+import lombok.Data
+
+@Data
 class ExchangeMessage {
     private var action = "CreateExchange"//DeleteExchange
     private var autoDeleteState = false

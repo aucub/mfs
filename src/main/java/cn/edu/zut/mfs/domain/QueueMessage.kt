@@ -1,5 +1,8 @@
 package cn.edu.zut.mfs.domain
 
+import lombok.Data
+
+@Data
 class QueueMessage {
     private var action: String? = null//DeleteQueue
     private var queueName: String? = null
