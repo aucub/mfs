@@ -15,7 +15,7 @@ import java.util.UUID;
 public class PublishStreamServiceImpl implements PublishStreamService {
     private static String stream = UUID.randomUUID().toString();
     private static Environment env = Environment.builder()
-            .uri("rabbitmq-stream://root:root@47.113.201.150:5552/mfs")
+            .uri("rabbitmq-stream://root:root@47.113.201.150:5552/%2fmfs")
             .build();
 
     private RabbitStreamTemplate rabbitStreamTemplate;
