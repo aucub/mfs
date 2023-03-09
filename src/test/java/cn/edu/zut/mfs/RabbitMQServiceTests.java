@@ -2,8 +2,8 @@ package cn.edu.zut.mfs;
 
 import cn.edu.zut.mfs.domain.ForwardMessage;
 import cn.edu.zut.mfs.service.ConsumeService;
-import cn.edu.zut.mfs.service.PublishStreamService;
 import cn.edu.zut.mfs.service.impl.PublishServiceImpl;
+import cn.edu.zut.mfs.service.impl.PublishStreamServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,7 +16,7 @@ public class RabbitMQServiceTests {
     @Autowired
     ConsumeService consumeService;
     @Autowired
-    PublishStreamService publishStreamService;
+    PublishStreamServiceImpl publishStreamService;
 
     @Test
     public void test1() {
@@ -31,5 +31,10 @@ public class RabbitMQServiceTests {
     @Test
     public void test3() {
         publishStreamService.publish(forwardMessage);
+    }
+
+    @Test
+    public void test4() {
+        publishStreamService.consume();
     }
 }
