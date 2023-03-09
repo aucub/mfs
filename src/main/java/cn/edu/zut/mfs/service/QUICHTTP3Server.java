@@ -7,7 +7,6 @@ import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.nio.NioDatagramChannel;
 import io.netty.handler.ssl.util.SelfSignedCertificate;
 import io.netty.incubator.codec.http3.*;
 import io.netty.incubator.codec.quic.*;
@@ -15,7 +14,6 @@ import io.netty.util.CharsetUtil;
 import io.netty.util.ReferenceCountUtil;
 import lombok.extern.slf4j.Slf4j;
 
-import java.net.InetSocketAddress;
 import java.security.cert.CertificateException;
 import java.util.concurrent.TimeUnit;
 
@@ -91,7 +89,7 @@ public class QUICHTTP3Server {
     }
 
     public static void Server() {
-        try {
+        /*try {
             channel = bs.group(group)
                     .channel(NioDatagramChannel.class)
                     .handler(codec)
@@ -99,7 +97,7 @@ public class QUICHTTP3Server {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        log.info("Netty QUIC HTTP3 started on port(s): " + port);
+        log.info("Netty QUIC HTTP3 started on port(s): " + port);*/
     }
 
     public static void closeServer() {

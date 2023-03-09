@@ -1,40 +1,39 @@
 package cn.edu.zut.mfs.service;
 
-import com.rabbitmq.stream.OffsetSpecification;
-import org.springframework.amqp.rabbit.listener.RabbitListenerContainerFactory;
-import org.springframework.context.annotation.Bean;
-import org.springframework.core.env.Environment;
-import org.springframework.rabbit.stream.config.StreamRabbitListenerContainerFactory;
-import org.springframework.rabbit.stream.listener.StreamListenerContainer;
-import org.springframework.rabbit.stream.producer.RabbitStreamTemplate;
-import org.springframework.rabbit.stream.retry.StreamRetryOperationsInterceptorFactoryBean;
-import org.springframework.retry.support.RetryTemplate;
-
 public class RabbitMQStreamService {
+    /*private static String stream = UUID.randomUUID().toString();
+    private static Environment env = Environment.builder()
+            .uri("rabbitmq-stream://root:root@47.113.201.150:5552/mfs")
+            .build();
     @Bean
-    RabbitStreamTemplate streamTemplate(Environment env) {
-        RabbitStreamTemplate template = new RabbitStreamTemplate((com.rabbitmq.stream.Environment) env, "mfs");
-        template.setProducerCustomizer((name, builder) -> builder.name("test"));
+    RabbitStreamTemplate streamTemplate() {
+        env.streamCreator()
+                .stream(stream)
+                .maxLengthBytes(ByteCapacity.GB(1))
+                .maxSegmentSizeBytes(ByteCapacity.MB(50))
+                .create();
+        RabbitStreamTemplate template = new RabbitStreamTemplate(env, stream);
+        template.setProducerCustomizer((name, builder) -> builder.name("Producer"));
         return template;
     }
 
     @Bean
-    RabbitListenerContainerFactory<StreamListenerContainer> rabbitListenerContainerFactory(Environment env) {
-        return new StreamRabbitListenerContainerFactory((com.rabbitmq.stream.Environment) env);
+    RabbitListenerContainerFactory<StreamListenerContainer> rabbitListenerContainerFactory() {
+        return new StreamRabbitListenerContainerFactory(env);
     }
 
 
     @Bean
-    RabbitListenerContainerFactory<StreamListenerContainer> nativeFactory(Environment env) {
-        StreamRabbitListenerContainerFactory factory = new StreamRabbitListenerContainerFactory((com.rabbitmq.stream.Environment) env);
+    RabbitListenerContainerFactory<StreamListenerContainer> nativeFactory() {
+        StreamRabbitListenerContainerFactory factory = new StreamRabbitListenerContainerFactory(env);
         factory.setNativeListener(true);
-        factory.setConsumerCustomizer((id, builder) -> builder.name("myConsumer")
+        factory.setConsumerCustomizer((id, builder) -> builder.name("Consumer")
                 .offset(OffsetSpecification.first())
                 .manualTrackingStrategy());
         return factory;
-    }
+    }*/
 
-    @Bean
+   /* @Bean
     public StreamRetryOperationsInterceptorFactoryBean sfb(RetryTemplate retryTemplate) {
         StreamRetryOperationsInterceptorFactoryBean rfb =
                 new StreamRetryOperationsInterceptorFactoryBean();
@@ -42,6 +41,6 @@ public class RabbitMQStreamService {
         rfb.setStreamMessageRecoverer((msg, context, throwable) -> {
         });
         return rfb;
-    }
+    }*/
 
 }

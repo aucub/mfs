@@ -2,7 +2,6 @@ package cn.edu.zut.mfs.service.impl;
 
 import cn.edu.zut.mfs.service.ConsumeService;
 import org.springframework.amqp.core.Message;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,7 +28,7 @@ public class ConsumeServiceImpl implements ConsumeService {
 
     }
 
-    @RabbitListener(queues = "test")
+    //@RabbitListener(queues = "test")
     public void consumerBatch2(List<Message> messages) {
 
     }

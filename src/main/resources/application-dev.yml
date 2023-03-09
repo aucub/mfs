@@ -37,6 +37,12 @@ spring:
       channel:
         size: 1
         checkout-timeout: 1
+    stream:
+      host: 47.113.201.150
+      port: 5552
+      username: root
+      password: root
+      name: mfs
   data:
     redis:
       host: localhost
