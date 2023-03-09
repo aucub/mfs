@@ -22,6 +22,7 @@ public class PublishServiceImpl implements PublishService {
         rabbitTemplate.setUsePublisherConnection(true);
     }
 
+    @Override
     @SneakyThrows
     public void publish(ForwardMessage forwardMessage) {
         Boolean result = rabbitTemplate.invoke(t -> {

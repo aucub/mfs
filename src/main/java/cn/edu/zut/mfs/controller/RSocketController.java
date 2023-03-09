@@ -25,9 +25,9 @@ import java.util.Objects;
 @RestController
 @MessageMapping("rSocket")
 public class RSocketController {
+    private final HashMap<RSocketRequester, String> clients = new HashMap<>();
     private PublishService publishService;
     private ConsumeService consumeService;
-    private final HashMap<RSocketRequester, String> clients = new HashMap<>();
 
     @Autowired
     public void setPublishService(PublishService publishService) {

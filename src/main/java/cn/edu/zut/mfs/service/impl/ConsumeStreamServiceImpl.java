@@ -1,14 +1,16 @@
 package cn.edu.zut.mfs.service.impl;
 
-import cn.edu.zut.mfs.domain.ForwardMessage;
-import cn.edu.zut.mfs.service.PublishStreamService;
+import cn.edu.zut.mfs.service.ConsumeStreamService;
+import com.rabbitmq.stream.MessageHandler;
 import org.springframework.amqp.core.Message;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.rabbit.stream.producer.RabbitStreamTemplate;
 import org.springframework.stereotype.Service;
 
+
 @Service
-public class PublishStreamServiceImpl implements PublishStreamService {
+public class ConsumeStreamServiceImpl implements ConsumeStreamService {
     private RabbitStreamTemplate rabbitStreamTemplate;
 
     @Autowired
@@ -17,7 +19,9 @@ public class PublishStreamServiceImpl implements PublishStreamService {
     }
 
     @Override
-    public void publish(ForwardMessage forwardMessage) {
-        rabbitStreamTemplate.send(new Message(forwardMessage.getBody()));
+    @RabbitListener(queues = "mfs", containerFactory = "nativeFactory")
+    public void consumer(Message in, MessageHandler.Context context) {
+        in.getBody();
+        context.storeOffset();
     }
 }
