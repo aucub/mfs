@@ -1,20 +1,18 @@
 package cn.edu.zut.mfs.controller;
 
-import cn.edu.zut.mfs.RabbitMQ.RabbitMQStream;
 import cn.edu.zut.mfs.domain.Message;
-import com.rabbitmq.client.Delivery;
+import cn.edu.zut.mfs.pojo.BaseResponse;
+import cn.edu.zut.mfs.service.ConsumeService;
+import cn.edu.zut.mfs.service.PublishService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.BeforeAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.rsocket.RSocketRequester;
 import org.springframework.messaging.rsocket.annotation.ConnectMapping;
 import org.springframework.web.bind.annotation.RestController;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -27,21 +25,18 @@ import java.util.Objects;
 @RestController
 @MessageMapping("rSocket")
 public class RSocketController {
+    private PublishService publishService;
+    private ConsumeService consumeService;
     private final HashMap<RSocketRequester, String> clients = new HashMap<>();
-    private static RabbitMQStream rabbitMQStream;
 
-    @BeforeAll
-    public static void startConsume() {
-        try {
-            rabbitMQStream.consume();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+    @Autowired
+    public void setPublishService(PublishService publishService) {
+        this.publishService = publishService;
     }
 
     @Autowired
-    public void setRabbitMQStream(RabbitMQStream rabbitMQStream) {
-        this.rabbitMQStream = rabbitMQStream;
+    public void setConsumeService(ConsumeService consumeService) {
+        this.consumeService = consumeService;
     }
 
     @Operation(summary = "客户端连接")
@@ -65,27 +60,17 @@ public class RSocketController {
 
     @Operation(summary = "生产")
     @MessageMapping("publish")
-    public Mono<Long> publish(Message message) {
+    public BaseResponse<String> publish(Message message) {
         log.info("收到生产请求");
-        try {
-            rabbitMQStream.publish(message);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        return null;
+        publishService.publish(message);
+        return BaseResponse.success("");
     }
 
     @Operation(summary = "消费")
     @MessageMapping("consume")
-    public Flux<Delivery> consume() {
+    public String consume(String consumer) {
         log.info("收到流请求");
-        return null;
-        /*return Flux
-                // 创建一个新的索引 Flux 每秒发射一个元素
-                .interval(Duration.ofSeconds(1))
-                // 使用索引的 Flux 创建新消息的 Flux
-                .map(index -> "test" + index);
-*/
+        return consumeService.consume(consumer);
     }
 
 }

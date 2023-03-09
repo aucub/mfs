@@ -6,8 +6,6 @@ logging:
     root: info
 
 spring:
-  webflux:
-    base-path:
   main:
     web-application-type: reactive
     lazy-initialization: true
