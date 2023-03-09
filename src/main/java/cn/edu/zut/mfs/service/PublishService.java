@@ -1,8 +1,8 @@
 package cn.edu.zut.mfs.service;
 
 
-import cn.edu.zut.mfs.domain.Message;
+import cn.edu.zut.mfs.domain.ForwardMessage;
 
 public interface PublishService {
-    void publish(Message message);
+    void publish(ForwardMessage forwardMessage);
 }

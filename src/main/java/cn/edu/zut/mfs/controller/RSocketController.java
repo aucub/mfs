@@ -1,6 +1,6 @@
 package cn.edu.zut.mfs.controller;
 
-import cn.edu.zut.mfs.domain.Message;
+import cn.edu.zut.mfs.domain.ForwardMessage;
 import cn.edu.zut.mfs.pojo.BaseResponse;
 import cn.edu.zut.mfs.service.ConsumeService;
 import cn.edu.zut.mfs.service.PublishService;
@@ -60,9 +60,9 @@ public class RSocketController {
 
     @Operation(summary = "生产")
     @MessageMapping("publish")
-    public BaseResponse<String> publish(Message message) {
+    public BaseResponse<String> publish(ForwardMessage forwardMessage) {
         log.info("收到生产请求");
-        publishService.publish(message);
+        publishService.publish(forwardMessage);
         return BaseResponse.success("");
     }
 

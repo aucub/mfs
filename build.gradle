@@ -26,6 +26,7 @@ ext {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-amqp'
+    implementation 'org.springframework.amqp:spring-rabbit'
     implementation 'org.springframework.boot:spring-boot-starter-integration'
     //implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.integration:spring-integration-amqp'
@@ -37,6 +38,10 @@ dependencies {
     implementation 'com.baomidou:mybatis-plus:3.5.3.1'
     implementation 'com.baomidou:mybatis-plus-extension:3.5.3.1'
     implementation 'org.springframework.boot:spring-boot-starter-rsocket:3.0.2'
+    implementation 'com.rabbitmq:http-client:5.0.0'
+    implementation 'org.springframework.boot:spring-boot-starter-reactor-netty:3.0.2'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.2'
+    implementation 'org.springframework.amqp:spring-rabbit-stream'
     // knife4j
     implementation 'com.github.xiaoymin:knife4j-openapi3-jakarta-spring-boot-starter:4.0.0'
     // Sa-Token 权限认证
@@ -52,16 +57,13 @@ dependencies {
     implementation 'org.mockito:mockito-core:5.1.1'
     implementation 'com.redis.om:redis-om-spring:0.6.4'
     implementation 'com.google.errorprone:error_prone_annotations:2.18.0'
-    // https://mvnrepository.com/artifact/io.netty.incubator/netty-incubator-codec-parent-quic
     implementation 'io.netty.incubator:netty-incubator-codec-parent-quic:0.0.37.Final'
-    // https://mvnrepository.com/artifact/io.netty.incubator/netty-incubator-codec-quic
     implementation 'io.netty.incubator:netty-incubator-codec-native-quic:0.0.36.Final'
-    // https://mvnrepository.com/artifact/io.netty.incubator/netty-incubator-codec-http3
     implementation 'io.netty.incubator:netty-incubator-codec-http3:0.0.16.Final'
-    // https://mvnrepository.com/artifact/org.bouncycastle/bcpkix-jdk15on
     implementation 'org.bouncycastle:bcpkix-jdk15on:1.70'
     // implementation 'org.springframework.security:spring-security-rsocket:6.0.1'
     // implementation 'org.springframework.security:spring-security-messaging:6.0.1'
+    implementation 'org.springframework.integration:spring-integration-mqtt:6.0.3'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'com.mysql:mysql-connector-j'

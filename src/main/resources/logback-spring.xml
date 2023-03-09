@@ -68,7 +68,22 @@
             <charset>UTF-8</charset> <!-- 此处设置字符集 -->
         </encoder>
     </appender>
-
+    <appender name="AMQP" class="org.springframework.amqp.rabbit.logback.AmqpAppender">
+        <layout>
+            <pattern><![CDATA[ %d %p %t [%c] - <%m>%n ]]></pattern>
+        </layout>
+        <addresses>47.113.201.150:5672</addresses>
+        <abbreviation>36</abbreviation>
+        <includeCallerData>false</includeCallerData>
+        <applicationId>mfs</applicationId>
+        <routingKeyPattern>%property{applicationId}.%c.%p</routingKeyPattern>
+        <generateId>true</generateId>
+        <charset>UTF-8</charset>
+        <durable>false</durable>
+        <deliveryMode>NON_PERSISTENT</deliveryMode>
+        <declareExchange>true</declareExchange>
+        <addMdcAsHeaders>false</addMdcAsHeaders>
+    </appender>
     <root level="info">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="FILE_INFO"/>

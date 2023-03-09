@@ -26,6 +26,17 @@ spring:
     virtual-host: /mfs
     username: root
     password: root
+    listener:
+      direct: # usePublisherConnection
+        retry:
+          enabled: true
+          initial-interval: 500
+          multiplier: 10.0
+          max-interval: 10000
+    cache:
+      channel:
+        size: 1
+        checkout-timeout: 1
   data:
     redis:
       host: localhost
