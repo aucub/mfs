@@ -5,6 +5,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Objects;
 
 @Service
@@ -17,6 +18,11 @@ public class ConsumeServiceImpl implements ConsumeService {
     }
 
     public String consume(String consumer) {
-        return Objects.requireNonNull(rabbitTemplate.receive(consumer)).toString();
+        try {
+            return new String(Objects.requireNonNull(rabbitTemplate.receive(consumer)).getBody(), "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }
