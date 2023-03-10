@@ -34,4 +34,4 @@ jobs:
         uses: gradle/gradle-build-action@v2.4.0
 
       - name: Execute Gradle build
-        run: ./gradlew build bootBuildImage --imageName=mfs:latest --publishImage
+        run: ./gradlew build bootBuildImage --imageName=mfs:latest --publishImage --docker.publishRegistry.username=${{ secrets.DOCKERHUB_USERNAME }} --docker.publishRegistry.password=${{ secrets.DOCKERHUB_TOKEN }}
