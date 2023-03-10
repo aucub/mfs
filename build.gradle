@@ -84,7 +84,8 @@ tasks.named('test') {
 tasks.named("bootBuildImage") {
     docker {
         publishRegistry {
-            token = "dckr_pat_BlI83RwNNnRZ4zWzvbzOO6yVfj8"
+            username = "azumide"
+            password = "T6c:U-u4_eC6G7W"
         }
     }
 }
