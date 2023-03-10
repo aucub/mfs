@@ -18,13 +18,13 @@ import java.util.HashMap;
 import java.util.Objects;
 
 /**
- * RSocket
+ * 消息处理
  */
-@Tag(name = "RSocket")
+@Tag(name = "消息处理")
 @Slf4j
 @RestController
-@MessageMapping("rSocket")
-public class RSocketController {
+@MessageMapping("Message")
+public class MessageController {
     private final HashMap<RSocketRequester, String> clients = new HashMap<>();
     private PublishService publishService;
     private ConsumeService consumeService;
@@ -63,7 +63,7 @@ public class RSocketController {
     public BaseResponse<String> publish(ForwardMessage forwardMessage) {
         log.info("收到生产请求");
         publishService.publish(forwardMessage);
-        return BaseResponse.success("");
+        return BaseResponse.success("success");
     }
 
     @Operation(summary = "消费")

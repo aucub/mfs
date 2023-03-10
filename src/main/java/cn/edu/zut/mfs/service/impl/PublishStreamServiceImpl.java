@@ -3,11 +3,10 @@ package cn.edu.zut.mfs.service.impl;
 import cn.edu.zut.mfs.domain.ForwardMessage;
 import com.rabbitmq.stream.*;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.BeforeAll;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.rabbit.stream.producer.RabbitStreamTemplate;
+import org.springframework.rabbit.stream.support.StreamMessageProperties;
 import org.springframework.stereotype.Service;
-
-import java.util.UUID;
 
 @Slf4j
 @Service
@@ -19,9 +18,7 @@ public class PublishStreamServiceImpl {
     private static Producer producer;
     private static RabbitStreamTemplate rabbitStreamTemplate = new RabbitStreamTemplate(env, "mfs");
 
-    @BeforeAll
-    public static void init() {
-        rabbitStreamTemplate.setProducerCustomizer((name, builder) -> builder.name("test"));
+    public PublishStreamServiceImpl() {
         env.streamCreator()
                 .stream(stream)
                 .maxLengthBytes(ByteCapacity.GB(5))
@@ -30,22 +27,14 @@ public class PublishStreamServiceImpl {
     }
 
     public void publish(ForwardMessage forwardMessage) {
-        producer = env.producerBuilder()
+        rabbitStreamTemplate.setProducerCustomizer((name, builder) -> builder.name("test"));
+        env.streamCreator()
                 .stream(stream)
-                .name("mfs")
-                .build();
-        long nextPublishingId = producer.getLastPublishingId() + 1;
-        Message message = producer.messageBuilder()
-                .properties()
-                .messageId(UUID.randomUUID())
-                .correlationId(UUID.randomUUID())
-                .contentType("text/plain")
-                .messageBuilder()
-                .addData(forwardMessage.getBody())
-                .build();
-        producer.send(message, confirmationStatus -> {
-        });
-
+                .maxLengthBytes(ByteCapacity.GB(5))
+                .maxSegmentSizeBytes(ByteCapacity.MB(100))
+                .create();
+        StreamMessageProperties streamMessageProperties = new StreamMessageProperties();
+        rabbitStreamTemplate.send(new org.springframework.amqp.core.Message(forwardMessage.getBody(), streamMessageProperties));
     }
 
     public void consume() {
@@ -60,5 +49,10 @@ public class PublishStreamServiceImpl {
                             System.out.println(message.getBody());
                         })
                         .build();
+    }
+
+    @RabbitListener(id = "mfs", queues = "mfs", containerFactory = "nativeFactory")
+    public void nativeMsg(String in) {
+        log.info(in.toString());
     }
 }
