@@ -10,7 +10,7 @@ spring:
     server:
       address: 0.0.0.0
       port: 9898
-      mapping-path: /rsocket
+      mapping-path: /rsocket/
       transport: websocket
   main:
     web-application-type: reactive
@@ -26,6 +26,23 @@ spring:
     virtual-host: /mfs
     username: root
     password: root
+    listener:
+      direct:
+        retry:
+          enabled: true
+          initial-interval: 500
+          multiplier: 10.0
+          max-interval: 10000
+    cache:
+      channel:
+        size: 1
+        checkout-timeout: 1
+    stream:
+      host: 47.113.201.150
+      port: 5552
+      username: root
+      password: root
+      name: mfs
   data:
     redis:
       host: 47.113.201.150
@@ -46,6 +63,14 @@ spring:
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
+
+  dynamic:
+    tp:
+      enabled: true
+      enabledCollect: true                    # 是否开启监控指标采集，默认false
+      collectorTypes: micrometer,logging      # 监控数据采集器类型（logging | micrometer | internal_logging），默认micrometer
+      logPath: /home/logs                     # 监控日志数据路径，默认 ${user.home}/logs，采集类型非logging不用配置
+      monitorInterval: 5
 
 mybatis-plus:
   configuration:

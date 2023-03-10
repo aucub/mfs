@@ -19,6 +19,7 @@ public class ConsumeServiceImpl implements ConsumeService {
         this.rabbitTemplate = rabbitTemplate;
     }
 
+    @Override
     public String consume(String consumer) {
         try {
             return new String(Objects.requireNonNull(rabbitTemplate.receive(consumer)).getBody(), "utf-8");
