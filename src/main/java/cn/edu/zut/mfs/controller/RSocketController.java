@@ -68,9 +68,9 @@ public class RSocketController {
 
     @Operation(summary = "消费")
     @MessageMapping("consume")
-    public String consume(String consumer) {
+    public BaseResponse<String> consume(String consumer) {
         log.info("收到流请求");
-        return consumeService.consume(consumer);
+        return BaseResponse.success(consumeService.consume(consumer));
     }
 
 }

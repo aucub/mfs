@@ -7,30 +7,30 @@ import org.junit.jupiter.api.BeforeAll;
 import org.springframework.rabbit.stream.producer.RabbitStreamTemplate;
 import org.springframework.stereotype.Service;
 
-import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 @Slf4j
 @Service
 public class PublishStreamServiceImpl {
-    private final static String stream = "kkkk";
+    private final static String stream = "mfs";
     private static Environment env = Environment.builder()
             .uri("rabbitmq-stream://root:root@47.113.201.150:5552/%2fmfs")
             .build();
+    private static Producer producer;
     private static RabbitStreamTemplate rabbitStreamTemplate = new RabbitStreamTemplate(env, "mfs");
 
     @BeforeAll
-    public void init() {
+    public static void init() {
         rabbitStreamTemplate.setProducerCustomizer((name, builder) -> builder.name("test"));
-    }
-
-    public void publish(ForwardMessage forwardMessage) {
-        /*env.streamCreator()
+        env.streamCreator()
                 .stream(stream)
                 .maxLengthBytes(ByteCapacity.GB(5))
                 .maxSegmentSizeBytes(ByteCapacity.MB(100))
-                .create();*/
-        Producer producer = env.producerBuilder()
+                .create();
+    }
+
+    public void publish(ForwardMessage forwardMessage) {
+        producer = env.producerBuilder()
                 .stream(stream)
                 .name("mfs")
                 .build();
@@ -41,7 +41,7 @@ public class PublishStreamServiceImpl {
                 .correlationId(UUID.randomUUID())
                 .contentType("text/plain")
                 .messageBuilder()
-                .addData("hello".getBytes(StandardCharsets.UTF_8))
+                .addData(forwardMessage.getBody())
                 .build();
         producer.send(message, confirmationStatus -> {
         });
@@ -57,7 +57,6 @@ public class PublishStreamServiceImpl {
                         .autoTrackingStrategy()
                         .builder()
                         .messageHandler((context, message) -> {
-                            // message handling code...
                             System.out.println(message.getBody());
                         })
                         .build();
