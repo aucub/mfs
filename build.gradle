@@ -85,6 +85,7 @@ tasks.named("bootBuildImage") {
     docker {
         publishRegistry {
             token = "dckr_pat_BlI83RwNNnRZ4zWzvbzOO6yVfj8"
+            url = "https://hub.docker.com/azumide/"
         }
     }
 }
