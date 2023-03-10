@@ -34,4 +34,4 @@ jobs:
         uses: gradle/gradle-build-action@v2.4.0
 
       - name: Execute Gradle build
-        run: ./gradlew build bootBuildImage --imageName=hub.docker.com/azumide/mfs:latest --publishImage
+        run: ./gradlew build bootBuildImage --imageName=index.docker.io/v1/azumide/mfs:latest --publishImage
