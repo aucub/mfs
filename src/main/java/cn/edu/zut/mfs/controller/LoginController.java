@@ -7,6 +7,8 @@ import cn.edu.zut.mfs.service.LoginAuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,7 +23,7 @@ public class LoginController {
     LoginAuthService loginAuthService;
 
     @Operation(summary = "登录")
-    @RequestMapping("doLogin")
+    @PostMapping("doLogin")
     public BaseResponse<String> doLogin(String username, String password) {
         if (loginAuthService.login(username, password)) {
             // 先检查此账号是否已被封禁
@@ -36,7 +38,7 @@ public class LoginController {
     }
 
     @Operation(summary = "记住我登录")
-    @RequestMapping("doLogin1")
+    @PostMapping("doLogin1")
     public BaseResponse<String> doLogin1(String username, String password) {
         if (loginAuthService.login(username, password)) {
             StpUtil.checkDisable(username);
@@ -49,7 +51,7 @@ public class LoginController {
     }
 
     @Operation(summary = "不记住我登录")
-    @RequestMapping("doLogin2")
+    @PostMapping("doLogin2")
     public BaseResponse<String> doLogin2(String username, String password) {
         if (loginAuthService.login(username, password)) {
             StpUtil.checkDisable(username);
@@ -62,7 +64,7 @@ public class LoginController {
     }
 
     @Operation(summary = "七天免登录")
-    @RequestMapping("doLogin3")
+    @PostMapping("doLogin3")
     public BaseResponse<String> doLogin3(String username, String password) {
         if (loginAuthService.login(username, password)) {
             StpUtil.checkDisable(username);
@@ -76,7 +78,7 @@ public class LoginController {
 
 
     @Operation(summary = "查询登录状态")
-    @RequestMapping("isLogin")
+    @GetMapping("isLogin")
     public BaseResponse<String> isLogin() {
         // StpUtil.isLogin() 查询当前客户端是否登录，返回 true 或 false
         boolean isLogin = StpUtil.isLogin();
@@ -84,7 +86,7 @@ public class LoginController {
     }
 
     @Operation(summary = "注销登录")
-    @RequestMapping("logout")
+    @GetMapping("logout")
     public BaseResponse<String> logout() {
         // 退出登录会清除三个地方的数据：
         // 		1、Redis中保存的 Token 信息
@@ -98,7 +100,7 @@ public class LoginController {
     }
 
     @Operation(summary = "检验当前会话是否已经登录")
-    @RequestMapping("checkLogin")
+    @GetMapping("checkLogin")
     public BaseResponse<String> checkLogin() {
         // 检验当前会话是否已经登录, 如果未登录，则抛出异常：`NotLoginException`
         StpUtil.checkLogin();
@@ -107,7 +109,7 @@ public class LoginController {
     }
 
     @Operation(summary = "获取当前会话id")
-    @RequestMapping("getLoginIdAsString")
+    @GetMapping("getLoginIdAsString")
     public BaseResponse<String> getLoginIdAsString() {
         // 获取当前会话账号id, 如果未登录，则抛出异常：`NotLoginException`
         String username = StpUtil.getLoginIdAsString();

@@ -6,6 +6,7 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.edu.zut.mfs.pojo.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,7 +23,7 @@ public class SearchSessionController {
 
     @Operation(summary = "会话查询接口----根据分页参数获取会话列表")
     @SaCheckPermission("admin:getList")
-    @RequestMapping("getList")
+    @PostMapping("getList")
     public BaseResponse<List<SaSession>> getList(int start, int size) {
         // 创建集合
         List<SaSession> sessionList = new ArrayList<>();

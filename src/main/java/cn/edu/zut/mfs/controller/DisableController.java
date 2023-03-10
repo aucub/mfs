@@ -5,6 +5,7 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.edu.zut.mfs.pojo.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,7 +20,7 @@ public class DisableController {
 
     @Operation(summary = "封禁指定账号")
     @SaCheckPermission("user:disable")
-    @RequestMapping("disable")
+    @PostMapping("disable")
     public BaseResponse<String> disable(long userId) {
         /*
          * 账号封禁：
@@ -32,7 +33,7 @@ public class DisableController {
 
     @Operation(summary = "解封指定账号")
     @SaCheckPermission("user:untieDisable")
-    @RequestMapping("untieDisable")
+    @PostMapping("untieDisable")
     public BaseResponse<String> untieDisable(long userId) {
         StpUtil.untieDisable(userId);
         return BaseResponse.success("账号 " + userId + " 解封成功");
