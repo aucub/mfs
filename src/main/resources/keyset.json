@@ -1,0 +1,14 @@
+{
+  "encryptedKeyset": "ARqU3sOHqGUs1XZIz7kXrRU1eI3V4bpDcut4VFWpprmwyLKE33DF7UI6K/dxBdThcSbN1Ev95CPA6iRQioJ8W4a3AbMz4ggfT4Lvb2a3PxzTPtLYexgIJML6MHxqU2REnCQihsP8VS9DOV9Q5JrOltQCabdJvvK6bHltOTc=",
+  "keysetInfo": {
+    "primaryKeyId": 445963971,
+    "keyInfo": [
+      {
+        "typeUrl": "type.googleapis.com/google.crypto.tink.AesGcmKey",
+        "status": "ENABLED",
+        "keyId": 445963971,
+        "outputPrefixType": "TINK"
+      }
+    ]
+  }
+}
