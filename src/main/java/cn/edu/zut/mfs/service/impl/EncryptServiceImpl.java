@@ -32,7 +32,7 @@ public class EncryptServiceImpl implements EncryptService {
     }
 
     @Override
-    public String getLoginPublicKey() {
+    public String getPublicKey() {
         ECIES ecies = new ECIES();
         String publicKey = ecies.getPublicKeyBase64();
         String privateKey = ecies.getPrivateKeyBase64();

@@ -33,10 +33,10 @@ public class RegisterController {
         this.encryptService = encryptService;
     }
 
-    @Operation(summary = "获取登录公钥")
-    @GetMapping("getLoginPublicKey")
-    public BaseResponse<String> getLoginPublicKey() {
-        return BaseResponse.success(encryptService.getLoginPublicKey());
+    @Operation(summary = "获取公钥")
+    @GetMapping("getPublicKey")
+    public BaseResponse<String> getPublicKey() {
+        return BaseResponse.success(encryptService.getPublicKey());
     }
 
     @Operation(summary = "用户注册")

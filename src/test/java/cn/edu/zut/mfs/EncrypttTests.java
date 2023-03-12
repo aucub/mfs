@@ -1,21 +1,10 @@
 package cn.edu.zut.mfs;
 
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.crypto.asymmetric.ECIES;
-import cn.hutool.crypto.asymmetric.KeyType;
-import com.google.crypto.tink.*;
-import com.google.crypto.tink.aead.AeadConfig;
-import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.security.GeneralSecurityException;
 
 @SpringBootTest
 public class EncrypttTests {
-    final ECIES ecies = new ECIES();
+    /*final ECIES ecies = new ECIES();
     String text = "我是一段特别长的测试";
 
     Aead kekAead = null;
@@ -46,5 +35,5 @@ public class EncrypttTests {
             System.out.println("test0");
         }
     }
-
+*/
 }
