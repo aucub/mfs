@@ -3,6 +3,7 @@ package cn.edu.zut.mfs.controller;
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.edu.zut.mfs.pojo.BaseResponse;
+import cn.edu.zut.mfs.service.EncryptService;
 import cn.edu.zut.mfs.service.LoginAuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,9 +23,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginController {
     LoginAuthService loginAuthService;
 
+    EncryptService encryptService;
+
+    @Operation(summary = "获取登录公钥")
+    @GetMapping("getLoginPublicKey")
+    public BaseResponse<String> getLoginPublicKey() {
+        return BaseResponse.success(encryptService.getLoginPublicKey());
+    }
+
     @Operation(summary = "登录")
     @PostMapping("doLogin")
-    public BaseResponse<String> doLogin(String username, String password) {
+    public BaseResponse<String> doLogin(String username, String publicKey, String password) {
+        password = encryptService.transformer(username, publicKey, password);
         if (loginAuthService.login(username, password)) {
             // 先检查此账号是否已被封禁
             StpUtil.checkDisable(username);
@@ -39,7 +49,8 @@ public class LoginController {
 
     @Operation(summary = "记住我登录")
     @PostMapping("doLogin1")
-    public BaseResponse<String> doLogin1(String username, String password) {
+    public BaseResponse<String> doLogin1(String username, String publicKey, String password) {
+        password = encryptService.transformer(username, publicKey, password);
         if (loginAuthService.login(username, password)) {
             StpUtil.checkDisable(username);
             StpUtil.login(username, true);
@@ -52,7 +63,8 @@ public class LoginController {
 
     @Operation(summary = "不记住我登录")
     @PostMapping("doLogin2")
-    public BaseResponse<String> doLogin2(String username, String password) {
+    public BaseResponse<String> doLogin2(String username, String publicKey, String password) {
+        password = encryptService.transformer(username, publicKey, password);
         if (loginAuthService.login(username, password)) {
             StpUtil.checkDisable(username);
             StpUtil.login(username, false);
@@ -65,7 +77,8 @@ public class LoginController {
 
     @Operation(summary = "七天免登录")
     @PostMapping("doLogin3")
-    public BaseResponse<String> doLogin3(String username, String password) {
+    public BaseResponse<String> doLogin3(String username, String publicKey, String password) {
+        password = encryptService.transformer(username, publicKey, password);
         if (loginAuthService.login(username, password)) {
             StpUtil.checkDisable(username);
             StpUtil.login(username, 60 * 60 * 24 * 7);
