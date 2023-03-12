@@ -28,6 +28,11 @@ public class RegisterController {
         this.registerService = registerService;
     }
 
+    @Autowired
+    public void setEncryptService(EncryptService encryptService) {
+        this.encryptService = encryptService;
+    }
+
     @Operation(summary = "获取登录公钥")
     @GetMapping("getLoginPublicKey")
     public BaseResponse<String> getLoginPublicKey() {
