@@ -1,7 +1,9 @@
 package cn.edu.zut.mfs;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.test.context.SpringBootTest;
 
+@Slf4j
 @SpringBootTest
 public class EncrypttTests {
     /*final ECIES ecies = new ECIES();
@@ -22,18 +24,19 @@ public class EncrypttTests {
     @Test
     public void test1() {
         try {
-            AeadConfig.register();
-            KeysetHandle handle = KeysetHandle.generateNew(KeyTemplates.get("AES128_GCM"));
-            kekAead = handle.getPrimitive(Aead.class);
-            handle.write(JsonKeysetWriter.withOutputStream(new FileOutputStream("./src/main/resources/keyset.json")), kekAead);
-            handle = KeysetHandle.read(JsonKeysetReader.withInputStream(new FileInputStream("./src/main/resources/keyset.json")), kekAead);
-            kekAead = handle.getPrimitive(Aead.class);
-            byte[] ciphertext = kekAead.encrypt("test".getBytes(), "one".getBytes());
-            byte[] plaintext = kekAead.decrypt(ciphertext, "one".getBytes());
+            TinkConfig.register();
+            KeysetHandle privateKeysetHandle = KeysetHandle.generateNew(KeyTemplates.get("ECIES_P256_COMPRESSED_HKDF_HMAC_SHA256_AES128_GCM"));
+            CleartextKeysetHandle.write(privateKeysetHandle, JsonKeysetWriter.withFile(new File("./src/main/resources/privateKeyset.json")));
+            KeysetHandle publicKeysetHandle = privateKeysetHandle.getPublicKeysetHandle();
+            CleartextKeysetHandle.write(publicKeysetHandle, JsonKeysetWriter.withFile(new File("./src/main/resources/publicKeyset.json")));
+            HybridEncrypt hybridEncrypt = publicKeysetHandle.getPrimitive(HybridEncrypt.class);
+            byte[] ciphertext = hybridEncrypt.encrypt("test".getBytes(), "one".getBytes());
+            privateKeysetHandle = CleartextKeysetHandle.read(JsonKeysetReader.withFile(new File("./src/main/resources/privateKeyset.json")));
+            HybridDecrypt hybridDecrypt = privateKeysetHandle.getPrimitive(HybridDecrypt.class);
+            byte[] plaintext = hybridDecrypt.decrypt(ciphertext, "one".getBytes());
             System.out.println(new String(plaintext));
         } catch (GeneralSecurityException | IOException ex) {
             System.out.println("test0");
         }
-    }
-*/
+    }*/
 }

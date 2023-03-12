@@ -5,10 +5,12 @@ import cn.edu.zut.mfs.service.RedisService;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.asymmetric.ECIES;
 import cn.hutool.crypto.asymmetric.KeyType;
-import com.google.crypto.tink.Aead;
+import com.google.crypto.tink.CleartextKeysetHandle;
+import com.google.crypto.tink.HybridEncrypt;
 import com.google.crypto.tink.JsonKeysetReader;
 import com.google.crypto.tink.KeysetHandle;
-import com.google.crypto.tink.aead.AeadConfig;
+import com.google.crypto.tink.config.TinkConfig;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.FileInputStream;
@@ -17,18 +19,24 @@ import java.security.GeneralSecurityException;
 
 @Service
 public class EncryptServiceImpl implements EncryptService {
-    Aead kekAead = null;
-    KeysetHandle handle;
+    KeysetHandle publicKeysetHandle;
     RedisService redisService;
+    HybridEncrypt hybridEncrypt;
 
+    @Autowired
     public EncryptServiceImpl() {
         try {
-            AeadConfig.register();
-            handle = KeysetHandle.read(JsonKeysetReader.withInputStream(new FileInputStream("./src/main/resources/keyset.json")), kekAead);
-            kekAead = handle.getPrimitive(Aead.class);
+            TinkConfig.register();
+            publicKeysetHandle = CleartextKeysetHandle.read(JsonKeysetReader.withInputStream(new FileInputStream("./src/main/resources/publicKeyset.json")));
+            hybridEncrypt = publicKeysetHandle.getPrimitive(HybridEncrypt.class);
         } catch (GeneralSecurityException | IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Autowired
+    public void setRedisService(RedisService redisService) {
+        this.redisService = redisService;
     }
 
     @Override
@@ -46,7 +54,7 @@ public class EncryptServiceImpl implements EncryptService {
         ECIES ecies = new ECIES(privateKey, null);
         password = StrUtil.utf8Str(ecies.decrypt(password, KeyType.PrivateKey));
         try {
-            password = new String(kekAead.encrypt(password.getBytes(), username.getBytes()));
+            password = new String(hybridEncrypt.encrypt(password.getBytes(), username.getBytes()));
         } catch (GeneralSecurityException e) {
             throw new RuntimeException(e);
         }
