@@ -44,13 +44,13 @@ public class LoginController {
 
     @Operation(summary = "登录")
     @PostMapping("doLogin")
-    public BaseResponse<String> doLogin(String username, String publicKey, String password) {
-        password = encryptService.transformer(username, publicKey, password);
-        if (loginAuthService.login(username, password)) {
+    public BaseResponse<String> doLogin(String userName, String publicKey, String password) {
+        password = encryptService.transformer(userName, publicKey, password);
+        if (loginAuthService.login(userName, password)) {
             // 先检查此账号是否已被封禁
-            StpUtil.checkDisable(username);
-            StpUtil.login(username);
-            log.info(username + "登录成功");
+            StpUtil.checkDisable(userName);
+            StpUtil.login(userName);
+            log.info(userName + "登录成功");
             // 获取 Token  相关参数，这里需要把 Token 信息从响应体中返回到前端
             SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
             return BaseResponse.success("登录成功,token:" + tokenInfo);

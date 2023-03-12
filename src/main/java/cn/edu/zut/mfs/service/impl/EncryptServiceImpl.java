@@ -51,6 +51,7 @@ public class EncryptServiceImpl implements EncryptService {
     @Override
     public String transformer(String username, String publicKey, String password) {
         String privateKey = redisService.get(publicKey);
+        redisService.remove(publicKey);
         ECIES ecies = new ECIES(privateKey, null);
         password = StrUtil.utf8Str(ecies.decrypt(password, KeyType.PrivateKey));
         try {
