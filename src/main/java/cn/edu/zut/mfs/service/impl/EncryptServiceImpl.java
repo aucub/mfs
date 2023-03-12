@@ -11,9 +11,9 @@ import com.google.crypto.tink.JsonKeysetReader;
 import com.google.crypto.tink.KeysetHandle;
 import com.google.crypto.tink.config.TinkConfig;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 
@@ -27,7 +27,7 @@ public class EncryptServiceImpl implements EncryptService {
     public EncryptServiceImpl() {
         try {
             TinkConfig.register();
-            publicKeysetHandle = CleartextKeysetHandle.read(JsonKeysetReader.withInputStream(new FileInputStream("./src/main/resources/publicKeyset.json")));
+            publicKeysetHandle = CleartextKeysetHandle.read(JsonKeysetReader.withInputStream(new ClassPathResource("publicKeyset.json").getInputStream()));
             hybridEncrypt = publicKeysetHandle.getPrimitive(HybridEncrypt.class);
         } catch (GeneralSecurityException | IOException e) {
             throw new RuntimeException(e);
