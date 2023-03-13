@@ -3,12 +3,18 @@ server:
 
 logging:
   level:
-    root: trace
+    root: info
 
 spring:
-  # main:
-  # web-application-type: servlet
-  # lazy-initialization: true
+  main:
+    web-application-type: servlet
+    lazy-initialization: true
+  rsocket:
+    server:
+      address: 0.0.0.0
+      port: 9898
+      mapping-path: /rsocket/
+      transport: websocket
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -58,9 +64,9 @@ spring:
           # 连接池中的最小空闲连接
           min-idle: 0
 
-    # jackson:
-    # date-format: yyyy-MM-dd HH:mm:ss
-    # time-zone: GMT+8
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
 
   dynamic:
     tp:
@@ -108,3 +114,16 @@ sa-token:
   token-style: uuid
   # 是否输出操作日志
   is-log: true
+
+# springdoc-openapi项目配置
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+  group-configs:
+    - group: 'default'
+      paths-to-match: '/**'
+      packages-to-scan: cn.edu.zut.mfs.controller
