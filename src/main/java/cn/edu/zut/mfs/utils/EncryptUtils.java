@@ -1,6 +1,9 @@
 package cn.edu.zut.mfs.utils;
 
-import com.google.crypto.tink.*;
+import com.google.crypto.tink.CleartextKeysetHandle;
+import com.google.crypto.tink.DeterministicAead;
+import com.google.crypto.tink.JsonKeysetReader;
+import com.google.crypto.tink.KeysetHandle;
 import com.google.crypto.tink.config.TinkConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
@@ -20,7 +23,7 @@ public class EncryptUtils {
             TinkConfig.register();
             InputStream inputStream = new ClassPathResource("Keyset.json").getInputStream();
             keysetHandle = CleartextKeysetHandle.read(JsonKeysetReader.withInputStream(inputStream));
-            daead =keysetHandle.getPrimitive(DeterministicAead.class);
+            daead = keysetHandle.getPrimitive(DeterministicAead.class);
         } catch (GeneralSecurityException | IOException e) {
             throw new RuntimeException(e);
         }
