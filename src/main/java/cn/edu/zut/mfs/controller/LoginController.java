@@ -47,7 +47,7 @@ public class LoginController {
         if (encryptService.transformer(userVo)) {
             if (loginAuthService.login(new User(userVo.getUsername(), userVo.getPassword()))) {
                 // 先检查此账号是否已被封禁
-                StpUtil.checkDisable(userVo.getUsername());
+                //StpUtil.checkDisable(userVo.getUsername());
                 StpUtil.login(userVo.getUsername());
                 log.info(userVo.getUsername() + "登录成功");
                 // 获取 Token  相关参数，这里需要把 Token 信息从响应体中返回到前端
@@ -78,14 +78,16 @@ public class LoginController {
     @Operation(summary = "不记住我登录")
     @PostMapping("doLogin2")
     public BaseResponse<String> doLogin2(@RequestBody UserVo userVo) {
-        if (loginAuthService.login(new User(userVo.getUsername(), userVo.getPassword()))) {
-            // 先检查此账号是否已被封禁
-            StpUtil.checkDisable(userVo.getUsername());
-            StpUtil.login(userVo.getUsername(), false);
-            log.info(userVo.getUsername() + "登录成功");
-            // 获取 Token  相关参数，这里需要把 Token 信息从响应体中返回到前端
-            SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
-            return BaseResponse.success("登录成功,token:" + tokenInfo);
+        if (encryptService.transformer(userVo)) {
+            if (loginAuthService.login(new User(userVo.getUsername(), userVo.getPassword()))) {
+                // 先检查此账号是否已被封禁
+                StpUtil.checkDisable(userVo.getUsername());
+                StpUtil.login(userVo.getUsername(), false);
+                log.info(userVo.getUsername() + "登录成功");
+                // 获取 Token  相关参数，这里需要把 Token 信息从响应体中返回到前端
+                SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
+                return BaseResponse.success("登录成功,token:" + tokenInfo);
+            }
         }
         return BaseResponse.fail("登录失败");
     }
@@ -93,14 +95,16 @@ public class LoginController {
     @Operation(summary = "七天免登录")
     @PostMapping("doLogin3")
     public BaseResponse<String> doLogin3(@RequestBody UserVo userVo) {
-        if (loginAuthService.login(new User(userVo.getUsername(), userVo.getPassword()))) {
-            // 先检查此账号是否已被封禁
-            StpUtil.checkDisable(userVo.getUsername());
-            StpUtil.login(userVo.getUsername(), 60 * 60 * 24 * 7);
-            log.info(userVo.getUsername() + "登录成功");
-            // 获取 Token  相关参数，这里需要把 Token 信息从响应体中返回到前端
-            SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
-            return BaseResponse.success("登录成功,token:" + tokenInfo);
+        if (encryptService.transformer(userVo)) {
+            if (loginAuthService.login(new User(userVo.getUsername(), userVo.getPassword()))) {
+                // 先检查此账号是否已被封禁
+                StpUtil.checkDisable(userVo.getUsername());
+                StpUtil.login(userVo.getUsername(), 60 * 60 * 24 * 7);
+                log.info(userVo.getUsername() + "登录成功");
+                // 获取 Token  相关参数，这里需要把 Token 信息从响应体中返回到前端
+                SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
+                return BaseResponse.success("登录成功,token:" + tokenInfo);
+            }
         }
         return BaseResponse.fail("登录失败");
     }
