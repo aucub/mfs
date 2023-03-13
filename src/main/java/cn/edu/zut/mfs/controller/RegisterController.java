@@ -1,22 +1,21 @@
 package cn.edu.zut.mfs.controller;
 
+import cn.edu.zut.mfs.domain.User;
 import cn.edu.zut.mfs.pojo.BaseResponse;
 import cn.edu.zut.mfs.service.RegisterService;
 import cn.edu.zut.mfs.service.impl.EncryptServiceImpl;
+import cn.edu.zut.mfs.vo.UserVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 用户注册
  */
 @Slf4j
-@RequestMapping("/register/")
+@RequestMapping("/register")
 @Tag(name = "用户注册")
 @RestController
 public class RegisterController {
@@ -34,18 +33,19 @@ public class RegisterController {
     }
 
     @Operation(summary = "获取公钥")
-    @GetMapping("getPublicKey")
+    @PostMapping("getPublicKey")
+    @ResponseBody
     public BaseResponse<String> getPublicKey() {
-        System.out.println("7777777777" + encryptService.getPublicKey());
         return BaseResponse.success(encryptService.getPublicKey());
     }
 
     @Operation(summary = "用户注册")
-    @PostMapping("user")
-    public BaseResponse<String> user(String username, String publicKey, String password) {
-        password = encryptService.transformer(username, publicKey, password);
-        if (registerService.register(username, password)) {
-            return BaseResponse.success("注册成功");
+    @PostMapping("/user")
+    public BaseResponse<String> user(@RequestBody UserVo userVo) {
+        if (encryptService.transformer(userVo)) {
+            if (registerService.register(new User(userVo.getUsername(), userVo.getPassword()))) {
+                return BaseResponse.success("注册成功");
+            }
         }
         return BaseResponse.fail("注册失败");
     }

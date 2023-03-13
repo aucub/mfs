@@ -23,14 +23,14 @@ public class RegisterServiceImpl implements RegisterService {
     }
 
     @Override
-    public Boolean register(String username, String password) {
-        if (StrUtil.isEmpty(username) || StrUtil.isEmpty(password)) {
+    public Boolean register(User user) {
+        if (StrUtil.isEmpty(user.getUsername()) || StrUtil.isEmpty(user.getPassword())) {
             throw new BaseException("账号或密码格式错误");
         }
         Map<String, Object> params = new HashMap<>();
-        params.put("username", username);
+        params.put("username", user.getUsername());
         if (registerDao.selectByMap(params).isEmpty()) {
-            return registerDao.insert(new User(username, password)) == 1;
+            return registerDao.insert(user) == 1;
         } else throw new BaseException("账户已存在");
     }
 }

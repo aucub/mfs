@@ -1,6 +1,7 @@
 package cn.edu.zut.mfs.service.impl;
 
 import cn.edu.zut.mfs.dao.LoginDao;
+import cn.edu.zut.mfs.domain.User;
 import cn.edu.zut.mfs.exception.BaseException;
 import cn.edu.zut.mfs.service.LoginAuthService;
 import cn.hutool.core.util.StrUtil;
@@ -23,13 +24,13 @@ public class LoginAuthServiceImpl implements LoginAuthService {
     }
 
     @Override
-    public Boolean login(String username, String password) {
-        if (StrUtil.isEmpty(username) || StrUtil.isEmpty(password)) {
+    public Boolean login(User user) {
+        if (StrUtil.isEmpty(user.getUsername()) || StrUtil.isEmpty(user.getPassword())) {
             throw new BaseException("");
         }
         Map<String, Object> params = new HashMap<>();
-        params.put("username", username);
-        params.put("password", password);
+        params.put("username", user.getUsername());
+        params.put("password", user.getPassword());
         if (!loginDao.selectByMap(params).isEmpty()) {
             return true;
         } else throw new BaseException("");

@@ -1,6 +1,8 @@
 package cn.edu.zut.mfs.service.impl;
 
+import cn.edu.zut.mfs.service.EncryptService;
 import cn.edu.zut.mfs.service.RedisService;
+import cn.edu.zut.mfs.vo.UserVo;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.asymmetric.ECIES;
 import cn.hutool.crypto.asymmetric.KeyType;
@@ -20,7 +22,7 @@ import java.security.GeneralSecurityException;
 
 @Slf4j
 @Service
-public class EncryptServiceImpl {
+public class EncryptServiceImpl implements EncryptService {
     static KeysetHandle publicKeysetHandle;
     RedisService redisService;
     static HybridEncrypt hybridEncrypt;
@@ -49,16 +51,16 @@ public class EncryptServiceImpl {
         return publicKey;
     }
 
-    public String transformer(String username, String publicKey, String password) {
-        String privateKey = redisService.get(publicKey);
-        redisService.remove(publicKey);
+    public Boolean transformer(UserVo userVo) {
+        String privateKey = redisService.get(userVo.getPublicKey());
+        //redisService.remove(publicKey);
         ECIES ecies = new ECIES(privateKey, null);
-        password = StrUtil.utf8Str(ecies.decrypt(password, KeyType.PrivateKey));
+        userVo.setPassword(StrUtil.utf8Str(ecies.decrypt(userVo.getPassword(), KeyType.PrivateKey)));
         try {
-            password = new String(hybridEncrypt.encrypt(password.getBytes(), username.getBytes()));
+            userVo.setPassword(new String(hybridEncrypt.encrypt(userVo.getPassword().getBytes(), userVo.getUsername().getBytes())));
         } catch (GeneralSecurityException e) {
             throw new RuntimeException(e);
         }
-        return password;
+        return true;
     }
 }

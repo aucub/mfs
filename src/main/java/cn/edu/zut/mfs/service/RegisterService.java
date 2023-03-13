@@ -1,5 +1,7 @@
 package cn.edu.zut.mfs.service;
 
+import cn.edu.zut.mfs.domain.User;
+
 public interface RegisterService {
-    Boolean register(String username, String password);
+    Boolean register(User user);
 }

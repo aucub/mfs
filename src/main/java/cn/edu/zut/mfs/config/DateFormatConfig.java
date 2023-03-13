@@ -19,9 +19,7 @@ public class DateFormatConfig {
     @Value("${spring.jackson.date-format:yyyy-MM-dd HH:mm:ss}")
     private String pattern;
 
-    /**
-     * date 类型全局时间格式化
-     */
+    //date 类型全局时间格式化
     @Bean
     public Jackson2ObjectMapperBuilderCustomizer jackson2ObjectMapperBuilder() {
 
@@ -36,10 +34,7 @@ public class DateFormatConfig {
         };
     }
 
-    /**
-     * LocalDate 类型全局时间格式化
-     */
-
+    // LocalDate 类型全局时间格式化
     public LocalDateTimeSerializer localDateTimeDeserializer() {
         return new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(pattern));
     }

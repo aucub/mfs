@@ -2,7 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.0.2'
     id 'io.spring.dependency-management' version '1.1.0'
-    id 'org.graalvm.buildtools.native' version '0.9.18'
+    //id 'org.graalvm.buildtools.native' version '0.9.18'
     id 'org.jetbrains.kotlin.jvm' version '1.8.20-Beta'
 }
 
@@ -13,6 +13,9 @@ sourceCompatibility = '17'
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
+    }
+    compile {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
     }
 }
 
@@ -30,13 +33,15 @@ ext {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-amqp'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis:3.0.3'
-    implementation 'org.springframework.boot:spring-boot-starter-json:3.0.3'
+    implementation 'org.springframework.boot:spring-boot-starter-jetty:3.0.3'
+    //implementation 'org.springframework.boot:spring-boot-starter-json:3.0.3'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.2'
     implementation 'org.springframework.boot:spring-boot-starter-logging:3.0.4'
     implementation 'org.springframework.amqp:spring-rabbit'
     implementation 'org.springframework.boot:spring-boot-starter-integration'
     //implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.integration:spring-integration-amqp'
-    implementation 'org.springframework.integration:spring-integration-http'
+    //implementation 'org.springframework.integration:spring-integration-http'
     implementation 'org.springframework.integration:spring-integration-redis'
     implementation 'org.junit.jupiter:junit-jupiter:5.8.1'
     implementation 'org.springframework.boot:spring-boot-starter-test'
@@ -47,7 +52,7 @@ dependencies {
     implementation 'org.springframework.amqp:spring-rabbit-test:3.0.1'
     //implementation 'com.rabbitmq:http-client:5.0.0'
     //implementation 'org.springframework.boot:spring-boot-starter-reactor-netty:3.0.2'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.2'
+    //implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.2'
     implementation 'org.springframework.amqp:spring-rabbit-stream'
     // knife4j
     implementation 'com.github.xiaoymin:knife4j-openapi3-jakarta-spring-boot-starter:4.0.0'
@@ -58,31 +63,31 @@ dependencies {
     implementation 'cn.dev33:sa-token-dao-redis-jackson:1.34.0'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.2'
     // Sa-Token
-    implementation 'cn.dev33:sa-token-reactor-spring-boot-starter:1.34.0'
+    //implementation 'cn.dev33:sa-token-reactor-spring-boot-starter:1.34.0'
     implementation 'com.google.crypto.tink:tink:1.8.0'
-    implementation 'org.bouncycastle:bcprov-jdk15to18:1.72'
-    implementation 'org.questdb:questdb:7.0.1'
-    implementation 'cn.dynamictp:dynamic-tp-spring-boot-starter-common:1.1.0'
+    //implementation 'org.bouncycastle:bcprov-jdk15to18:1.72'
+    //implementation 'org.questdb:questdb:7.0.1'
+    //implementation 'cn.dynamictp:dynamic-tp-spring-boot-starter-common:1.1.0'
     // hutool
     implementation 'cn.hutool:hutool-all:5.8.11'
     // mockito模拟对象-单元测试
-    implementation 'org.mockito:mockito-core:5.1.1'
+    //implementation 'org.mockito:mockito-core:5.1.1'
     implementation 'com.redis.om:redis-om-spring:0.6.4'
-    implementation 'com.google.errorprone:error_prone_annotations:2.18.0'
-    implementation 'io.netty.incubator:netty-incubator-codec-parent-quic:0.0.37.Final'
+    //implementation 'com.google.errorprone:error_prone_annotations:2.18.0'
+    //implementation 'io.netty.incubator:netty-incubator-codec-parent-quic:0.0.37.Final'
     //implementation 'io.netty.incubator:netty-incubator-codec-native-quic:0.0.36.Final'
-    implementation 'io.netty.incubator:netty-incubator-codec-http3:0.0.16.Final'
-    implementation 'org.bouncycastle:bcpkix-jdk15on:1.70'
+    //implementation 'io.netty.incubator:netty-incubator-codec-http3:0.0.16.Final'
+    //implementation 'org.bouncycastle:bcpkix-jdk15on:1.70'
     //implementation 'org.springframework.security:spring-security-rsocket:6.0.1'
     //implementation 'org.springframework.security:spring-security-messaging:6.0.1'
-    implementation 'org.springframework.integration:spring-integration-mqtt:6.0.3'
+    //implementation 'org.springframework.integration:spring-integration-mqtt:6.0.3'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'io.projectreactor:reactor-test'
+    //testImplementation 'io.projectreactor:reactor-test'
     testImplementation 'org.springframework.amqp:spring-rabbit-test'
     testImplementation 'org.springframework.integration:spring-integration-test'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"

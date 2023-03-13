@@ -6,7 +6,6 @@ import cn.edu.zut.mfs.pojo.BaseResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * 异常处理
@@ -18,7 +17,6 @@ public class GlobalExceptionHandler {
 
     // json 异常处理
     @ExceptionHandler(value = JsonException.class)
-    @ResponseBody
     public BaseResponse<JsonException> jsonErrorHandler(JsonException exception) {
         log.error("【JsonException】:{}", exception.getMessage());
         return BaseResponse.jsonError(exception);
