@@ -10,7 +10,7 @@ public class User {
     /**
      * ID
      */
-    private Long id;
+    private String id;
     /**
      * 用户名
      */
