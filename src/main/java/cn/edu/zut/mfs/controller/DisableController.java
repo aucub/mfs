@@ -24,20 +24,21 @@ public class DisableController {
     @Operation(summary = "封禁指定账号")
     @SaCheckPermission("user:disable")
     @PostMapping("disable")
-    public BaseResponse<String> disable(@RequestBody long userId) {
+    public BaseResponse<String> disable( String userId) {
         /*
          * 账号封禁：
          * 	参数1：要封禁的账号id
          * 	参数2：要封禁的时间，单位：秒，86400秒=1天
          */
         StpUtil.disable(userId, 86400);
+        System.out.println(userId);
         return BaseResponse.success("账号 " + userId + " 封禁成功");
     }
 
     @Operation(summary = "解封指定账号")
     @SaCheckPermission("user:untieDisable")
     @PostMapping("untieDisable")
-    public BaseResponse<String> untieDisable(@RequestBody long userId) {
+    public BaseResponse<String> untieDisable( String userId) {
         StpUtil.untieDisable(userId);
         return BaseResponse.success("账号 " + userId + " 解封成功");
     }
