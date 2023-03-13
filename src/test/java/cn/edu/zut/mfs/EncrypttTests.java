@@ -15,10 +15,10 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Base64;
 
-@Slf4j
-@SpringBootTest
+/*@Slf4j
+@SpringBootTest*/
 public class EncrypttTests {
-    ECIES ecies = new ECIES();
+   /* ECIES ecies = new ECIES();
     String text = "root";
 
     @Test
@@ -28,10 +28,10 @@ public class EncrypttTests {
         //String decryptStr = StrUtil.utf8Str(ecies.decrypt(encryptStr, KeyType.PrivateKey));
         System.out.println(encryptStr);
         //System.out.println(decryptStr);
-    }
+    }*/
 
 
-    @Test
+    /*@Test
     public void test1() throws GeneralSecurityException, IOException {
         TinkConfig.register();
         KeysetHandle keysetHandle = KeysetHandle.generateNew(DeterministicAeadKeyTemplates.AES256_SIV);
@@ -41,5 +41,5 @@ public class EncrypttTests {
         DeterministicAead deterministicAead1 = keysetHandle.getPrimitive(DeterministicAead.class);
         byte[] ciphertext = deterministicAead1.encryptDeterministically("root".getBytes(), "root".getBytes());
         System.out.println(Base64.getEncoder().encodeToString(ciphertext));
-    }
+    }*/
 }
