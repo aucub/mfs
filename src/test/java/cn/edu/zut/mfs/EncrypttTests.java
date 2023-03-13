@@ -1,26 +1,33 @@
 package cn.edu.zut.mfs;
 
+import com.google.crypto.tink.*;
+import com.google.crypto.tink.config.TinkConfig;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.io.File;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 
 @Slf4j
 @SpringBootTest
 public class EncrypttTests {
-    /*final ECIES ecies = new ECIES();
+    /*  final ECIES ecies = new ECIES();*/
     String text = "我是一段特别长的测试";
 
     Aead kekAead = null;
 
-    @Test
-    public void Test() {
-        System.out.println(ecies.getPrivateKeyBase64());
-        System.out.println(ecies.getPublicKeyBase64());
-        String encryptStr = ecies.encryptBase64(text, KeyType.PublicKey);
-        String decryptStr = StrUtil.utf8Str(ecies.decrypt(encryptStr, KeyType.PrivateKey));
-        System.out.println(encryptStr);
-        System.out.println(decryptStr);
-    }
-
+    /* @Test
+     public void Test() {
+         System.out.println(ecies.getPrivateKeyBase64());
+         System.out.println(ecies.getPublicKeyBase64());
+         String encryptStr = ecies.encryptBase64(text, KeyType.PublicKey);
+         String decryptStr = StrUtil.utf8Str(ecies.decrypt(encryptStr, KeyType.PrivateKey));
+         System.out.println(encryptStr);
+         System.out.println(decryptStr);
+     }
+ */
     @Test
     public void test1() {
         try {
@@ -38,5 +45,5 @@ public class EncrypttTests {
         } catch (GeneralSecurityException | IOException ex) {
             System.out.println("test0");
         }
-    }*/
+    }
 }

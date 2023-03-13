@@ -3,7 +3,7 @@ server:
 
 logging:
   level:
-    root: info
+    root: debug
 
 spring:
   main:
@@ -15,11 +15,13 @@ spring:
       port: 9898
       mapping-path: /rsocket/
       transport: websocket
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/mfs?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
     username: root
     password: root
+
   rabbitmq:
     host: 47.113.201.150
     port: 5672
@@ -43,6 +45,7 @@ spring:
       username: root
       password: root
       name: mfs
+
   data:
     redis:
       host: localhost
@@ -60,6 +63,7 @@ spring:
           max-idle: 10
           # 连接池中的最小空闲连接
           min-idle: 0
+
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
@@ -109,7 +113,7 @@ sa-token:
   # token风格
   token-style: uuid
   # 是否输出操作日志
-  is-log: false
+  is-log: true
 
 # springdoc-openapi项目配置
 springdoc:
@@ -120,6 +124,6 @@ springdoc:
   api-docs:
     path: /v3/api-docs
   group-configs:
-    - group: 'default'
+    - group: 'Server'
       paths-to-match: '/**'
       packages-to-scan: cn.edu.zut.mfs.controller

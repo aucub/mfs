@@ -1,6 +1,7 @@
 package cn.edu.zut.mfs.service.impl;
 
 import cn.edu.zut.mfs.service.ConsumeService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Objects;
 
+@Slf4j
 @Service
 public class ConsumeServiceImpl implements ConsumeService {
     public RabbitTemplate rabbitTemplate;

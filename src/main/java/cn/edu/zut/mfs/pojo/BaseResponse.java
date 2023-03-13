@@ -1,9 +1,16 @@
 package cn.edu.zut.mfs.pojo;
 
+import lombok.Data;
+
 /**
  * @param <T>
  */
+@Data
 public class BaseResponse<T> {
+
+    private Integer code;
+    private String message;
+    private T data;
 
     /**
      * 成功返回
@@ -71,24 +78,5 @@ public class BaseResponse<T> {
         response.setMessage(ResultCode.BaseException.getMessage());
         response.setData(data);
         return response;
-    }
-
-
-    public void setCode(Integer code) {
-        /*
-          响应状态码
-         */
-    }
-
-    public void setMessage(String message) {
-        /*
-          响应结果描述
-         */
-    }
-
-    public void setData(T data) {
-        /*
-          返回的数据
-         */
     }
 }

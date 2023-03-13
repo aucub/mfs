@@ -1,6 +1,5 @@
 package cn.edu.zut.mfs.service.impl;
 
-import cn.edu.zut.mfs.service.EncryptService;
 import cn.edu.zut.mfs.service.RedisService;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.asymmetric.ECIES;
@@ -10,24 +9,27 @@ import com.google.crypto.tink.HybridEncrypt;
 import com.google.crypto.tink.JsonKeysetReader;
 import com.google.crypto.tink.KeysetHandle;
 import com.google.crypto.tink.config.TinkConfig;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.GeneralSecurityException;
 
+@Slf4j
 @Service
-public class EncryptServiceImpl implements EncryptService {
-    KeysetHandle publicKeysetHandle;
+public class EncryptServiceImpl {
+    static KeysetHandle publicKeysetHandle;
     RedisService redisService;
-    HybridEncrypt hybridEncrypt;
+    static HybridEncrypt hybridEncrypt;
 
-    @Autowired
-    public EncryptServiceImpl() {
+    private static void init() {
         try {
             TinkConfig.register();
-            publicKeysetHandle = CleartextKeysetHandle.read(JsonKeysetReader.withInputStream(new ClassPathResource("publicKeyset.json").getInputStream()));
+            InputStream inputStream = new ClassPathResource("publicKeyset.json").getInputStream();
+            publicKeysetHandle = CleartextKeysetHandle.read(JsonKeysetReader.withInputStream(inputStream));
             hybridEncrypt = publicKeysetHandle.getPrimitive(HybridEncrypt.class);
         } catch (GeneralSecurityException | IOException e) {
             throw new RuntimeException(e);
@@ -39,7 +41,6 @@ public class EncryptServiceImpl implements EncryptService {
         this.redisService = redisService;
     }
 
-    @Override
     public String getPublicKey() {
         ECIES ecies = new ECIES();
         String publicKey = ecies.getPublicKeyBase64();
@@ -48,7 +49,6 @@ public class EncryptServiceImpl implements EncryptService {
         return publicKey;
     }
 
-    @Override
     public String transformer(String username, String publicKey, String password) {
         String privateKey = redisService.get(publicKey);
         redisService.remove(publicKey);

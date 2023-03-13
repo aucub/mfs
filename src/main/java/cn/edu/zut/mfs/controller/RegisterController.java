@@ -1,8 +1,8 @@
 package cn.edu.zut.mfs.controller;
 
 import cn.edu.zut.mfs.pojo.BaseResponse;
-import cn.edu.zut.mfs.service.EncryptService;
 import cn.edu.zut.mfs.service.RegisterService;
+import cn.edu.zut.mfs.service.impl.EncryptServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class RegisterController {
     RegisterService registerService;
-    EncryptService encryptService;
+    EncryptServiceImpl encryptService;
 
     @Autowired
     public void setRegisterService(RegisterService registerService) {
@@ -29,13 +29,14 @@ public class RegisterController {
     }
 
     @Autowired
-    public void setEncryptService(EncryptService encryptService) {
+    public void setEncryptService(EncryptServiceImpl encryptService) {
         this.encryptService = encryptService;
     }
 
     @Operation(summary = "获取公钥")
     @GetMapping("getPublicKey")
     public BaseResponse<String> getPublicKey() {
+        System.out.println("7777777777" + encryptService.getPublicKey());
         return BaseResponse.success(encryptService.getPublicKey());
     }
 

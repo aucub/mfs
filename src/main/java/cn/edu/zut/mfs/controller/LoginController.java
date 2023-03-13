@@ -3,8 +3,8 @@ package cn.edu.zut.mfs.controller;
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.edu.zut.mfs.pojo.BaseResponse;
-import cn.edu.zut.mfs.service.EncryptService;
 import cn.edu.zut.mfs.service.LoginAuthService;
+import cn.edu.zut.mfs.service.impl.EncryptServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginController {
     LoginAuthService loginAuthService;
 
-    EncryptService encryptService;
+    EncryptServiceImpl encryptService;
 
     @Autowired
     public void setLoginAuthService(LoginAuthService loginAuthService) {
@@ -32,13 +32,14 @@ public class LoginController {
     }
 
     @Autowired
-    public void setEncryptService(EncryptService encryptService) {
+    public void setEncryptService(EncryptServiceImpl encryptService) {
         this.encryptService = encryptService;
     }
 
     @Operation(summary = "获取公钥")
     @GetMapping("getPublicKey")
     public BaseResponse<String> getPublicKey() {
+        System.out.println(BaseResponse.success("555555555555555" + encryptService.getPublicKey()));
         return BaseResponse.success(encryptService.getPublicKey());
     }
 

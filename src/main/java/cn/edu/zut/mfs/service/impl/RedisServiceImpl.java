@@ -1,6 +1,7 @@
 package cn.edu.zut.mfs.service.impl;
 
 import cn.edu.zut.mfs.service.RedisService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -9,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * redis操作Service的实现类
  */
+@Slf4j
 @Service
 public class RedisServiceImpl implements RedisService {
     private final StringRedisTemplate stringRedisTemplate;
