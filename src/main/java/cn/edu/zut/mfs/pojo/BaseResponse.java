@@ -1,11 +1,15 @@
 package cn.edu.zut.mfs.pojo;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @param <T>
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class BaseResponse<T> {
 
     private Integer code;

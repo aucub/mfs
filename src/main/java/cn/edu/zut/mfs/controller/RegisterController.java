@@ -2,6 +2,7 @@ package cn.edu.zut.mfs.controller;
 
 import cn.edu.zut.mfs.domain.User;
 import cn.edu.zut.mfs.pojo.BaseResponse;
+import cn.edu.zut.mfs.service.EncryptService;
 import cn.edu.zut.mfs.service.RegisterService;
 import cn.edu.zut.mfs.service.impl.EncryptServiceImpl;
 import cn.edu.zut.mfs.vo.UserVo;
@@ -20,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class RegisterController {
     RegisterService registerService;
-    EncryptServiceImpl encryptService;
+    EncryptService encryptService;
 
     @Autowired
     public void setRegisterService(RegisterService registerService) {

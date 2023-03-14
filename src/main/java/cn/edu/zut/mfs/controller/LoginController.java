@@ -4,6 +4,7 @@ import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.edu.zut.mfs.domain.User;
 import cn.edu.zut.mfs.pojo.BaseResponse;
+import cn.edu.zut.mfs.service.EncryptService;
 import cn.edu.zut.mfs.service.LoginAuthService;
 import cn.edu.zut.mfs.service.impl.EncryptServiceImpl;
 import cn.edu.zut.mfs.vo.UserVo;
@@ -23,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
 public class LoginController {
     LoginAuthService loginAuthService;
 
-    EncryptServiceImpl encryptService;
+    EncryptService encryptService;
 
     @Autowired
     public void setLoginAuthService(LoginAuthService loginAuthService) {

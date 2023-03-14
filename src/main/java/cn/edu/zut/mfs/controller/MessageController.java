@@ -4,6 +4,7 @@ import cn.edu.zut.mfs.domain.ForwardMessage;
 import cn.edu.zut.mfs.pojo.BaseResponse;
 import cn.edu.zut.mfs.service.ConsumeService;
 import cn.edu.zut.mfs.service.PublishService;
+import cn.edu.zut.mfs.service.PublishStreamService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +14,7 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.rsocket.RSocketRequester;
 import org.springframework.messaging.rsocket.annotation.ConnectMapping;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -26,6 +28,7 @@ import java.util.Objects;
 @MessageMapping("Message")
 public class MessageController {
     private final HashMap<RSocketRequester, String> clients = new HashMap<>();
+    private PublishStreamService publishStreamService;
     private PublishService publishService;
     private ConsumeService consumeService;
 
@@ -37,6 +40,11 @@ public class MessageController {
     @Autowired
     public void setConsumeService(ConsumeService consumeService) {
         this.consumeService = consumeService;
+    }
+
+    @Autowired
+    public void setPublishStreamService(PublishStreamService publishStreamService) {
+        this.publishStreamService = publishStreamService;
     }
 
     @Operation(summary = "客户端连接")
@@ -60,10 +68,10 @@ public class MessageController {
 
     @Operation(summary = "生产")
     @MessageMapping("publish")
-    public BaseResponse<String> publish(ForwardMessage forwardMessage) {
+    public Mono<ForwardMessage> publish(String s) {
         log.info("收到生产请求");
-        publishService.publish(forwardMessage);
-        return BaseResponse.success("success");
+        publishStreamService.publish(new ForwardMessage("test","test",s.getBytes()));
+        return Mono.just(new ForwardMessage("test","test",s.getBytes()));
     }
 
     @Operation(summary = "消费")

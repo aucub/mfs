@@ -18,16 +18,17 @@ public class PublishStreamServiceImpl implements PublishStreamService {
             .build();
     private static final RabbitStreamTemplate rabbitStreamTemplate = new RabbitStreamTemplate(env, "mfs");
 
-    public PublishStreamServiceImpl() {
+
+    static  {
         env.streamCreator()
                 .stream(stream)
                 .maxLengthBytes(ByteCapacity.GB(5))
                 .maxSegmentSizeBytes(ByteCapacity.MB(100))
                 .create();
+        rabbitStreamTemplate.setProducerCustomizer((name, builder) -> builder.name("mfs"));
     }
 
     public void publish(ForwardMessage forwardMessage) {
-        rabbitStreamTemplate.setProducerCustomizer((name, builder) -> builder.name("mfs"));
         StreamMessageProperties streamMessageProperties = new StreamMessageProperties();
         rabbitStreamTemplate.send(new org.springframework.amqp.core.Message(forwardMessage.getBody(), streamMessageProperties));
     }

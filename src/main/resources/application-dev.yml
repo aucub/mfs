@@ -14,7 +14,7 @@ spring:
       address: 0.0.0.0
       port: 9898
       mapping-path: /rsocket/
-      transport: websocket
+      transport: tcp
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
