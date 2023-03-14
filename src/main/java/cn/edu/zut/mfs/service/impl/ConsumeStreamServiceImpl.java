@@ -26,10 +26,12 @@ public class ConsumeStreamServiceImpl implements ConsumeStreamService {
         this.rabbitStreamTemplate = rabbitStreamTemplate;
     }
 
+
     @Override
     @RabbitListener(queues = "mfs", containerFactory = "nativeFactory")
     public void consumer(Message in, MessageHandler.Context context) {
         in.getBody();
+        System.out.println(in);
         context.storeOffset();
     }
 
@@ -47,8 +49,8 @@ public class ConsumeStreamServiceImpl implements ConsumeStreamService {
                         .build();
     }
 
-    @RabbitListener(id = "mfs", queues = "mfs", containerFactory = "nativeFactory")
+    /*@RabbitListener( queues = "mfs", containerFactory = "nativeFactory")
     public void nativeMsg(String in) {
         log.info(in.toString());
-    }
+    }*/
 }
