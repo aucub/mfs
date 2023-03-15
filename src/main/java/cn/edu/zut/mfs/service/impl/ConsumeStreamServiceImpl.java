@@ -28,11 +28,9 @@ public class ConsumeStreamServiceImpl implements ConsumeStreamService {
 
 
     @Override
-    @RabbitListener(queues = "mfs", containerFactory = "nativeFactory")
-    public void consumer(Message in, MessageHandler.Context context) {
-        in.getBody();
+    @RabbitListener(queues = "mfs")//, containerFactory = "nativeFactory"
+    public void consumer(String in) {
         System.out.println(in);
-        context.storeOffset();
     }
 
     public void consume() {
