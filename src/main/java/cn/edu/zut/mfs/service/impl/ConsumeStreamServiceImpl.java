@@ -1,6 +1,9 @@
 package cn.edu.zut.mfs.service.impl;
 
+import cn.edu.zut.mfs.domain.ForwardMessage;
 import cn.edu.zut.mfs.service.ConsumeStreamService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.stream.Consumer;
 import com.rabbitmq.stream.Environment;
 import com.rabbitmq.stream.MessageHandler;
@@ -9,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.codec.cbor.Jackson2CborDecoder;
 import org.springframework.rabbit.stream.producer.RabbitStreamTemplate;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +34,13 @@ public class ConsumeStreamServiceImpl implements ConsumeStreamService {
     @Override
     @RabbitListener(queues = "mfs")//, containerFactory = "nativeFactory"
     public void consumer(String in) {
-        System.out.println(in);
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            ForwardMessage forwardMessage=mapper.readValue(in, ForwardMessage.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println(in.toString());
     }
 
     public void consume() {

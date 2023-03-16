@@ -68,10 +68,10 @@ public class MessageController {
 
     @Operation(summary = "生产")
     @MessageMapping("publish")
-    public Mono<ForwardMessage> publish(String s) {
-        log.info("收到生产请求");
-        publishStreamService.publish(new ForwardMessage("test","test",s.getBytes()));
-        return Mono.just(new ForwardMessage("test","test",s.getBytes()));
+    public Mono<String> publish(ForwardMessage forwardMessage) {
+        log.info("收到publisher:"+forwardMessage.getPublisher()+",messageId:"+forwardMessage.getMessageId()+"消息");
+        publishStreamService.publish(forwardMessage);
+        return Mono.just("messageId:"+forwardMessage.getMessageId()+"已投递");
     }
 
     @Operation(summary = "消费")

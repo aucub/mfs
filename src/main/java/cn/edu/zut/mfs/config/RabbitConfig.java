@@ -31,7 +31,7 @@ public class RabbitConfig {
         return new StreamRabbitListenerContainerFactory(env);
     }
 
-    @Bean
+    /*@Bean
     RabbitListenerContainerFactory<StreamListenerContainer> nativeFactory() {
         StreamRabbitListenerContainerFactory factory = new StreamRabbitListenerContainerFactory(Environment.builder()
                 .uri("rabbitmq-stream://root:root@47.113.201.150:5552/%2fmfs")
@@ -41,5 +41,5 @@ public class RabbitConfig {
                 .offset(OffsetSpecification.first())
                 .manualTrackingStrategy());
         return factory;
-    }
+    }*/
 }

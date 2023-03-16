@@ -2,6 +2,8 @@ package cn.edu.zut.mfs.service.impl;
 
 import cn.edu.zut.mfs.domain.ForwardMessage;
 import cn.edu.zut.mfs.service.PublishStreamService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.stream.ByteCapacity;
 import com.rabbitmq.stream.Environment;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +32,11 @@ public class PublishStreamServiceImpl implements PublishStreamService {
 
     public void publish(ForwardMessage forwardMessage) {
         StreamMessageProperties streamMessageProperties = new StreamMessageProperties();
-        rabbitStreamTemplate.send(new org.springframework.amqp.core.Message(forwardMessage.getBody(), streamMessageProperties));
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            rabbitStreamTemplate.send(new org.springframework.amqp.core.Message(mapper.writeValueAsBytes(forwardMessage), streamMessageProperties));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
