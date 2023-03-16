@@ -69,15 +69,15 @@ public class MessageController {
     @Operation(summary = "生产")
     @MessageMapping("publish")
     public Mono<String> publish(ForwardMessage forwardMessage) {
-        log.info("收到publisher:"+forwardMessage.getPublisher()+",messageId:"+forwardMessage.getMessageId()+"消息");
+        log.info("收到publisher:" + forwardMessage.getPublisher() + ",messageId:" + forwardMessage.getMessageId() + "消息");
         publishStreamService.publish(forwardMessage);
-        return Mono.just("messageId:"+forwardMessage.getMessageId()+"已投递");
+        return Mono.just("messageId:" + forwardMessage.getMessageId() + "已投递");
     }
 
     @Operation(summary = "消费")
     @MessageMapping("consume")
     public BaseResponse<ForwardMessage> consume(String consumer) {
-        log.info("收到流请求");
+        log.info("收到消费请求consumer:" + consumer);
         return BaseResponse.success(consumeService.consume(consumer));
     }
 

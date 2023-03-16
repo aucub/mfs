@@ -2,7 +2,6 @@ package cn.edu.zut.mfs.service.impl;
 
 import cn.edu.zut.mfs.domain.ForwardMessage;
 import cn.edu.zut.mfs.service.PublishService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -36,8 +35,8 @@ public class PublishServiceImpl implements PublishService {
     @SneakyThrows
     public void publish(ForwardMessage forwardMessage) {
         ObjectMapper mapper = new ObjectMapper();
-        amqpAdmin.declareQueue(new Queue(forwardMessage.getConsumer(),true,false,true));
-        rabbitTemplate.send(forwardMessage.getConsumer(),new Message(mapper.writeValueAsBytes(forwardMessage)));
+        amqpAdmin.declareQueue(new Queue(forwardMessage.getConsumer(), true, false, true));
+        rabbitTemplate.send(forwardMessage.getConsumer(), new Message(mapper.writeValueAsBytes(forwardMessage)));
         System.out.println(forwardMessage.toString());
         //t.send(forwardMessage.getConsumer(), new Message(mapper.writeValueAsBytes(forwardMessage)));
     }

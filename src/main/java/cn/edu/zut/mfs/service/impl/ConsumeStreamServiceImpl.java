@@ -7,13 +7,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.stream.Consumer;
 import com.rabbitmq.stream.Environment;
-import com.rabbitmq.stream.MessageHandler;
 import com.rabbitmq.stream.OffsetSpecification;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.codec.cbor.Jackson2CborDecoder;
 import org.springframework.rabbit.stream.producer.RabbitStreamTemplate;
 import org.springframework.stereotype.Service;
 
@@ -21,11 +18,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class ConsumeStreamServiceImpl implements ConsumeStreamService {
 
-    PublishService publishService;
     private final static String stream = "mfs";
     private static Environment env = Environment.builder()
             .uri("rabbitmq-stream://root:root@47.113.201.150:5552/%2fmfs")
             .build();
+    PublishService publishService;
     private RabbitStreamTemplate rabbitStreamTemplate;
 
     @Autowired
@@ -43,7 +40,7 @@ public class ConsumeStreamServiceImpl implements ConsumeStreamService {
     public void consumer(String in) {
         ObjectMapper mapper = new ObjectMapper();
         try {
-            ForwardMessage forwardMessage=mapper.readValue(in, ForwardMessage.class);
+            ForwardMessage forwardMessage = mapper.readValue(in, ForwardMessage.class);
             publishService.publish(forwardMessage);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);

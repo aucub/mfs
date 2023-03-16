@@ -21,7 +21,7 @@ public class PublishStreamServiceImpl implements PublishStreamService {
     private static final RabbitStreamTemplate rabbitStreamTemplate = new RabbitStreamTemplate(env, "mfs");
 
 
-    static  {
+    static {
         env.streamCreator()
                 .stream(stream)
                 .maxLengthBytes(ByteCapacity.GB(5))

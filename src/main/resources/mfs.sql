@@ -8,7 +8,7 @@ create table permission
     status     int          null comment '启用状态；0->禁用；1->启用',
     createTime datetime     null comment '创建时间'
 )
-    comment '权限表' ;
+    comment '权限表';
 
 create table role
 (
@@ -20,7 +20,7 @@ create table role
     createTime  datetime      null comment '创建时间',
     status      int default 1 null comment '启用状态：0->禁用；1->启用'
 )
-    comment '角色表' ;
+    comment '角色表';
 
 create table role_permission_relation
 (
@@ -38,7 +38,7 @@ create table role_relation
     user_id varchar(32) null,
     role_id bigint      null
 )
-    comment '用户和角色关系表' ;
+    comment '用户和角色关系表';
 
 create table user
 (
@@ -67,7 +67,7 @@ create table user_login_log
     createTime datetime    null,
     ip         varchar(64) null
 )
-    comment '登录记录' ;
+    comment '登录记录';
 
 create table user_permission_relation
 (
@@ -77,4 +77,4 @@ create table user_permission_relation
     permission_id bigint      null,
     type          int         null
 )
-    comment '用户和权限关系表' ;
+    comment '用户和权限关系表';

@@ -2,7 +2,6 @@ package cn.edu.zut.mfs.config;
 
 import com.rabbitmq.stream.ByteCapacity;
 import com.rabbitmq.stream.Environment;
-import com.rabbitmq.stream.OffsetSpecification;
 import org.springframework.amqp.rabbit.listener.RabbitListenerContainerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
