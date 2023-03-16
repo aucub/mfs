@@ -2,6 +2,7 @@ package cn.edu.zut.mfs.service.impl;
 
 import cn.edu.zut.mfs.domain.ForwardMessage;
 import cn.edu.zut.mfs.service.ConsumeStreamService;
+import cn.edu.zut.mfs.service.PublishService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.stream.Consumer;
@@ -19,6 +20,8 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class ConsumeStreamServiceImpl implements ConsumeStreamService {
+
+    PublishService publishService;
     private final static String stream = "mfs";
     private static Environment env = Environment.builder()
             .uri("rabbitmq-stream://root:root@47.113.201.150:5552/%2fmfs")
@@ -30,6 +33,10 @@ public class ConsumeStreamServiceImpl implements ConsumeStreamService {
         this.rabbitStreamTemplate = rabbitStreamTemplate;
     }
 
+    @Autowired
+    public void setPublishService(PublishService publishService) {
+        this.publishService = publishService;
+    }
 
     @Override
     @RabbitListener(queues = "mfs")//, containerFactory = "nativeFactory"
@@ -37,6 +44,7 @@ public class ConsumeStreamServiceImpl implements ConsumeStreamService {
         ObjectMapper mapper = new ObjectMapper();
         try {
             ForwardMessage forwardMessage=mapper.readValue(in, ForwardMessage.class);
+            publishService.publish(forwardMessage);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

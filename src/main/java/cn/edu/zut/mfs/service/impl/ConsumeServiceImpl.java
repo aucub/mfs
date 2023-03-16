@@ -1,12 +1,15 @@
 package cn.edu.zut.mfs.service.impl;
 
+import cn.edu.zut.mfs.domain.ForwardMessage;
 import cn.edu.zut.mfs.service.ConsumeService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Objects;
@@ -22,10 +25,12 @@ public class ConsumeServiceImpl implements ConsumeService {
     }
 
     @Override
-    public String consume(String consumer) {
+    public ForwardMessage consume(String consumer) {
+        ObjectMapper mapper = new ObjectMapper();
         try {
-            return new String(Objects.requireNonNull(rabbitTemplate.receive(consumer)).getBody(), "utf-8");
-        } catch (UnsupportedEncodingException e) {
+            return mapper.readValue((rabbitTemplate.receive(consumer)).getBody(), ForwardMessage.class);
+            //return new String(Objects.requireNonNull(rabbitTemplate.receive(consumer)).getBody(), "utf-8");
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
 

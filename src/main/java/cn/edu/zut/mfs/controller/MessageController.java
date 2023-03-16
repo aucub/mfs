@@ -76,7 +76,7 @@ public class MessageController {
 
     @Operation(summary = "消费")
     @MessageMapping("consume")
-    public BaseResponse<String> consume(String consumer) {
+    public BaseResponse<ForwardMessage> consume(String consumer) {
         log.info("收到流请求");
         return BaseResponse.success(consumeService.consume(consumer));
     }
