@@ -27,7 +27,7 @@ import java.util.Objects;
 @RestController
 @MessageMapping("Message")
 public class MessageController {
-    private final HashMap<RSocketRequester, String> clients = new HashMap<>();
+    public final static HashMap<String,RSocketRequester > clients = new HashMap<>();
     private PublishStreamService publishStreamService;
     private PublishService publishService;
     private ConsumeService consumeService;
@@ -49,21 +49,22 @@ public class MessageController {
 
     @Operation(summary = "客户端连接")
     @ConnectMapping("connect")
-    public void connect(RSocketRequester requester,
+    public Mono<Void> connect(RSocketRequester requester,
                         @Payload String client) {
 
         Objects.requireNonNull(requester.rsocket())
                 .onClose()
                 .doFirst(() -> {
                     log.info("客户端: {} 连接", client);
-                    clients.put(requester, client);
+                    clients.put( client,requester);
                 })
                 .doOnError(error -> log.warn("通道被客户端： {} 关闭", client))
                 .doFinally(consumer -> {
-                    clients.remove(requester);
+                    clients.remove(client);
                     log.info("客户端： {} 断开连接", client);
                 })
                 .subscribe();
+        return Mono.empty();
     }
 
     @Operation(summary = "生产")
