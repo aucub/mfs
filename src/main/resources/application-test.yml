@@ -10,8 +10,8 @@ spring:
     server:
       address: 0.0.0.0
       port: 9898
-      mapping-path: /rsocket/
-      transport: websocket
+      # mapping-path: /rsocket/
+      transport: tcp
   main:
     web-application-type: reactive
     lazy-initialization: true
