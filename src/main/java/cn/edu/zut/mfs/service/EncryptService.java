@@ -1,9 +1,9 @@
 package cn.edu.zut.mfs.service;
 
-import cn.edu.zut.mfs.vo.UserVo;
+import cn.edu.zut.mfs.vo.UserLoginVo;
 
 public interface EncryptService {
     String getPublicKey();
 
-    Boolean transformer(UserVo userVo);
+    Boolean transformer(UserLoginVo userLoginVo);
 }

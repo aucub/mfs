@@ -5,7 +5,7 @@ import cn.edu.zut.mfs.pojo.BaseResponse;
 import cn.edu.zut.mfs.service.EncryptService;
 import cn.edu.zut.mfs.service.RegisterService;
 import cn.edu.zut.mfs.service.impl.EncryptServiceImpl;
-import cn.edu.zut.mfs.vo.UserVo;
+import cn.edu.zut.mfs.vo.UserLoginVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -42,9 +42,9 @@ public class RegisterController {
 
     @Operation(summary = "用户注册")
     @PostMapping("/user")
-    public BaseResponse<String> user(@RequestBody UserVo userVo) {
-        if (encryptService.transformer(userVo)) {
-            if (registerService.register(new User(userVo.getUsername(), userVo.getPassword()))) {
+    public BaseResponse<String> user(@RequestBody UserLoginVo userLoginVo) {
+        if (encryptService.transformer(userLoginVo)) {
+            if (registerService.register(new User(userLoginVo.getUsername(), userLoginVo.getPassword()))) {
                 return BaseResponse.success("注册成功");
             }
         }
