@@ -1,6 +1,7 @@
 package cn.edu.zut.mfs.service;
 
 import cn.edu.zut.mfs.domain.Permission;
+import cn.edu.zut.mfs.domain.Role;
 import cn.edu.zut.mfs.domain.User;
 import cn.edu.zut.mfs.vo.UserLoginVo;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,7 +39,7 @@ public interface UserService {
     /**
      * 获取用户对应角色
      */
-    List<User> getRoleList(String userId);
+    List<Role> getRoleList(String userId);
 
     /**
      * 获取指定用户的权限

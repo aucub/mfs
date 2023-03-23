@@ -5,7 +5,9 @@ import cn.edu.zut.mfs.dao.RoleDao;
 import cn.edu.zut.mfs.dao.RolePermissionRelationDao;
 import cn.edu.zut.mfs.domain.Permission;
 import cn.edu.zut.mfs.domain.Role;
+import cn.edu.zut.mfs.domain.RolePermissionRelation;
 import cn.edu.zut.mfs.service.RoleService;
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +19,7 @@ import java.util.Map;
 public class RoleServiceImpl implements RoleService {
     RoleDao roleDao;
     PermissionDao permissionDao;
-    RolePermissionRelationDao permissionRelationDao;
+    RolePermissionRelationDao rolePermissionRelationDao;
     @Autowired
     public void setRoleDao(RoleDao roleDao) {
         this.roleDao = roleDao;
@@ -29,8 +31,8 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Autowired
-    public void setPermissionRelationDao(RolePermissionRelationDao permissionRelationDao) {
-        this.permissionRelationDao = permissionRelationDao;
+    public void setRolePermissionRelationDao(RolePermissionRelationDao rolePermissionRelationDao) {
+        this.rolePermissionRelationDao = rolePermissionRelationDao;
     }
 
     @Override
@@ -38,9 +40,7 @@ public class RoleServiceImpl implements RoleService {
         Map<String, Object> params = new HashMap<>();
         params.put("name", role.getName());
         if(roleDao.selectByMap(params).isEmpty()){
-            if(roleDao.insert(role)==1){
-                return true;
-            }
+            return roleDao.insert(role) == 1;
         }
         return false;
     }
@@ -48,10 +48,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public Boolean update(String id, Role role) {
         role.setId(id);
-        if(roleDao.updateById(role)==1){
-            return true;
-        }
-        return false;
+        return roleDao.updateById(role) == 1;
     }
 
     @Override
@@ -61,11 +58,24 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public List<Permission> listPermission(String roleId) {
-        return null;
+        return roleDao.listPermission(roleId);
     }
 
     @Override
     public Boolean allocPermission(String roleId, List<String> permissionIds) {
-        return null;
+        int count = permissionIds == null ? 0 : permissionIds.size();
+        Map<String, Object> params = new HashMap<>();
+        params.put("role_id", roleId);
+        rolePermissionRelationDao.deleteByMap(params);
+        if (!CollectionUtils.isEmpty(permissionIds)){
+            for (String permissionId : permissionIds) {
+                RolePermissionRelation rolePermissionRelation = new RolePermissionRelation();
+                rolePermissionRelation.setRoleId(roleId);
+                rolePermissionRelation.setPermissionId(permissionId);
+                rolePermissionRelationDao.insert(rolePermissionRelation);
+                count--;
+            }
+        }
+        return count == 0;
     }
 }
