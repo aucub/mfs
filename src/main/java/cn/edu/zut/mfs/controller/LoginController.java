@@ -45,8 +45,7 @@ public class LoginController {
     @Operation(summary = "登录")
     @PostMapping("doLogin")
     public BaseResponse<String> doLogin(@RequestBody UserLoginVo userLoginVo) {
-        if (encryptService.transformer(userLoginVo)) {
-            if (loginAuthService.login(new User(userLoginVo.getUsername(), userLoginVo.getPassword()))) {
+        if (encryptService.transformer(userLoginVo) && (Boolean.TRUE.equals(loginAuthService.login(new User(userLoginVo.getUsername(), userLoginVo.getPassword()))))) {
                 // 先检查此账号是否已被封禁
                 //StpUtil.checkDisable(userVo.getUsername());
                 StpUtil.login(userLoginVo.getUsername(),true);
@@ -54,7 +53,7 @@ public class LoginController {
                 // 获取 Token  相关参数，这里需要把 Token 信息从响应体中返回到前端
                 SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
                 return BaseResponse.success("登录成功,token:" + tokenInfo);
-            }
+
         }
         return BaseResponse.fail("登录失败");
     }
@@ -62,8 +61,7 @@ public class LoginController {
     @Operation(summary = "不记住我登录")
     @PostMapping("doLogin1")
     public BaseResponse<String> doLogin1(@RequestBody UserLoginVo userLoginVo) {
-        if (encryptService.transformer(userLoginVo)) {
-            if (loginAuthService.login(new User(userLoginVo.getUsername(), userLoginVo.getPassword()))) {
+        if (encryptService.transformer(userLoginVo) && (Boolean.TRUE.equals(loginAuthService.login(new User(userLoginVo.getUsername(), userLoginVo.getPassword()))))) {
                 // 先检查此账号是否已被封禁
                 StpUtil.checkDisable(userLoginVo.getUsername());
                 StpUtil.login(userLoginVo.getUsername(), false);
@@ -71,7 +69,7 @@ public class LoginController {
                 // 获取 Token  相关参数，这里需要把 Token 信息从响应体中返回到前端
                 SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
                 return BaseResponse.success("登录成功,token:" + tokenInfo);
-            }
+
         }
         return BaseResponse.fail("登录失败");
     }

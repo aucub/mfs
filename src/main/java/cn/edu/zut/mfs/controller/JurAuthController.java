@@ -23,7 +23,7 @@ public class JurAuthController {
 
     @Operation(summary = "查询权限")
     @GetMapping("getPermission")
-    public BaseResponse<LinkedHashMap> getPermission() {
+    public BaseResponse<LinkedHashMap<String, Object>> getPermission() {
         // 查询权限信息 ，如果当前会话未登录，会返回一个空集合
         List<String> permissionList = StpUtil.getPermissionList();
         // 查询角色信息 ，如果当前会话未登录，会返回一个空集合
