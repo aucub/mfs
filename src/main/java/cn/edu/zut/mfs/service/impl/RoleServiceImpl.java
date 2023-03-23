@@ -3,6 +3,7 @@ package cn.edu.zut.mfs.service.impl;
 import cn.edu.zut.mfs.dao.PermissionDao;
 import cn.edu.zut.mfs.dao.RoleDao;
 import cn.edu.zut.mfs.dao.RolePermissionRelationDao;
+import cn.edu.zut.mfs.dao.RoleRelationDao;
 import cn.edu.zut.mfs.domain.Permission;
 import cn.edu.zut.mfs.domain.Role;
 import cn.edu.zut.mfs.domain.RolePermissionRelation;
@@ -20,6 +21,7 @@ public class RoleServiceImpl implements RoleService {
     RoleDao roleDao;
     PermissionDao permissionDao;
     RolePermissionRelationDao rolePermissionRelationDao;
+    RoleRelationDao roleRelationDao;
     @Autowired
     public void setRoleDao(RoleDao roleDao) {
         this.roleDao = roleDao;
@@ -35,6 +37,11 @@ public class RoleServiceImpl implements RoleService {
         this.rolePermissionRelationDao = rolePermissionRelationDao;
     }
 
+    @Autowired
+    public void setRoleRelationDao(RoleRelationDao roleRelationDao) {
+        this.roleRelationDao = roleRelationDao;
+    }
+
     @Override
     public Boolean create(Role role) {
         Map<String, Object> params = new HashMap<>();
@@ -43,6 +50,15 @@ public class RoleServiceImpl implements RoleService {
             return roleDao.insert(role) == 1;
         }
         return false;
+    }
+
+    @Override
+    public Boolean delete(String id) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("role_id", id);
+        rolePermissionRelationDao.deleteByMap(params);
+        roleRelationDao.deleteByMap(params);
+        return roleDao.deleteById(id) == 1;
     }
 
     @Override

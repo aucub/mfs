@@ -11,6 +11,10 @@ public interface RoleService {
      * 添加角色
      */
     Boolean create(Role role);
+    /**
+     * 删除角色
+     */
+    Boolean delete(String id);
 
     /**
      * 修改角色信息

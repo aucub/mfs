@@ -53,7 +53,10 @@ public class RoleController {
     @Operation(summary = "删除")
     @PostMapping(value = "/delete")
     public BaseResponse<String> delete(@NotBlank(message = "角色id不能为空") @RequestParam String id) {
-        return null;
+        if(roleService.delete(id)){
+            return BaseResponse.success("删除成功");
+        }
+        return BaseResponse.fail("删除失败");
     }
 
 }
