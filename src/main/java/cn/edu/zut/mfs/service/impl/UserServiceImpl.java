@@ -8,8 +8,11 @@ import cn.edu.zut.mfs.domain.Role;
 import cn.edu.zut.mfs.domain.RoleRelation;
 import cn.edu.zut.mfs.domain.User;
 import cn.edu.zut.mfs.service.UserService;
+import cn.edu.zut.mfs.vo.FindPageVo;
 import cn.edu.zut.mfs.vo.UserLoginVo;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,8 +48,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> list(String keyword, Integer pageSize, Integer pageNum) {
-        return null;
+    public Object list(FindPageVo findPageVo) {
+        Page<User> page= Page.of(findPageVo.getPageNum(), findPageVo.getPageSize());
+        LambdaQueryWrapper<User> queryWrapper=new LambdaQueryWrapper<>();
+        queryWrapper.eq(User::getUsername,findPageVo.getKeyword()).or().eq(User::getNickname,findPageVo.getKeyword());
+        userDao.selectPage(page,queryWrapper);
+        return page;
     }
 
     @Override

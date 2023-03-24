@@ -4,27 +4,39 @@ import cn.edu.zut.mfs.domain.Role;
 import cn.edu.zut.mfs.domain.RoleRelation;
 import cn.edu.zut.mfs.domain.User;
 import cn.edu.zut.mfs.pojo.BaseResponse;
+import cn.edu.zut.mfs.service.UserService;
+import cn.edu.zut.mfs.vo.FindPageVo;
 import cn.edu.zut.mfs.vo.UserLoginVo;
-import cn.hutool.db.PageResult;
-import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+/**
+ * 用户管理
+ */
+@Slf4j
+@RequestMapping("/user")
+@Tag(name = "用户管理")
+@RestController
 public class UserController {
-    @Operation(summary = "用户分页查询")
+    UserService userService;
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    @Operation(summary = "用户查询")
     @GetMapping("/pageList")
-    public BaseResponse<PageResult<User>> pageList(User user) {
-        return null;
+    public BaseResponse<Object> pageList(FindPageVo findPageVo) {
+        return BaseResponse.success(userService.list(findPageVo));
     }
 
     @Operation(summary = "添加")
-    @ApiOperationSupport(order = 5, author = "dcy")
     @PostMapping("/save")
     public BaseResponse<String> save(@RequestBody User user) {
         return null;
@@ -39,7 +51,10 @@ public class UserController {
     @Operation(summary = "删除")
     @PostMapping(value = "/delete")
     public BaseResponse<String> delete(@NotBlank(message = "id不能为空") @RequestParam String id) {
-        return null;
+       if(userService.delete(id)) {
+           return BaseResponse.success("删除成功");
+       }
+       else return BaseResponse.fail("删除失败");
     }
 
     @Operation(summary = "重置密码")
@@ -57,7 +72,7 @@ public class UserController {
     @Operation(summary = "获取已授权的角色列表")
     @GetMapping(value = "/getAuthRoleListByUserId")
     public BaseResponse<List<Role>> getAuthRoleListByUserId(@NotBlank(message = "用户id不能为空") @RequestParam String userId) {
-        return null;
+        return BaseResponse.success(userService.getRoleList(userId));
     }
 
     @Operation(summary = "保存授权角色")

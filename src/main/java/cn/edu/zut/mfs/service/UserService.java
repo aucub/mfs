@@ -3,6 +3,7 @@ package cn.edu.zut.mfs.service;
 import cn.edu.zut.mfs.domain.Permission;
 import cn.edu.zut.mfs.domain.Role;
 import cn.edu.zut.mfs.domain.User;
+import cn.edu.zut.mfs.vo.FindPageVo;
 import cn.edu.zut.mfs.vo.UserLoginVo;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +19,7 @@ public interface UserService {
     /**
      * 根据用户名或昵称分页查询用户
      */
-    List<User> list(String keyword, Integer pageSize, Integer pageNum);
+    Object list(FindPageVo findPageVo);
 
     /**
      * 修改指定用户信息
