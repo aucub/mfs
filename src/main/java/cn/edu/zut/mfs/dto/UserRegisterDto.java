@@ -1,17 +1,15 @@
-package cn.edu.zut.mfs.domain;
+package cn.edu.zut.mfs.dto;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
-@TableName("user")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class UserRegisterDto {
     /**
      * ID
      */
@@ -20,6 +18,8 @@ public class User {
      * 用户名
      */
     private String username;
+    private String publicKey;
+    private String password;
     /**
      * 用户昵称
      */
@@ -30,6 +30,5 @@ public class User {
     private Boolean status;
     private Date createTime;
     private Date lastUpdateTime;
-    private Date loginTime;
     private String note;
 }

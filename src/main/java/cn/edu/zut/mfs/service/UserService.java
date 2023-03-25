@@ -3,8 +3,8 @@ package cn.edu.zut.mfs.service;
 import cn.edu.zut.mfs.domain.Permission;
 import cn.edu.zut.mfs.domain.Role;
 import cn.edu.zut.mfs.domain.User;
-import cn.edu.zut.mfs.vo.FindPageVo;
-import cn.edu.zut.mfs.vo.UserLoginVo;
+import cn.edu.zut.mfs.dto.FindPageDto;
+import cn.edu.zut.mfs.dto.UserLoginDto;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -14,17 +14,17 @@ public interface UserService {
     /**
      * 根据用户id获取用户
      */
-    User getItem(String id);
+    User getUserById(String id);
 
     /**
      * 根据用户名或昵称分页查询用户
      */
-    Object list(FindPageVo findPageVo);
+    Object list(FindPageDto findPageDto);
 
     /**
      * 修改指定用户信息
      */
-    Boolean update(String id, User user);
+    Boolean update(User user);
 
     /**
      * 删除指定用户
@@ -50,11 +50,11 @@ public interface UserService {
     /**
      * 修改密码
      */
-    Boolean updatePassword(UserLoginVo userLoginVo);
+    Boolean updatePassword(UserLoginDto userLoginDto);
 
     /**
-     * 获取用户信息
+     * 根据用户名获取用户
      */
-    User loadUserByUsername(String username);
+    User getUserByUsername(String username);
 
 }

@@ -1,11 +1,11 @@
 package cn.edu.zut.mfs.controller;
 
-import cn.edu.zut.mfs.domain.User;
+import cn.edu.zut.mfs.dto.UserRegisterDto;
 import cn.edu.zut.mfs.pojo.BaseResponse;
 import cn.edu.zut.mfs.service.EncryptService;
 import cn.edu.zut.mfs.service.RegisterService;
 import cn.edu.zut.mfs.service.impl.EncryptServiceImpl;
-import cn.edu.zut.mfs.vo.UserLoginVo;
+import cn.edu.zut.mfs.dto.UserLoginDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -42,9 +42,14 @@ public class RegisterController {
 
     @Operation(summary = "用户注册")
     @PostMapping("/user")
-    public BaseResponse<String> user(@RequestBody UserLoginVo userLoginVo) {
-        if (encryptService.transformer(userLoginVo)) {
-            if (registerService.register(new User(userLoginVo.getUsername(), userLoginVo.getPassword()))) {
+    public BaseResponse<String> user(@RequestBody UserRegisterDto userRegisterDto) {
+        UserLoginDto userLoginDto = new UserLoginDto();
+        userLoginDto.setUsername(userRegisterDto.getUsername());
+        userLoginDto.setPassword(userRegisterDto.getPassword());
+        encryptService.encrypt(userLoginDto);
+        userLoginDto.setPassword(userLoginDto.getPassword());
+        if (encryptService.transformer(userLoginDto)) {
+            if (registerService.register(userRegisterDto)) {
                 return BaseResponse.success("注册成功");
             }
         }

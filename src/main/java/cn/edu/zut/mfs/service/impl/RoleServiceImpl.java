@@ -62,8 +62,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Boolean update(String id, Role role) {
-        role.setId(id);
+    public Boolean update(Role role) {
         return roleDao.updateById(role) == 1;
     }
 

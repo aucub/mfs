@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.zut.mfs.dao.RegisterDao">
+    <insert id="insert" parameterMap="cn.edu.zut.mfs.dto.UserRegisterDto">
+        INSERT INTO user(username, password, nickname, status, create_time, deleted, last_update_time, note) VALUES(#{username}, #{password}, #{nickname}, #{status}, #{create_time}, #{deleted}, #{last_update_time}, #{note})
+    </insert>
+</mapper>

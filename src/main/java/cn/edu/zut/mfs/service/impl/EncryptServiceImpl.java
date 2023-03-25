@@ -3,7 +3,7 @@ package cn.edu.zut.mfs.service.impl;
 import cn.edu.zut.mfs.service.EncryptService;
 import cn.edu.zut.mfs.service.RedisService;
 import cn.edu.zut.mfs.utils.EncryptUtils;
-import cn.edu.zut.mfs.vo.UserLoginVo;
+import cn.edu.zut.mfs.dto.UserLoginDto;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.asymmetric.ECIES;
 import cn.hutool.crypto.asymmetric.KeyType;
@@ -30,13 +30,20 @@ public class EncryptServiceImpl implements EncryptService {
         return publicKey;
     }
 
-    public Boolean transformer(UserLoginVo userLoginVo) {
+    public Boolean transformer(UserLoginDto userLoginDto) {
         EncryptUtils.init();
-        String privateKey = redisService.get(userLoginVo.getPublicKey());
+        String privateKey = redisService.get(userLoginDto.getPublicKey());
         //redisService.remove(userVo.getPublicKey());
         ECIES ecies = new ECIES(privateKey, null);
-        userLoginVo.setPassword(StrUtil.utf8Str(ecies.decrypt(userLoginVo.getPassword(), KeyType.PrivateKey)));
-        userLoginVo.setPassword(EncryptUtils.encrypt(userLoginVo.getPassword(), userLoginVo.getUsername()));
+        userLoginDto.setPassword(StrUtil.utf8Str(ecies.decrypt(userLoginDto.getPassword(), KeyType.PrivateKey)));
+        userLoginDto.setPassword(EncryptUtils.encrypt(userLoginDto.getPassword(), userLoginDto.getUsername()));
+        return true;
+    }
+
+    @Override
+    public Boolean encrypt(UserLoginDto userLoginDto) {
+        EncryptUtils.init();
+        userLoginDto.setPassword(EncryptUtils.encrypt(userLoginDto.getPassword(), userLoginDto.getUsername()));
         return true;
     }
 }

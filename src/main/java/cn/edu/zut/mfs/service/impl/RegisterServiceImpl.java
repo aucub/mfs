@@ -1,7 +1,7 @@
 package cn.edu.zut.mfs.service.impl;
 
 import cn.edu.zut.mfs.dao.RegisterDao;
-import cn.edu.zut.mfs.domain.User;
+import cn.edu.zut.mfs.dto.UserRegisterDto;
 import cn.edu.zut.mfs.exception.BaseException;
 import cn.edu.zut.mfs.service.RegisterService;
 import cn.hutool.core.util.StrUtil;
@@ -23,14 +23,14 @@ public class RegisterServiceImpl implements RegisterService {
     }
 
     @Override
-    public Boolean register(User user) {
-        if (StrUtil.isEmpty(user.getUsername()) || StrUtil.isEmpty(user.getPassword())) {
+    public Boolean register(UserRegisterDto userRegisterDto) {
+        if (StrUtil.isEmpty(userRegisterDto.getUsername()) || StrUtil.isEmpty(userRegisterDto.getUsername())) {
             throw new BaseException("账号或密码格式错误");
         }
         Map<String, Object> params = new HashMap<>();
-        params.put("username", user.getUsername());
+        params.put("username", userRegisterDto.getUsername());
         if (registerDao.selectByMap(params).isEmpty()) {
-            return registerDao.insert(user) == 1;
+            return registerDao.insert(userRegisterDto) == 1;
         } else throw new BaseException("账户已存在");
     }
 }

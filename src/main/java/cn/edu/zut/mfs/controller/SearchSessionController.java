@@ -4,7 +4,7 @@ import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.session.SaSession;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.edu.zut.mfs.pojo.BaseResponse;
-import cn.edu.zut.mfs.vo.SearchSessionVo;
+import cn.edu.zut.mfs.dto.SearchSessionDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -28,11 +28,11 @@ public class SearchSessionController {
     @Operation(summary = "会话查询接口----根据分页参数获取会话列表")
     @SaCheckPermission("admin:getList")
     @PostMapping("getList")
-    public BaseResponse<List<SaSession>> getList(@RequestBody SearchSessionVo searchSessionVo) {
+    public BaseResponse<List<SaSession>> getList(@RequestBody SearchSessionDto searchSessionDto) {
         // 创建集合
         List<SaSession> sessionList = new ArrayList<>();
         // 分页查询数据
-        List<String> sessionIdList = StpUtil.searchSessionId("", searchSessionVo.getStart(), searchSessionVo.getSize(), false);
+        List<String> sessionIdList = StpUtil.searchSessionId("", searchSessionDto.getStart(), searchSessionDto.getSize(), false);
         for (String sessionId : sessionIdList) {
             SaSession session = StpUtil.getSessionBySessionId(sessionId);
             sessionList.add(session);

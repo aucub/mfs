@@ -1,7 +1,7 @@
 package cn.edu.zut.mfs.service.impl;
 
 import cn.edu.zut.mfs.dao.LoginDao;
-import cn.edu.zut.mfs.domain.User;
+import cn.edu.zut.mfs.dto.UserLoginDto;
 import cn.edu.zut.mfs.exception.BaseException;
 import cn.edu.zut.mfs.service.LoginAuthService;
 import cn.hutool.core.util.StrUtil;
@@ -24,15 +24,15 @@ public class LoginAuthServiceImpl implements LoginAuthService {
     }
 
     @Override
-    public Boolean login(User user) {
-        if (StrUtil.isEmpty(user.getUsername()) || StrUtil.isEmpty(user.getPassword())) {
-            throw new BaseException("");
+    public Boolean login(UserLoginDto userLoginDto) {
+        if (StrUtil.isEmpty(userLoginDto.getUsername()) || StrUtil.isEmpty(userLoginDto.getPassword())) {
+            throw new BaseException("账号或密码格式错误");
         }
         Map<String, Object> params = new HashMap<>();
-        params.put("username", user.getUsername());
-        params.put("password", user.getPassword());
+        params.put("username", userLoginDto.getUsername());
+        params.put("password", userLoginDto.getPassword());
         if (!loginDao.selectByMap(params).isEmpty()) {
             return true;
-        } else throw new BaseException("");
+        } else throw new BaseException("账号或密码格式错误");
     }
 }

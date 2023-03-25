@@ -19,7 +19,7 @@ public interface RoleService {
     /**
      * 修改角色信息
      */
-    Boolean update(String id, Role role);
+    Boolean update(Role role);
 
     /**
      * 获取所有角色列表

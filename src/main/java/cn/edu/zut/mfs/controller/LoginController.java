@@ -7,7 +7,7 @@ import cn.edu.zut.mfs.pojo.BaseResponse;
 import cn.edu.zut.mfs.service.EncryptService;
 import cn.edu.zut.mfs.service.LoginAuthService;
 import cn.edu.zut.mfs.service.impl.EncryptServiceImpl;
-import cn.edu.zut.mfs.vo.UserLoginVo;
+import cn.edu.zut.mfs.dto.UserLoginDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -44,12 +44,12 @@ public class LoginController {
 
     @Operation(summary = "登录")
     @PostMapping("doLogin")
-    public BaseResponse<String> doLogin(@RequestBody UserLoginVo userLoginVo) {
-        if (encryptService.transformer(userLoginVo) && (Boolean.TRUE.equals(loginAuthService.login(new User(userLoginVo.getUsername(), userLoginVo.getPassword()))))) {
+    public BaseResponse<String> doLogin(@RequestBody UserLoginDto userLoginDto) {
+        if (encryptService.transformer(userLoginDto) && (Boolean.TRUE.equals(loginAuthService.login(userLoginDto)))) {
                 // 先检查此账号是否已被封禁
                 //StpUtil.checkDisable(userVo.getUsername());
-                StpUtil.login(userLoginVo.getUsername(),true);
-                log.info(userLoginVo.getUsername() + "登录成功");
+                StpUtil.login(userLoginDto.getUsername(),true);
+                log.info(userLoginDto.getUsername() + "登录成功");
                 // 获取 Token  相关参数，这里需要把 Token 信息从响应体中返回到前端
                 SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
                 return BaseResponse.success("登录成功,token:" + tokenInfo);
@@ -60,12 +60,12 @@ public class LoginController {
 
     @Operation(summary = "不记住我登录")
     @PostMapping("doLogin1")
-    public BaseResponse<String> doLogin1(@RequestBody UserLoginVo userLoginVo) {
-        if (encryptService.transformer(userLoginVo) && (Boolean.TRUE.equals(loginAuthService.login(new User(userLoginVo.getUsername(), userLoginVo.getPassword()))))) {
+    public BaseResponse<String> doLogin1(@RequestBody UserLoginDto userLoginDto) {
+        if (encryptService.transformer(userLoginDto) && (Boolean.TRUE.equals(loginAuthService.login(userLoginDto)))) {
                 // 先检查此账号是否已被封禁
-                StpUtil.checkDisable(userLoginVo.getUsername());
-                StpUtil.login(userLoginVo.getUsername(), false);
-                log.info(userLoginVo.getUsername() + "登录成功");
+                StpUtil.checkDisable(userLoginDto.getUsername());
+                StpUtil.login(userLoginDto.getUsername(), false);
+                log.info(userLoginDto.getUsername() + "登录成功");
                 // 获取 Token  相关参数，这里需要把 Token 信息从响应体中返回到前端
                 SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
                 return BaseResponse.success("登录成功,token:" + tokenInfo);

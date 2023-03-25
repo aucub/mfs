@@ -1,8 +1,7 @@
 package cn.edu.zut.mfs.service;
 
-
-import cn.edu.zut.mfs.domain.User;
+import cn.edu.zut.mfs.dto.UserLoginDto;
 
 public interface LoginAuthService {
-    Boolean login(User user);
+    Boolean login(UserLoginDto userLoginDto);
 }

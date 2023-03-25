@@ -18,7 +18,7 @@ public class EncryptUtils {
     static KeysetHandle keysetHandle;
     static DeterministicAead daead;
 
-    public final static void init() {
+    public static void init() {
         try {
             TinkConfig.register();
             InputStream inputStream = new ClassPathResource("Keyset.json").getInputStream();

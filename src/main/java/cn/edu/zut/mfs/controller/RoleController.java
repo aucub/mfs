@@ -44,7 +44,7 @@ public class RoleController {
     @Operation(summary = "修改")
     @PostMapping(value = "/update")
     public BaseResponse<String> update(@RequestBody Role role) {
-        if(roleService.update(role.getId(), role)){
+        if(roleService.update(role)){
             return BaseResponse.success("修改成功");
         }
         return BaseResponse.fail("修改失败");

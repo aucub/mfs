@@ -12,7 +12,7 @@ public interface PermissionService {
     Permission getItem(String id);
 
     /**
-     * 查询权限
+     * 获取权限列表
      */
     List<Permission> list();
 }
