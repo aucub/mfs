@@ -120,11 +120,4 @@ public class UserController {
         return BaseResponse.fail("修改失败");
     }
 
-    @Operation(summary = "修改密码")
-    @PostMapping("/updatePass")
-    public BaseResponse<String> updatePass( @RequestBody UserLoginDto userLoginDto) {
-        return null;
-    }
-
-
 }

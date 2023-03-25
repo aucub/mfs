@@ -121,4 +121,14 @@ public class LoginController {
     }
 
 
+    @Operation(summary = "修改密码")
+    @PostMapping("/updatePass")
+    public BaseResponse<String> updatePass( @RequestBody UserLoginDto userLoginDto) {
+        if (encryptService.transformer(userLoginDto) && (Boolean.TRUE.equals(loginAuthService.updatePassword(userLoginDto)))) {
+            return BaseResponse.success("修改密码成功");
+
+        }
+        return BaseResponse.fail("修改密码失败");
+    }
+
 }

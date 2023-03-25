@@ -4,7 +4,6 @@ import cn.edu.zut.mfs.domain.Permission;
 import cn.edu.zut.mfs.domain.Role;
 import cn.edu.zut.mfs.domain.User;
 import cn.edu.zut.mfs.dto.FindPageDto;
-import cn.edu.zut.mfs.dto.UserLoginDto;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -46,11 +45,6 @@ public interface UserService {
      * 获取指定用户的权限
      */
     List<Permission> getPermissionList(String userId);
-
-    /**
-     * 修改密码
-     */
-    Boolean updatePassword(UserLoginDto userLoginDto);
 
     /**
      * 根据用户名获取用户

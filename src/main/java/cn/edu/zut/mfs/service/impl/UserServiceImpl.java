@@ -7,9 +7,11 @@ import cn.edu.zut.mfs.domain.Permission;
 import cn.edu.zut.mfs.domain.Role;
 import cn.edu.zut.mfs.domain.RoleRelation;
 import cn.edu.zut.mfs.domain.User;
+import cn.edu.zut.mfs.exception.BaseException;
 import cn.edu.zut.mfs.service.UserService;
 import cn.edu.zut.mfs.dto.FindPageDto;
 import cn.edu.zut.mfs.dto.UserLoginDto;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -98,11 +100,6 @@ public class UserServiceImpl implements UserService {
         //permissions.addAll(roleRelationDao.getPermissionList(userId));
         permissions.addAll(userPermissionRelationDao.getPermissionList(userId));
         return permissions;
-    }
-
-    @Override
-    public Boolean updatePassword(UserLoginDto userLoginDto) {
-        return null;
     }
 
     @Override
