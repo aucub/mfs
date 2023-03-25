@@ -7,11 +7,8 @@ import cn.edu.zut.mfs.domain.Permission;
 import cn.edu.zut.mfs.domain.Role;
 import cn.edu.zut.mfs.domain.RoleRelation;
 import cn.edu.zut.mfs.domain.User;
-import cn.edu.zut.mfs.exception.BaseException;
 import cn.edu.zut.mfs.service.UserService;
 import cn.edu.zut.mfs.dto.FindPageDto;
-import cn.edu.zut.mfs.dto.UserLoginDto;
-import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -56,6 +53,12 @@ public class UserServiceImpl implements UserService {
         queryWrapper.like(User::getUsername, findPageDto.getKeyword()).or().like(User::getNickname, findPageDto.getKeyword());
         userDao.selectPage(page,queryWrapper);
         return page;
+    }
+
+    @Override
+    public Object listByRoleId(FindPageDto findPageDto) {
+        Page<User> page= Page.of(findPageDto.getPageNum(), findPageDto.getPageSize());
+        return userDao.listByRoleId(page, findPageDto.getKeyword());
     }
 
     @Override

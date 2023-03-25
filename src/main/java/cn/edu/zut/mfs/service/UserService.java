@@ -19,6 +19,10 @@ public interface UserService {
      * 根据用户名或昵称分页查询用户
      */
     Object list(FindPageDto findPageDto);
+    /**
+     * 根据角色查询用户
+     */
+    Object listByRoleId(FindPageDto findPageDto);
 
     /**
      * 修改指定用户信息
