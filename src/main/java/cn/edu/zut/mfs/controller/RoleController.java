@@ -26,9 +26,9 @@ public class RoleController {
         this.roleService = roleService;
     }
 
-    @Operation(summary = "获取全部信息")
-    @GetMapping(value = "/all")
-    public BaseResponse<List<Role>> getAllRoleList() {
+    @Operation(summary = "获取角色列表")
+    @GetMapping(value = "/list")
+    public BaseResponse<List<Role>> getRoleList() {
         return BaseResponse.success(roleService.list());
     }
 

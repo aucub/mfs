@@ -51,6 +51,12 @@ public class UserController {
         return BaseResponse.success(userService.list(findPageDto));
     }
 
+    @Operation(summary = "用户查询-角色")
+    @GetMapping("/pageListByRoleId")
+    public BaseResponse<Object> pageListByRoleId(FindPageDto findPageDto) {
+        return BaseResponse.success(userService.listByRoleId(findPageDto));
+    }
+
     @Operation(summary = "添加")
     @PostMapping("/save")
     public BaseResponse<String> save(@RequestBody UserRegisterDto userRegisterDto) {
@@ -83,11 +89,6 @@ public class UserController {
        else return BaseResponse.fail("删除失败");
     }
 
-    @Operation(summary = "重置密码")
-    @PostMapping(value = "/resetPassword")
-    public BaseResponse<String> resetPassword( @RequestBody UserLoginDto userLoginDto) {
-        return null;
-    }
 
     @Operation(summary = "根据用户名获取用户信息")
     @GetMapping(value = "/getUserInfoByUsername")
