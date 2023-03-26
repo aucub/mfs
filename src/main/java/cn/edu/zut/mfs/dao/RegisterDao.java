@@ -6,6 +6,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
-public interface RegisterDao extends BaseMapper<User> {
-    Integer insert(UserRegisterDto userRegisterDto);
+public interface RegisterDao extends BaseMapper<UserRegisterDto> {
+   // Integer insert(UserRegisterDto userRegisterDto);
 }

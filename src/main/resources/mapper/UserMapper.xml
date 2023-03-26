@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.edu.zut.mfs.dao.UserDao">
-    <!--<update id="update" parameterMap="cn.edu.zut.mfs.domain.User">
+    <!--<update id="update">
         update user set nickname=#{nickname},status=#{status},last_update_time=#{last_update_time},note=#{note} where id=#{id}
     </update>
-    <select id="getItem" resultMap="cn.edu.zut.mfs.domain.User">
+    <select id="getItem">
         select id,username, nickname, status, create_time, deleted, last_update_time, login_time, note from user where id=#{id}
     </select>-->
-    <select id="listByRoleId" resultMap="cn.edu.zut.mfs.domain.User">
+    <select id="listByRoleId">
         select user.* from user where user.id in (select role_relation.user_id from role_relation where role_relation.role_id=#{roleId})
     </select>
 </mapper>

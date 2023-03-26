@@ -99,14 +99,14 @@ public class UserController {
     @Operation(summary = "根据用户名获取用户信息")
     @SaCheckPermission("user:getUserInfoByUsername")
     @PostMapping(value = "/getUserInfoByUsername")
-    public BaseResponse<User> getUserInfoByUsername(@NotBlank(message = "用户名不能为空") @RequestBody String username) {
+    public BaseResponse<User> getUserInfoByUsername(@NotBlank(message = "用户名不能为空") @RequestParam String username) {
         return BaseResponse.success(userService.getUserByUsername(username));
     }
 
     @Operation(summary = "获取用户的角色列表")
     @SaCheckPermission("user:getRoleListByUserId")
     @PostMapping(value = "/getRoleListByUserId")
-    public BaseResponse<List<Role>> getRoleListByUserId(@NotBlank(message = "用户id不能为空") @RequestBody String userId) {
+    public BaseResponse<List<Role>> getRoleListByUserId(@NotBlank(message = "用户id不能为空") @RequestParam String userId) {
         return BaseResponse.success(userService.getRoleList(userId));
     }
 
@@ -118,17 +118,6 @@ public class UserController {
             return BaseResponse.success("保存成功");
         }
         return BaseResponse.fail("保存失败");
-    }
-
-
-    @Operation(summary = "修改基本信息")
-    @SaCheckPermission("user:updateInfo")
-    @PostMapping(value = "/updateInfo")
-    public BaseResponse<String> updateInfo(@RequestBody User user) {
-        if(userService.update(user)) {
-            return BaseResponse.success("修改成功");
-        }
-        return BaseResponse.fail("修改失败");
     }
 
 }
