@@ -1,5 +1,6 @@
 package cn.edu.zut.mfs.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.edu.zut.mfs.domain.Role;
 import cn.edu.zut.mfs.pojo.BaseResponse;
 import cn.edu.zut.mfs.service.RoleService;
@@ -27,12 +28,14 @@ public class RoleController {
     }
 
     @Operation(summary = "获取角色列表")
+    @SaCheckPermission("role:list")
     @GetMapping(value = "/list")
     public BaseResponse<List<Role>> getRoleList() {
         return BaseResponse.success(roleService.list());
     }
 
     @Operation(summary = "添加")
+    @SaCheckPermission("role:save")
     @PostMapping(value = "/save")
     public BaseResponse<String> save(@RequestBody Role role) {
         if(roleService.create(role)){
@@ -42,6 +45,7 @@ public class RoleController {
     }
 
     @Operation(summary = "修改")
+    @SaCheckPermission("role:update")
     @PostMapping(value = "/update")
     public BaseResponse<String> update(@RequestBody Role role) {
         if(roleService.update(role)){
@@ -51,6 +55,7 @@ public class RoleController {
     }
 
     @Operation(summary = "删除")
+    @SaCheckPermission("role:delete")
     @PostMapping(value = "/delete")
     public BaseResponse<String> delete(@NotBlank(message = "角色id不能为空") @RequestParam String id) {
         if(roleService.delete(id)){

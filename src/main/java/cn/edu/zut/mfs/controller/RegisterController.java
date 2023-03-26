@@ -1,5 +1,6 @@
 package cn.edu.zut.mfs.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.edu.zut.mfs.dto.UserRegisterDto;
 import cn.edu.zut.mfs.pojo.BaseResponse;
 import cn.edu.zut.mfs.service.EncryptService;
@@ -34,21 +35,21 @@ public class RegisterController {
     }
 
     @Operation(summary = "获取公钥")
-    @PostMapping("getPublicKey")
-    @ResponseBody
+    @GetMapping("getPublicKey")
     public BaseResponse<String> getPublicKey() {
         return BaseResponse.success(encryptService.getPublicKey());
     }
 
     @Operation(summary = "用户注册")
+    @SaCheckPermission("register:user")
     @PostMapping("/user")
     public BaseResponse<String> user(@RequestBody UserRegisterDto userRegisterDto) {
         UserLoginDto userLoginDto = new UserLoginDto();
         userLoginDto.setUsername(userRegisterDto.getUsername());
         userLoginDto.setPassword(userRegisterDto.getPassword());
-        encryptService.encrypt(userLoginDto);
-        userLoginDto.setPassword(userLoginDto.getPassword());
+        userLoginDto.setPublicKey(userRegisterDto.getPublicKey());
         if (encryptService.transformer(userLoginDto)) {
+            userRegisterDto.setPassword(userLoginDto.getPassword());
             if (registerService.register(userRegisterDto)) {
                 return BaseResponse.success("注册成功");
             }

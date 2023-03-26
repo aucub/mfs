@@ -21,7 +21,7 @@ public class DisableController {
 
 
     @Operation(summary = "封禁指定账号")
-    @SaCheckPermission("user:disable")
+    @SaCheckPermission("disable:disable")
     @PostMapping("disable")
     public BaseResponse<String> disable(String userId) {
         /*
@@ -35,7 +35,7 @@ public class DisableController {
     }
 
     @Operation(summary = "解封指定账号")
-    @SaCheckPermission("user:untieDisable")
+    @SaCheckPermission("disable:untieDisable")
     @PostMapping("untieDisable")
     public BaseResponse<String> untieDisable(String userId) {
         StpUtil.untieDisable(userId);

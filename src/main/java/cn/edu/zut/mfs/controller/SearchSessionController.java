@@ -26,7 +26,7 @@ import java.util.List;
 public class SearchSessionController {
 
     @Operation(summary = "会话查询接口----根据分页参数获取会话列表")
-    @SaCheckPermission("admin:getList")
+    @SaCheckPermission("searchSession:getList")
     @PostMapping("getList")
     public BaseResponse<List<SaSession>> getList(@RequestBody SearchSessionDto searchSessionDto) {
         // 创建集合
