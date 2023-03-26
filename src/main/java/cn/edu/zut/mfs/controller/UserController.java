@@ -88,7 +88,7 @@ public class UserController {
     @Operation(summary = "删除")
     @SaCheckPermission("user:delete")
     @PostMapping(value = "/delete")
-    public BaseResponse<String> delete(@NotBlank(message = "id不能为空") @RequestBody String id) {
+    public BaseResponse<String> delete(@NotBlank(message = "id不能为空") @RequestParam String id) {
        if(userService.delete(id)) {
            return BaseResponse.success("删除成功");
        }
