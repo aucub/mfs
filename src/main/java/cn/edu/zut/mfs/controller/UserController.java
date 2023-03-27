@@ -11,6 +11,7 @@ import cn.edu.zut.mfs.service.RegisterService;
 import cn.edu.zut.mfs.service.UserService;
 import cn.edu.zut.mfs.dto.FindPageDto;
 import cn.edu.zut.mfs.dto.UserLoginDto;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
@@ -48,9 +49,9 @@ public class UserController {
 
     @Operation(summary = "用户查询")
     @SaCheckPermission("user:pageList")
-    @PostMapping("/pageList")
-    public BaseResponse<Object> pageList(@RequestBody FindPageDto findPageDto) {
-        return BaseResponse.success(userService.list(findPageDto));
+    @GetMapping("/pageList")
+    public Object pageList(@RequestParam int pi,@RequestParam int ps) {
+        return userService.list(new FindPageDto("",ps,pi)).getRecords();
     }
 
     @Operation(summary = "用户查询-角色")

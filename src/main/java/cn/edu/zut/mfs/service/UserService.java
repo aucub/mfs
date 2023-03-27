@@ -4,6 +4,7 @@ import cn.edu.zut.mfs.domain.Permission;
 import cn.edu.zut.mfs.domain.Role;
 import cn.edu.zut.mfs.domain.User;
 import cn.edu.zut.mfs.dto.FindPageDto;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public interface UserService {
     /**
      * 根据用户名或昵称分页查询用户
      */
-    Object list(FindPageDto findPageDto);
+    Page<User> list(FindPageDto findPageDto);
     /**
      * 根据角色查询用户
      */

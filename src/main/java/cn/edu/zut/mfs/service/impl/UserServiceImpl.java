@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Object list(FindPageDto findPageDto) {
+    public Page<User> list(FindPageDto findPageDto) {
         Page<User> page= Page.of(findPageDto.getPageNum(), findPageDto.getPageSize());
         LambdaQueryWrapper<User> queryWrapper=new LambdaQueryWrapper<>();
         queryWrapper.like(User::getUsername, findPageDto.getKeyword()).or().like(User::getNickname, findPageDto.getKeyword());

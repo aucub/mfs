@@ -74,6 +74,23 @@ public class LoginController {
         return BaseResponse.fail("登录失败");
     }
 
+    @Operation(summary = "登录")
+    @PostMapping("doLogin2")
+    public BaseResponse<SaTokenInfo> doLogin2(@RequestBody UserLoginDto userLoginDto) {
+        encryptService.encrypt(userLoginDto);
+        if ((Boolean.TRUE.equals(loginAuthService.login(userLoginDto)))) {
+            // 先检查此账号是否已被封禁
+            StpUtil.checkDisable(userLoginDto.getUsername());
+            StpUtil.login(userLoginDto.getUsername(), false);
+            log.info(userLoginDto.getUsername() + "登录成功");
+            // 获取 Token  相关参数，这里需要把 Token 信息从响应体中返回到前端
+            SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
+            return BaseResponse.success(tokenInfo);
+
+        }
+        return BaseResponse.fail(null);
+    }
+
 
     @Operation(summary = "查询登录状态")
     @GetMapping("isLogin")
