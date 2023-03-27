@@ -49,9 +49,9 @@ public class UserController {
 
     @Operation(summary = "用户查询")
     @SaCheckPermission("user:pageList")
-    @GetMapping("/pageList")
-    public Object pageList(@RequestParam int pi,@RequestParam int ps) {
-        return userService.list(new FindPageDto("",ps,pi)).getRecords();
+    @PostMapping("/pageList")
+    public BaseResponse<Page<User>> pageList(@RequestBody FindPageDto findPageDto) {
+        return BaseResponse.success(userService.list(findPageDto));
     }
 
     @Operation(summary = "用户查询-角色")
