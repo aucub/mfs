@@ -71,7 +71,7 @@ dependencies {
     // mockito模拟对象-单元测试
     implementation 'org.mockito:mockito-core:5.2.0'
     implementation 'com.google.errorprone:error_prone_annotations:2.18.0'
-    implementation 'com.redis.om:redis-om-spring:0.8.0'
+   // implementation 'com.redis.om:redis-om-spring:0.8.0'
     //implementation 'io.netty.incubator:netty-incubator-codec-parent-quic:0.0.37.Final'
     //implementation 'io.netty.incubator:netty-incubator-codec-native-quic:0.0.36.Final'
     //implementation 'io.netty.incubator:netty-incubator-codec-http3:0.0.16.Final'

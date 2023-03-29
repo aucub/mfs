@@ -4,17 +4,19 @@ import cn.edu.zut.mfs.domain.ForwardMessage;
 import cn.edu.zut.mfs.service.ConsumeService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.List;
 
 @Slf4j
 @Service
 public class ConsumeServiceImpl implements ConsumeService {
+    private static final String QUEUE_NAME="mfs1";
     public RabbitTemplate rabbitTemplate;
 
     @Autowired
@@ -34,8 +36,14 @@ public class ConsumeServiceImpl implements ConsumeService {
 
     }
 
-    //@RabbitListener(queues = "test")
-    public void consumerBatch2(List<Message> messages) {
+    @Bean
+    public Queue queue(){
+        return new Queue(QUEUE_NAME,true);
+    }
 
+    @Override
+    //@RabbitListener(queues = "m")
+    public void consumer(String in) {
+        System.out.println(in);
     }
 }

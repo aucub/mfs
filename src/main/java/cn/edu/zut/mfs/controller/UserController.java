@@ -57,7 +57,7 @@ public class UserController {
     @Operation(summary = "用户查询-角色")
     @SaCheckPermission("user:pageListByRoleId")
     @PostMapping("/pageListByRoleId")
-    public BaseResponse<Object> pageListByRoleId(@RequestBody FindPageDto findPageDto) {
+    public BaseResponse<Page<User>> pageListByRoleId(@RequestBody FindPageDto findPageDto) {
         return BaseResponse.success(userService.listByRoleId(findPageDto));
     }
 

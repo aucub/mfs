@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 public class PublishStreamServiceImpl implements PublishStreamService {
     private final static String stream = "mfs";
     private static final Environment env = Environment.builder()
-            .uri("rabbitmq-stream://root:root@47.113.201.150:5552/%2f")//mfs
+            .uri("rabbitmq-stream://root:root@47.113.201.150:5552/%2fmfs")//mfs
             .build();
     private static final RabbitStreamTemplate rabbitStreamTemplate = new RabbitStreamTemplate(env, "mfs");
 

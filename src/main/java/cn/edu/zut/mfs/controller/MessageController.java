@@ -1,12 +1,13 @@
 package cn.edu.zut.mfs.controller;
 
+import cn.edu.zut.mfs.domain.Event;
 import cn.edu.zut.mfs.domain.ForwardMessage;
 import cn.edu.zut.mfs.pojo.BaseResponse;
 import cn.edu.zut.mfs.service.ConsumeService;
 import cn.edu.zut.mfs.service.PublishService;
 import cn.edu.zut.mfs.service.PublishStreamService;
+import cn.edu.zut.mfs.service.impl.ConsumeStreamServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -22,7 +23,6 @@ import java.util.Objects;
 /**
  * 消息处理
  */
-@Tag(name = "消息处理")
 @Slf4j
 @RestController
 @MessageMapping("Message")
@@ -30,18 +30,25 @@ public class MessageController {
     public final static HashMap<String,RSocketRequester > clients = new HashMap<>();
     private PublishStreamService publishStreamService;
     private PublishService publishService;
-    private ConsumeService consumeService;
+    //private ConsumeService consumeService;
+
+    ConsumeStreamServiceImpl consumeStreamService;
+
+    @Autowired
+    public void setConsumeStreamService(ConsumeStreamServiceImpl consumeStreamService) {
+        this.consumeStreamService = consumeStreamService;
+    }
 
     @Autowired
     public void setPublishService(PublishService publishService) {
         this.publishService = publishService;
     }
 
-    @Autowired
+    /*@Autowired
     public void setConsumeService(ConsumeService consumeService) {
         this.consumeService = consumeService;
     }
-
+*/
     @Autowired
     public void setPublishStreamService(PublishStreamService publishStreamService) {
         this.publishStreamService = publishStreamService;
@@ -67,6 +74,13 @@ public class MessageController {
         return Mono.empty();
     }
 
+    /*@MessageMapping("publish")
+    public Mono<String> publish(Event event) {
+        log.info("收到事件，客户端:" +event.getClient() + ",messageId:" + event.getId() );
+        publishService.publish(event);
+        return Mono.just("messageId:" + event.getId() + "已投递");
+    }*/
+
     @Operation(summary = "生产")
     @MessageMapping("publish")
     public Mono<String> publish(ForwardMessage forwardMessage) {
@@ -75,12 +89,18 @@ public class MessageController {
         return Mono.just("messageId:" + forwardMessage.getMessageId() + "已投递");
     }
 
-    @Operation(summary = "消费")
+   /* @Operation(summary = "消费")
     @MessageMapping("consume")
     public BaseResponse<ForwardMessage> consume(String consumer) {
         log.info("收到消费请求consumer:" + consumer);
         return BaseResponse.success(consumeService.consume(consumer));
-    }
+    }*/
+
+   @MessageMapping("consume")
+   public void consume() {
+       log.info("收到消费请求consume");
+       consumeStreamService.consume();
+   }
 
 }
 

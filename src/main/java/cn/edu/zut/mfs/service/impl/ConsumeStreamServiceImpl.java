@@ -1,11 +1,14 @@
 package cn.edu.zut.mfs.service.impl;
 
+import cn.edu.zut.mfs.ConsumerCustomizerFor;
+import cn.edu.zut.mfs.MessageListenerFor;
 import cn.edu.zut.mfs.controller.MessageController;
 import cn.edu.zut.mfs.domain.ForwardMessage;
 import cn.edu.zut.mfs.service.ConsumeStreamService;
 import cn.edu.zut.mfs.service.PublishService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rabbitmq.stream.ChannelCustomizer;
 import com.rabbitmq.stream.Consumer;
 import com.rabbitmq.stream.Environment;
 import com.rabbitmq.stream.OffsetSpecification;
@@ -18,6 +21,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.rsocket.RSocketRequester;
+import org.springframework.rabbit.stream.listener.ConsumerCustomizer;
+import org.springframework.rabbit.stream.listener.StreamListenerContainer;
 import org.springframework.rabbit.stream.producer.RabbitStreamTemplate;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -46,7 +51,7 @@ public class ConsumeStreamServiceImpl implements ConsumeStreamService {
     }
 
     @Override
-    @RabbitListener(queues = "mfs")//, containerFactory = "nativeFactory"
+    //@RabbitListener(queues = "mfs")//, containerFactory = "nativeFactory"
     public void consumer(String in) {
         ObjectMapper mapper = new ObjectMapper();
         try {
@@ -80,6 +85,20 @@ public class ConsumeStreamServiceImpl implements ConsumeStreamService {
     }
 
     public void consume() {
+        /*Environment environment = Environment.builder()
+                .uri("rabbitmq-stream://root:root@47.113.201.150:5552/%2f")
+                .build();
+        StreamListenerContainer streamListenerContainer=new StreamListenerContainer(environment);
+        streamListenerContainer.setQueueNames("mfs");
+        streamListenerContainer.setupMessageListener(new MessageListenerFor());
+        streamListenerContainer.setConsumerCustomizer(new ConsumerCustomizerFor());
+        streamListenerContainer.setAutoStartup(true);
+        streamListenerContainer.start();
+        try {
+            wait(100000000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }*/
         Consumer consumer =
                 env.consumerBuilder()
                         .stream(stream)
@@ -91,10 +110,11 @@ public class ConsumeStreamServiceImpl implements ConsumeStreamService {
                             System.out.println(message.getBody());
                         })
                         .build();
+        consumer.storedOffset();
+        try {
+            wait(10000000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
-
-    /*@RabbitListener( queues = "mfs", containerFactory = "nativeFactory")
-    public void nativeMsg(String in) {
-        log.info(in.toString());
-    }*/
 }

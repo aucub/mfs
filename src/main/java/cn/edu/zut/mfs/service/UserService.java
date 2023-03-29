@@ -23,7 +23,7 @@ public interface UserService {
     /**
      * 根据角色查询用户
      */
-    Object listByRoleId(FindPageDto findPageDto);
+    Page<User> listByRoleId(FindPageDto findPageDto);
 
     /**
      * 修改指定用户信息

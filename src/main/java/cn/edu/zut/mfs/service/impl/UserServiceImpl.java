@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Object listByRoleId(FindPageDto findPageDto) {
+    public Page<User> listByRoleId(FindPageDto findPageDto) {
         Page<User> page= Page.of(findPageDto.getPageNum(), findPageDto.getPageSize());
         return userDao.listByRoleId(page, findPageDto.getKeyword());
     }
