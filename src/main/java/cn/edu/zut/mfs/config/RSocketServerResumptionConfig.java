@@ -8,9 +8,7 @@ import org.springframework.stereotype.Component;
 
 
 /**
- * 使套接字能够恢复。
- * 默认情况下，Resume Session 的持续时间为 120 秒，超时时间为 10 秒，
- * 并使用 In Memory（易失性、非持久性）会话存储。
+ * 套接字恢复
  */
 @Profile("resumption")
 @Component

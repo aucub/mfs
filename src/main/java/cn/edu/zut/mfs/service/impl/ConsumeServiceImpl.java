@@ -4,11 +4,8 @@ import cn.edu.zut.mfs.domain.ForwardMessage;
 import cn.edu.zut.mfs.service.ConsumeService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -16,8 +13,8 @@ import java.io.IOException;
 @Slf4j
 @Service
 public class ConsumeServiceImpl implements ConsumeService {
-    private static final String QUEUE_NAME="mfs1";
-    public RabbitTemplate rabbitTemplate;
+    private RabbitTemplate rabbitTemplate;
+    private final static ObjectMapper mapper = new ObjectMapper();
 
     @Autowired
     public void setRabbitTemplate(RabbitTemplate rabbitTemplate) {
@@ -25,25 +22,11 @@ public class ConsumeServiceImpl implements ConsumeService {
     }
 
     @Override
-    public ForwardMessage consume(String consumer) {
-        ObjectMapper mapper = new ObjectMapper();
+    public ForwardMessage consume(String queue) {
         try {
-            return mapper.readValue((rabbitTemplate.receive(consumer)).getBody(), ForwardMessage.class);
-            //return new String(Objects.requireNonNull(rabbitTemplate.receive(consumer)).getBody(), "utf-8");
+            return mapper.readValue((rabbitTemplate.receive(queue)).getBody(), ForwardMessage.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-    }
-
-    @Bean
-    public Queue queue(){
-        return new Queue(QUEUE_NAME,true);
-    }
-
-    @Override
-    //@RabbitListener(queues = "m")
-    public void consumer(String in) {
-        System.out.println(in);
     }
 }

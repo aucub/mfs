@@ -1,6 +1,5 @@
 package cn.edu.zut.mfs.service.impl;
 
-import cn.edu.zut.mfs.domain.Event;
 import cn.edu.zut.mfs.domain.ForwardMessage;
 import cn.edu.zut.mfs.service.PublishService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,10 +15,9 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class PublishServiceImpl implements PublishService {
-
-
+    private final static ObjectMapper mapper = new ObjectMapper();
     private RabbitTemplate rabbitTemplate;
-    AmqpAdmin amqpAdmin;
+    private static AmqpAdmin amqpAdmin;
 
     @Autowired
     public void setRabbitTemplate(RabbitTemplate rabbitTemplate) {
@@ -35,19 +33,7 @@ public class PublishServiceImpl implements PublishService {
     @Override
     @SneakyThrows
     public void publish(ForwardMessage forwardMessage) {
-        ObjectMapper mapper = new ObjectMapper();
-        amqpAdmin.declareQueue(new Queue(forwardMessage.getConsumer(), true, false, true));
-        rabbitTemplate.send(forwardMessage.getConsumer(), new Message(mapper.writeValueAsBytes(forwardMessage)));
-        System.out.println(forwardMessage.toString());
-        //t.send(forwardMessage.getConsumer(), new Message(mapper.writeValueAsBytes(forwardMessage)));
-    }
-
-    @Override
-    @SneakyThrows
-    public void publish(Event event) {
-        ObjectMapper mapper = new ObjectMapper();
-        amqpAdmin.declareQueue(new Queue(event.getTopic(), true, false, true));
-        rabbitTemplate.send(event.getTopic(), new Message(mapper.writeValueAsBytes(event)));
-        System.out.println(event.toString());
+        amqpAdmin.declareQueue(new Queue(forwardMessage.getTopic(), true, false, true));
+        rabbitTemplate.send(forwardMessage.getTopic(), new Message(mapper.writeValueAsBytes(forwardMessage)));
     }
 }

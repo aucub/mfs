@@ -6,5 +6,4 @@ import cn.edu.zut.mfs.domain.ForwardMessage;
 
 public interface PublishService {
     void publish(ForwardMessage forwardMessage);
-    void publish(Event event);
 }

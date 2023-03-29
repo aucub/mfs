@@ -7,10 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ForwardMessage {
-    private String publisher;
-    private String consumer;
+public abstract class ForwardMessage {
+    private String id;
     private String client;
-    private String messageId;
-    private byte[] body;
+    private String topic;
+    //private Date timeStamp;
+
 }
