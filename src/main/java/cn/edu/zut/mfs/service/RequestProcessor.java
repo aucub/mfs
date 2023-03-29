@@ -11,7 +11,8 @@ import java.util.Objects;
 @Service
 public class RequestProcessor {
     public final static HashMap<String, RSocketRequester> requesters = new HashMap<>();
-    public void processRequests(RSocketRequester requester, String client){
+
+    public void processRequests(RSocketRequester requester, String client) {
         Objects.requireNonNull(requester.rsocket())
                 .onClose()
                 .doFirst(() -> {

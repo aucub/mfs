@@ -1,6 +1,5 @@
 package cn.edu.zut.mfs.service.impl;
 
-import cn.edu.zut.mfs.controller.ConsumeController;
 import cn.edu.zut.mfs.domain.ForwardMessage;
 import cn.edu.zut.mfs.service.RSocketServer;
 import cn.edu.zut.mfs.service.RequestProcessor;

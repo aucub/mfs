@@ -15,14 +15,13 @@ import java.util.HashMap;
 @RestController
 public class ConnectController {
 
+    public final static HashMap<String, RSocketRequester> requesters = new HashMap<>();
     private RequestProcessor requestProcessor;
 
     @Autowired
     public void setRequestProcessor(RequestProcessor requestProcessor) {
         this.requestProcessor = requestProcessor;
     }
-
-    public final static HashMap<String, RSocketRequester> requesters = new HashMap<>();
 
     @ConnectMapping("connect")
     public Mono<Void> connect(RSocketRequester requester,

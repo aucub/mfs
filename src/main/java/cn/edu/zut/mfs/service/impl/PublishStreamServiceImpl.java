@@ -14,10 +14,10 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class PublishStreamServiceImpl implements PublishStreamService {
+    private static final ObjectMapper mapper = new ObjectMapper();
     private Environment environment = Environment.builder()
             .uri("rabbitmq-stream://root:root@47.113.201.150:5552/%2fmfs")
             .build();
-    private static final ObjectMapper mapper = new ObjectMapper();
     private RabbitStreamTemplate rabbitStreamTemplate;
 
     public void setRabbitStreamTemplate(String stream) {

@@ -17,6 +17,7 @@ public class PublishController {
     private PublishStreamService publishStreamService;
 
     private PublishService publishService;
+
     @Autowired
     public void setPublishService(PublishService publishService) {
         this.publishService = publishService;
