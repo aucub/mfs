@@ -1,8 +1,9 @@
 package cn.edu.zut.mfs.service.impl;
 
-import cn.edu.zut.mfs.controller.MessageController;
+import cn.edu.zut.mfs.controller.ConsumeController;
 import cn.edu.zut.mfs.domain.ForwardMessage;
 import cn.edu.zut.mfs.service.RSocketServer;
+import cn.edu.zut.mfs.service.RequestProcessor;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.ByteBufUtil;
@@ -19,8 +20,8 @@ public class RSocketServerImpl implements RSocketServer {
 
     @Override
     public void send(ForwardMessage forwardMessage) {
-        if (MessageController.clients.containsKey(forwardMessage.getClient())) {
-            RSocketRequester requester = MessageController.clients.get(forwardMessage.getClient());
+        if (RequestProcessor.requesters.containsKey(forwardMessage.getClient())) {
+            RSocketRequester requester = RequestProcessor.requesters.get(forwardMessage.getClient());
             ByteBuf routeMetadata = TaggingMetadataCodec
                     .createTaggingContent(ByteBufAllocator.DEFAULT, Collections.singletonList("message"));
 

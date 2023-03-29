@@ -6,5 +6,4 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface RegisterDao extends BaseMapper<UserRegisterDto> {
-    // Integer insert(UserRegisterDto userRegisterDto);
 }

@@ -1,5 +1,6 @@
 package cn.edu.zut.mfs.service.impl;
 
+import cn.edu.zut.mfs.domain.Consume;
 import cn.edu.zut.mfs.domain.ForwardMessage;
 import cn.edu.zut.mfs.service.ConsumeService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,9 +23,9 @@ public class ConsumeServiceImpl implements ConsumeService {
     }
 
     @Override
-    public ForwardMessage consume(String queue) {
+    public ForwardMessage consume(Consume consume) {
         try {
-            return mapper.readValue((rabbitTemplate.receive(queue)).getBody(), ForwardMessage.class);
+            return mapper.readValue((rabbitTemplate.receive(consume.getQueue())).getBody(), ForwardMessage.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -14,19 +14,18 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class PublishStreamServiceImpl implements PublishStreamService {
-    private static final Environment env = Environment.builder()
+    private Environment environment = Environment.builder()
             .uri("rabbitmq-stream://root:root@47.113.201.150:5552/%2fmfs")
             .build();
     private static final ObjectMapper mapper = new ObjectMapper();
-    private final RabbitStreamTemplate rabbitStreamTemplate;
+    private RabbitStreamTemplate rabbitStreamTemplate;
 
-    public PublishStreamServiceImpl(String stream) {
-        rabbitStreamTemplate = new RabbitStreamTemplate(env, stream);
-        rabbitStreamTemplate.setProducerCustomizer((name, builder) -> builder.name(stream));
+    public void setRabbitStreamTemplate(String stream) {
+        rabbitStreamTemplate = new RabbitStreamTemplate(environment, stream);
     }
 
     public void stream(String stream) {
-        env.streamCreator()
+        environment.streamCreator()
                 .stream(stream)
                 .maxLengthBytes(ByteCapacity.GB(1))
                 .maxSegmentSizeBytes(ByteCapacity.MB(100))
@@ -37,6 +36,8 @@ public class PublishStreamServiceImpl implements PublishStreamService {
     public void publish(ForwardMessage forwardMessage) {
         StreamMessageProperties streamMessageProperties = new StreamMessageProperties();
         try {
+            stream(forwardMessage.getTopic());
+            setRabbitStreamTemplate(forwardMessage.getTopic());
             rabbitStreamTemplate.send(new org.springframework.amqp.core.Message(mapper.writeValueAsBytes(forwardMessage), streamMessageProperties));
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);

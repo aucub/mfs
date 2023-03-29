@@ -1,5 +1,6 @@
 package cn.edu.zut.mfs.service.impl;
 
+import cn.edu.zut.mfs.domain.Consume;
 import cn.edu.zut.mfs.service.ConsumeStreamService;
 import com.rabbitmq.stream.Consumer;
 import com.rabbitmq.stream.Environment;
@@ -17,11 +18,11 @@ public class ConsumeStreamServiceImpl implements ConsumeStreamService {
     private Consumer consumer;
 
     @Override
-    public void consume(String stream, String client) {
+    public void consume(Consume consume) {
         consumer =
                 environment.consumerBuilder()
-                        .stream(stream)
-                        .name(client)
+                        .stream(consume.getQueue())
+                        .name(consume.getClient())
                         .offset(OffsetSpecification.first())
                         .autoTrackingStrategy()
                         .builder()

@@ -7,10 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ForwardMessage {
-    private String id;
+public class Consume {
+    private String queue;
     private String client;
-    private String topic;
-    //private Date timeStamp;
-
 }
