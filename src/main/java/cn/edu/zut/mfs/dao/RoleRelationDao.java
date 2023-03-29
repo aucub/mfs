@@ -10,11 +10,12 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 @Mapper
-public interface RoleRelationDao extends BaseMapper<RoleRelation>{
+public interface RoleRelationDao extends BaseMapper<RoleRelation> {
     /**
      * 获取用户所有角色
      */
     List<Role> getRoleList(@Param("userId") String userId);
+
     /**
      * 获取用户角色权限
      */

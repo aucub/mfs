@@ -1,4 +1,4 @@
 package cn.edu.zut.mfs.domain;
 
-public abstract class Broadcast extends ForwardMessage{
+public abstract class Broadcast extends ForwardMessage {
 }

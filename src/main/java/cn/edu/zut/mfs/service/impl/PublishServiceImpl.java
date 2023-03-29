@@ -16,8 +16,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class PublishServiceImpl implements PublishService {
     private final static ObjectMapper mapper = new ObjectMapper();
-    private RabbitTemplate rabbitTemplate;
     private static AmqpAdmin amqpAdmin;
+    private RabbitTemplate rabbitTemplate;
 
     @Autowired
     public void setRabbitTemplate(RabbitTemplate rabbitTemplate) {

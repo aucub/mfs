@@ -13,8 +13,8 @@ import java.io.IOException;
 @Slf4j
 @Service
 public class ConsumeServiceImpl implements ConsumeService {
-    private RabbitTemplate rabbitTemplate;
     private final static ObjectMapper mapper = new ObjectMapper();
+    private RabbitTemplate rabbitTemplate;
 
     @Autowired
     public void setRabbitTemplate(RabbitTemplate rabbitTemplate) {

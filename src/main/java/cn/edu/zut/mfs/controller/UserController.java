@@ -3,14 +3,14 @@ package cn.edu.zut.mfs.controller;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.edu.zut.mfs.domain.Role;
 import cn.edu.zut.mfs.domain.User;
+import cn.edu.zut.mfs.dto.FindPageDto;
 import cn.edu.zut.mfs.dto.RoleRelationDto;
+import cn.edu.zut.mfs.dto.UserLoginDto;
 import cn.edu.zut.mfs.dto.UserRegisterDto;
 import cn.edu.zut.mfs.pojo.BaseResponse;
 import cn.edu.zut.mfs.service.EncryptService;
 import cn.edu.zut.mfs.service.RegisterService;
 import cn.edu.zut.mfs.service.UserService;
-import cn.edu.zut.mfs.dto.FindPageDto;
-import cn.edu.zut.mfs.dto.UserLoginDto;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 /**
  * 用户管理
  */
@@ -70,7 +71,7 @@ public class UserController {
         userLoginDto.setPassword(userRegisterDto.getPassword());
         encryptService.encrypt(userLoginDto);
         userRegisterDto.setPassword(userLoginDto.getPassword());
-        if(registerService.register(userRegisterDto)) {
+        if (registerService.register(userRegisterDto)) {
             return BaseResponse.success("添加成功");
         }
         return BaseResponse.fail("添加失败");
@@ -80,7 +81,7 @@ public class UserController {
     @SaCheckPermission("user:update")
     @PostMapping(value = "/update")
     public BaseResponse<String> update(@RequestBody User user) {
-        if(userService.update(user)) {
+        if (userService.update(user)) {
             return BaseResponse.success("修改成功");
         }
         return BaseResponse.fail("修改失败");
@@ -90,10 +91,9 @@ public class UserController {
     @SaCheckPermission("user:delete")
     @PostMapping(value = "/delete")
     public BaseResponse<String> delete(@NotBlank(message = "id不能为空") @RequestParam String id) {
-       if(userService.delete(id)) {
-           return BaseResponse.success("删除成功");
-       }
-       else return BaseResponse.fail("删除失败");
+        if (userService.delete(id)) {
+            return BaseResponse.success("删除成功");
+        } else return BaseResponse.fail("删除失败");
     }
 
 
@@ -114,8 +114,8 @@ public class UserController {
     @Operation(summary = "保存授权角色")
     @SaCheckPermission("user:saveAuthRole")
     @PostMapping(value = "/saveAuthRole")
-    public BaseResponse<String> saveAuthRole( @RequestBody RoleRelationDto roleRelationDto) {
-        if(userService.updateRole(roleRelationDto.getUserId(), roleRelationDto.getRoleIds())) {
+    public BaseResponse<String> saveAuthRole(@RequestBody RoleRelationDto roleRelationDto) {
+        if (userService.updateRole(roleRelationDto.getUserId(), roleRelationDto.getRoleIds())) {
             return BaseResponse.success("保存成功");
         }
         return BaseResponse.fail("保存失败");

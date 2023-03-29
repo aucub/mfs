@@ -6,7 +6,6 @@ import cn.edu.zut.mfs.service.ConsumeService;
 import cn.edu.zut.mfs.service.ConsumeStreamService;
 import cn.edu.zut.mfs.service.PublishService;
 import cn.edu.zut.mfs.service.PublishStreamService;
-import cn.edu.zut.mfs.service.impl.ConsumeStreamServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +26,7 @@ import java.util.Objects;
 @RestController
 @MessageMapping("Message")
 public class MessageController {
-    public final static HashMap<String,RSocketRequester > clients = new HashMap<>();
+    public final static HashMap<String, RSocketRequester> clients = new HashMap<>();
     private PublishStreamService publishStreamService;
     private ConsumeStreamService consumeStreamService;
 
@@ -58,13 +57,13 @@ public class MessageController {
     @Operation(summary = "客户端连接")
     @ConnectMapping("connect")
     public Mono<Void> connect(RSocketRequester requester,
-                        @Payload String client) {
+                              @Payload String client) {
 
         Objects.requireNonNull(requester.rsocket())
                 .onClose()
                 .doFirst(() -> {
                     log.info("客户端: {} 连接", client);
-                    clients.put( client,requester);
+                    clients.put(client, requester);
                 })
                 .doOnError(error -> log.warn("通道被客户端： {} 关闭", client))
                 .doFinally(consumer -> {
@@ -77,7 +76,7 @@ public class MessageController {
 
     @MessageMapping("publish")
     public Mono<String> publish(ForwardMessage forwardMessage) {
-        log.info("收到事件，客户端:" +forwardMessage.getClient() + ",messageId:" + forwardMessage.getId() );
+        log.info("收到事件，客户端:" + forwardMessage.getClient() + ",messageId:" + forwardMessage.getId());
         publishService.publish(forwardMessage);
         return Mono.just("messageId:" + forwardMessage.getId() + "已投递");
     }
@@ -93,11 +92,11 @@ public class MessageController {
         return BaseResponse.success(consumeService.consume(queue));
     }
 
-   @MessageMapping("consume")
-   public void consume() {
-       log.info("收到消费请求consume");
-       //consumeStreamService.consume(stream,client);
-   }
+    @MessageMapping("consume")
+    public void consume() {
+        log.info("收到消费请求consume");
+        //consumeStreamService.consume(stream,client);
+    }
 
 }
 

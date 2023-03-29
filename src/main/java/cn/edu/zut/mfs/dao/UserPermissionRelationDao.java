@@ -9,7 +9,7 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 @Mapper
-public interface UserPermissionRelationDao extends BaseMapper<UserPermissionRelation>{
+public interface UserPermissionRelationDao extends BaseMapper<UserPermissionRelation> {
     /**
      * 获取用户权限
      */

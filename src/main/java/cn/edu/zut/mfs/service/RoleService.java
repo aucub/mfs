@@ -11,6 +11,7 @@ public interface RoleService {
      * 添加角色
      */
     Boolean create(Role role);
+
     /**
      * 删除角色
      */

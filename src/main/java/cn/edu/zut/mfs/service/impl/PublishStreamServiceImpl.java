@@ -1,6 +1,5 @@
 package cn.edu.zut.mfs.service.impl;
 
-import cn.edu.zut.mfs.domain.Event;
 import cn.edu.zut.mfs.domain.ForwardMessage;
 import cn.edu.zut.mfs.service.PublishStreamService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -18,8 +17,8 @@ public class PublishStreamServiceImpl implements PublishStreamService {
     private static final Environment env = Environment.builder()
             .uri("rabbitmq-stream://root:root@47.113.201.150:5552/%2fmfs")
             .build();
-    private final RabbitStreamTemplate rabbitStreamTemplate;
     private static final ObjectMapper mapper = new ObjectMapper();
+    private final RabbitStreamTemplate rabbitStreamTemplate;
 
     public PublishStreamServiceImpl(String stream) {
         rabbitStreamTemplate = new RabbitStreamTemplate(env, stream);

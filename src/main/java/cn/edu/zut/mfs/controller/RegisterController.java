@@ -1,12 +1,12 @@
 package cn.edu.zut.mfs.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.edu.zut.mfs.dto.UserLoginDto;
 import cn.edu.zut.mfs.dto.UserRegisterDto;
 import cn.edu.zut.mfs.pojo.BaseResponse;
 import cn.edu.zut.mfs.service.EncryptService;
 import cn.edu.zut.mfs.service.RegisterService;
 import cn.edu.zut.mfs.service.impl.EncryptServiceImpl;
-import cn.edu.zut.mfs.dto.UserLoginDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;

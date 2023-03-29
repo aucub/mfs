@@ -20,6 +20,7 @@ public interface UserService {
      * 根据用户名或昵称分页查询用户
      */
     Page<User> list(FindPageDto findPageDto);
+
     /**
      * 根据角色查询用户
      */

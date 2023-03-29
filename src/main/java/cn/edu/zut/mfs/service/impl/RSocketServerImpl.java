@@ -19,8 +19,8 @@ public class RSocketServerImpl implements RSocketServer {
 
     @Override
     public void send(ForwardMessage forwardMessage) {
-        if(MessageController.clients.containsKey(forwardMessage.getClient())) {
-            RSocketRequester requester=MessageController.clients.get(forwardMessage.getClient());
+        if (MessageController.clients.containsKey(forwardMessage.getClient())) {
+            RSocketRequester requester = MessageController.clients.get(forwardMessage.getClient());
             ByteBuf routeMetadata = TaggingMetadataCodec
                     .createTaggingContent(ByteBufAllocator.DEFAULT, Collections.singletonList("message"));
 

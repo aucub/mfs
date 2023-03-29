@@ -8,6 +8,8 @@
         select id,username, nickname, status, create_time, deleted, last_update_time, login_time, note from user where id=#{id}
     </select>-->
     <select id="listByRoleId" resultType="cn.edu.zut.mfs.domain.User">
-        select user.* from user where user.id in (select role_relation.user_id from role_relation where role_relation.role_id=#{roleId})
+        select user.*
+        from user
+        where user.id in (select role_relation.user_id from role_relation where role_relation.role_id = #{roleId})
     </select>
 </mapper>

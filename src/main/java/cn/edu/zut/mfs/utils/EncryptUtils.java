@@ -15,14 +15,13 @@ import java.util.Base64;
 
 @Slf4j
 public class EncryptUtils {
-    static KeysetHandle keysetHandle;
-    static DeterministicAead daead;
+    private static DeterministicAead daead;
 
     public static void init() {
         try {
             TinkConfig.register();
             InputStream inputStream = new ClassPathResource("Keyset.json").getInputStream();
-            keysetHandle = CleartextKeysetHandle.read(JsonKeysetReader.withInputStream(inputStream));
+            KeysetHandle keysetHandle = CleartextKeysetHandle.read(JsonKeysetReader.withInputStream(inputStream));
             daead = keysetHandle.getPrimitive(DeterministicAead.class);
         } catch (GeneralSecurityException | IOException e) {
             throw new RuntimeException(e);

@@ -22,6 +22,7 @@ public class RoleServiceImpl implements RoleService {
     PermissionDao permissionDao;
     RolePermissionRelationDao rolePermissionRelationDao;
     RoleRelationDao roleRelationDao;
+
     @Autowired
     public void setRoleDao(RoleDao roleDao) {
         this.roleDao = roleDao;
@@ -46,7 +47,7 @@ public class RoleServiceImpl implements RoleService {
     public Boolean create(Role role) {
         Map<String, Object> params = new HashMap<>();
         params.put("name", role.getName());
-        if(roleDao.selectByMap(params).isEmpty()){
+        if (roleDao.selectByMap(params).isEmpty()) {
             return roleDao.insert(role) == 1;
         }
         return false;
@@ -82,7 +83,7 @@ public class RoleServiceImpl implements RoleService {
         Map<String, Object> params = new HashMap<>();
         params.put("role_id", roleId);
         rolePermissionRelationDao.deleteByMap(params);
-        if (!CollectionUtils.isEmpty(permissionIds)){
+        if (!CollectionUtils.isEmpty(permissionIds)) {
             for (String permissionId : permissionIds) {
                 RolePermissionRelation rolePermissionRelation = new RolePermissionRelation();
                 rolePermissionRelation.setRoleId(roleId);

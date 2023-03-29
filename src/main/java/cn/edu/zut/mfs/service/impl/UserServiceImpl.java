@@ -7,8 +7,8 @@ import cn.edu.zut.mfs.domain.Permission;
 import cn.edu.zut.mfs.domain.Role;
 import cn.edu.zut.mfs.domain.RoleRelation;
 import cn.edu.zut.mfs.domain.User;
-import cn.edu.zut.mfs.service.UserService;
 import cn.edu.zut.mfs.dto.FindPageDto;
+import cn.edu.zut.mfs.service.UserService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -48,28 +48,28 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Page<User> list(FindPageDto findPageDto) {
-        Page<User> page= Page.of(findPageDto.getPageNum(), findPageDto.getPageSize());
-        LambdaQueryWrapper<User> queryWrapper=new LambdaQueryWrapper<>();
+        Page<User> page = Page.of(findPageDto.getPageNum(), findPageDto.getPageSize());
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.like(User::getUsername, findPageDto.getKeyword()).or().like(User::getNickname, findPageDto.getKeyword());
-        userDao.selectPage(page,queryWrapper);
+        userDao.selectPage(page, queryWrapper);
         return page;
     }
 
     @Override
     public Page<User> listByRoleId(FindPageDto findPageDto) {
-        Page<User> page= Page.of(findPageDto.getPageNum(), findPageDto.getPageSize());
+        Page<User> page = Page.of(findPageDto.getPageNum(), findPageDto.getPageSize());
         return userDao.listByRoleId(page, findPageDto.getKeyword());
     }
 
     @Override
     public Boolean update(User user) {
-        return userDao.updateById(user)==1;
+        return userDao.updateById(user) == 1;
     }
 
 
     @Override
     public Boolean delete(String id) {
-        User user=new User();
+        User user = new User();
         user.setId(id);
         return userDao.deleteById(user) == 1;
     }
@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService {
         Map<String, Object> params = new HashMap<>();
         params.put("user_id", userId);
         roleRelationDao.deleteByMap(params);
-        if (!CollectionUtils.isEmpty(roleIds)){
+        if (!CollectionUtils.isEmpty(roleIds)) {
             for (String roleId : roleIds) {
                 RoleRelation roleRelation = new RoleRelation();
                 roleRelation.setUserId(userId);
@@ -99,7 +99,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<Permission> getPermissionList(String userId) {
-        List<Permission> permissions=new ArrayList<>();
+        List<Permission> permissions = new ArrayList<>();
         //permissions.addAll(roleRelationDao.getPermissionList(userId));
         permissions.addAll(userPermissionRelationDao.getPermissionList(userId));
         return permissions;

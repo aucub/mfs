@@ -6,5 +6,6 @@ public interface EncryptService {
     String getPublicKey();
 
     Boolean transformer(UserLoginDto userLoginDto);
+
     Boolean encrypt(UserLoginDto userLoginDto);
 }

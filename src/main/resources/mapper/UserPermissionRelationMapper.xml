@@ -3,13 +3,10 @@
 <mapper namespace="cn.edu.zut.mfs.dao.UserPermissionRelationDao">
     <select id="getPermissionList">
         SELECT permission.*
-        FROM
-            user_permission_relation
-                LEFT JOIN permission ON permission.id = user_permission_relation.permission_id
-        WHERE
-            user_permission_relation.user_id = #{userId}
+        FROM user_permission_relation
+                 LEFT JOIN permission ON permission.id = user_permission_relation.permission_id
+        WHERE user_permission_relation.user_id = #{userId}
           AND permission.id IS NOT NULL
-        GROUP BY
-            permission.id
+        GROUP BY permission.id
     </select>
 </mapper>

@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 /**
  * 角色管理
  */
@@ -40,7 +41,7 @@ public class RoleController {
     @SaCheckPermission("role:save")
     @PostMapping(value = "/save")
     public BaseResponse<String> save(@RequestBody Role role) {
-        if(Boolean.TRUE.equals(roleService.create(role))){
+        if (Boolean.TRUE.equals(roleService.create(role))) {
             return BaseResponse.success("添加成功");
         }
         return BaseResponse.fail("添加失败");
@@ -50,7 +51,7 @@ public class RoleController {
     @SaCheckPermission("role:update")
     @PostMapping(value = "/update")
     public BaseResponse<String> update(@RequestBody Role role) {
-        if(Boolean.TRUE.equals(roleService.update(role))){
+        if (Boolean.TRUE.equals(roleService.update(role))) {
             return BaseResponse.success("修改成功");
         }
         return BaseResponse.fail("修改失败");
@@ -60,7 +61,7 @@ public class RoleController {
     @SaCheckPermission("role:delete")
     @PostMapping(value = "/delete")
     public BaseResponse<String> delete(@NotBlank(message = "角色id不能为空") @RequestParam String id) {
-        if(Boolean.TRUE.equals(roleService.delete(id))){
+        if (Boolean.TRUE.equals(roleService.delete(id))) {
             return BaseResponse.success("删除成功");
         }
         return BaseResponse.fail("删除失败");
@@ -70,7 +71,7 @@ public class RoleController {
     @SaCheckPermission("role:allocPermission")
     @PostMapping(value = "/allocPermission")
     public BaseResponse<String> allocPermission(@RequestBody RolePermissionDto rolePermissionDto) {
-        if(roleService.allocPermission(rolePermissionDto.getRoleId(), rolePermissionDto.getPermissionIds())){
+        if (roleService.allocPermission(rolePermissionDto.getRoleId(), rolePermissionDto.getPermissionIds())) {
             return BaseResponse.success("分配权限成功");
         }
         return BaseResponse.fail("分配权限失败");
