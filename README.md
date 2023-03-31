@@ -1,6 +1,7 @@
 ## 基础设施
 
 - [x]  接口文档:http://47.113.201.150:8080/doc.html#/home
+- [x]  测试文档:https://gitee.com/aucub/fast-request-syncdoc
 - [ ]  weblog
 
 ## 后端用户管理
