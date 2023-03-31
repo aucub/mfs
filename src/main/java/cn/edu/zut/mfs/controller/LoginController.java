@@ -2,7 +2,6 @@ package cn.edu.zut.mfs.controller;
 
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
-import cn.edu.zut.mfs.domain.User;
 import cn.edu.zut.mfs.dto.UserLoginDto;
 import cn.edu.zut.mfs.pojo.BaseResponse;
 import cn.edu.zut.mfs.service.EncryptService;
@@ -15,12 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * Sa-Token 用户登录
+ * Sa-Token 登录
  */
 @Slf4j
 @RestController
-@RequestMapping("/user/")
-@Tag(name = "用户登录")
+@RequestMapping("/login/")
+@Tag(name = "登录")
 public class LoginController {
     LoginAuthService loginAuthService;
 
@@ -47,20 +46,18 @@ public class LoginController {
     public BaseResponse<String> doLogin(@RequestBody UserLoginDto userLoginDto) {
         if (encryptService.transformer(userLoginDto) && (Boolean.TRUE.equals(loginAuthService.login(userLoginDto)))) {
             // 先检查此账号是否已被封禁
-            //StpUtil.checkDisable(userVo.getUsername());
+            StpUtil.checkDisable(userLoginDto.getUsername());
             StpUtil.login(userLoginDto.getUsername(), true);
-            log.info(userLoginDto.getUsername() + "登录成功");
             // 获取 Token  相关参数，这里需要把 Token 信息从响应体中返回到前端
             SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
             return BaseResponse.success("登录成功,token:" + tokenInfo);
-
         }
         return BaseResponse.fail("登录失败");
     }
 
     @Operation(summary = "不记住我登录")
     @PostMapping("doLogin1")
-    public BaseResponse<String> doLogin1(@RequestBody UserLoginDto userLoginDto) {
+    public BaseResponse<SaTokenInfo> doLogin1(@RequestBody UserLoginDto userLoginDto) {
         if (encryptService.transformer(userLoginDto) && (Boolean.TRUE.equals(loginAuthService.login(userLoginDto)))) {
             // 先检查此账号是否已被封禁
             StpUtil.checkDisable(userLoginDto.getUsername());
@@ -68,10 +65,10 @@ public class LoginController {
             log.info(userLoginDto.getUsername() + "登录成功");
             // 获取 Token  相关参数，这里需要把 Token 信息从响应体中返回到前端
             SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
-            return BaseResponse.success("登录成功,token:" + tokenInfo);
+            return BaseResponse.success(tokenInfo);
 
         }
-        return BaseResponse.fail("登录失败");
+        return BaseResponse.fail(null);
     }
 
     @Operation(summary = "登录")
@@ -79,10 +76,7 @@ public class LoginController {
     public BaseResponse<SaTokenInfo> doLogin2(@RequestBody UserLoginDto userLoginDto) {
         encryptService.encrypt(userLoginDto);
         if ((Boolean.TRUE.equals(loginAuthService.login(userLoginDto)))) {
-            // 先检查此账号是否已被封禁
-            StpUtil.checkDisable(userLoginDto.getUsername());
             StpUtil.login(userLoginDto.getUsername(), false);
-            log.info(userLoginDto.getUsername() + "登录成功");
             // 获取 Token  相关参数，这里需要把 Token 信息从响应体中返回到前端
             SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
             return BaseResponse.success(tokenInfo);
@@ -130,13 +124,6 @@ public class LoginController {
         String username = StpUtil.getLoginIdAsString();
         return BaseResponse.success("当前客户端登录的账号是：" + username);
     }
-
-    @Operation(summary = "获取用户信息")
-    @GetMapping("/getUserInfo")
-    public BaseResponse<User> getUserInfo() {
-        return null;
-    }
-
 
     @Operation(summary = "修改密码")
     @PostMapping("/updatePass")

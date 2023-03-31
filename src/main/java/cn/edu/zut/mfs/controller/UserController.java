@@ -1,9 +1,10 @@
 package cn.edu.zut.mfs.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.dev33.satoken.stp.StpUtil;
 import cn.edu.zut.mfs.domain.Role;
 import cn.edu.zut.mfs.domain.User;
-import cn.edu.zut.mfs.dto.FindPageDto;
+import cn.edu.zut.mfs.dto.FindUserPageDto;
 import cn.edu.zut.mfs.dto.RoleRelationDto;
 import cn.edu.zut.mfs.dto.UserLoginDto;
 import cn.edu.zut.mfs.dto.UserRegisterDto;
@@ -51,15 +52,8 @@ public class UserController {
     @Operation(summary = "用户查询")
     @SaCheckPermission("user:pageList")
     @PostMapping("/pageList")
-    public BaseResponse<Page<User>> pageList(@RequestBody FindPageDto findPageDto) {
-        return BaseResponse.success(userService.list(findPageDto));
-    }
-
-    @Operation(summary = "用户查询-角色")
-    @SaCheckPermission("user:pageListByRoleId")
-    @PostMapping("/pageListByRoleId")
-    public BaseResponse<Page<User>> pageListByRoleId(@RequestBody FindPageDto findPageDto) {
-        return BaseResponse.success(userService.listByRoleId(findPageDto));
+    public BaseResponse<Page<User>> pageList(@RequestBody FindUserPageDto findUserPageDto) {
+        return BaseResponse.success(userService.list(findUserPageDto));
     }
 
     @Operation(summary = "添加")
@@ -102,6 +96,12 @@ public class UserController {
     @PostMapping(value = "/getUserInfoByUsername")
     public BaseResponse<User> getUserInfoByUsername(@NotBlank(message = "用户名不能为空") @RequestParam String username) {
         return BaseResponse.success(userService.getUserByUsername(username));
+    }
+
+    @Operation(summary = "获取登录用户信息")
+    @GetMapping("/getLoginUserInfo")
+    public BaseResponse<User> getUserInfo() {
+        return BaseResponse.success(userService.getUserByUsername(StpUtil.getLoginIdAsString()));
     }
 
     @Operation(summary = "获取用户的角色列表")

@@ -24,7 +24,7 @@ public class RSocketServerImpl implements RSocketServer {
             ByteBuf routeMetadata = TaggingMetadataCodec
                     .createTaggingContent(ByteBufAllocator.DEFAULT, Collections.singletonList("message"));
 
-            Mono.just("Server is calling you.")
+            Mono.just("服务端呼叫")
 //                .delayElement(Duration.ofSeconds(ThreadLocalRandom.current().nextInt(5, 10)))
                     .flatMap(m -> requester.rsocketClient().requestResponse(
                                     Mono.just(
@@ -33,9 +33,9 @@ public class RSocketServerImpl implements RSocketServer {
                                                             ByteBufAllocator.DEFAULT,
                                                             forwardMessage.toString()),
                                                     routeMetadata)))
-                            .doOnSubscribe(subscription -> log.info("Client subscribed."))
-                            .doOnError(throwable -> log.error("Error when calling client: {}", throwable.toString()))
-                            .doOnSuccess(p -> log.info("[test.connect.requester]Received from client: {}.", p.getDataUtf8()))
+                            .doOnSubscribe(subscription -> log.info("客户端订阅"))
+                            .doOnError(throwable -> log.error("服务端呼叫失败 {}", throwable.toString()))
+                            .doOnSuccess(p -> log.info("客户端返回: {}", p.getDataUtf8()))
                     )
                     .subscribe();
         }

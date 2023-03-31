@@ -31,7 +31,6 @@ public class PublishController {
 
     @MessageMapping("publish")
     public Mono<String> publish(ForwardMessage forwardMessage) {
-        log.info("收到事件，客户端:" + forwardMessage.getClient() + ",messageId:" + forwardMessage.getId());
         publishService.publish(forwardMessage);
         return Mono.just("messageId:" + forwardMessage.getId() + "已投递");
     }

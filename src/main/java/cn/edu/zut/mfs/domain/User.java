@@ -1,5 +1,6 @@
 package cn.edu.zut.mfs.domain;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,8 +29,11 @@ public class User {
      * 用户状态
      */
     private Boolean status;
+    @TableField("create_time")
     private Date createTime;
+    @TableField("last_update_time")
     private Date lastUpdateTime;
+    @TableField("login_time")
     private Date loginTime;
     private String note;
 }

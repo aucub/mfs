@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -25,7 +26,7 @@ public class ConsumeServiceImpl implements ConsumeService {
     @Override
     public ForwardMessage consume(Consume consume) {
         try {
-            return mapper.readValue((rabbitTemplate.receive(consume.getQueue())).getBody(), ForwardMessage.class);
+            return mapper.readValue((Objects.requireNonNull(rabbitTemplate.receive(consume.getQueue()))).getBody(), ForwardMessage.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

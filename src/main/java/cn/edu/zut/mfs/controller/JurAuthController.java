@@ -23,13 +23,13 @@ public class JurAuthController {
 
     @Operation(summary = "查询权限")
     @GetMapping("getPermission")
-    public BaseResponse<LinkedHashMap<String, Object>> getPermission() {
+    public BaseResponse<LinkedHashMap<String, List<String>>> getPermission() {
         // 查询权限信息 ，如果当前会话未登录，会返回一个空集合
         List<String> permissionList = StpUtil.getPermissionList();
         // 查询角色信息 ，如果当前会话未登录，会返回一个空集合
         List<String> roleList = StpUtil.getRoleList();
         // 返回给前端
-        LinkedHashMap<String, Object> linkedHashMap = new LinkedHashMap<>();
+        LinkedHashMap<String, List<String>> linkedHashMap = new LinkedHashMap<>();
         linkedHashMap.put("roleList", roleList);
         linkedHashMap.put("permissionList", permissionList);
         return BaseResponse.success(linkedHashMap);

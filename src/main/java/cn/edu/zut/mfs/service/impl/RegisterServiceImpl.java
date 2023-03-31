@@ -30,7 +30,6 @@ public class RegisterServiceImpl implements RegisterService {
         Map<String, Object> params = new HashMap<>();
         params.put("username", userRegisterDto.getUsername());
         if (registerDao.selectByMap(params).isEmpty()) {
-            // return registerDao.insert(userRegisterDto) == 1;
             return registerDao.insert(userRegisterDto) == 1;
         } else throw new BaseException("账户已存在");
     }

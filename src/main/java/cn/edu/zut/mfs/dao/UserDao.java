@@ -19,7 +19,7 @@ public interface UserDao extends BaseMapper<User> {
     User getItem(String id);
 
     /**
-     * 根据角色获取用户
+     * 获取用户
      */
-    Page<User> listByRoleId(Page<User> page, @Param("roleId") String roleId);
+    Page<User> list(Page<User> page, @Param("roleId") String roleId, @Param("keyword") String keyword);
 }

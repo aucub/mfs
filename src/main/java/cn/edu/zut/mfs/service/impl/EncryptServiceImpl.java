@@ -33,7 +33,7 @@ public class EncryptServiceImpl implements EncryptService {
     public Boolean transformer(UserLoginDto userLoginDto) {
         EncryptUtils.init();
         String privateKey = redisService.get(userLoginDto.getPublicKey());
-        //redisService.remove(userVo.getPublicKey());
+        redisService.remove(userLoginDto.getPublicKey());
         ECIES ecies = new ECIES(privateKey, null);
         userLoginDto.setPassword(StrUtil.utf8Str(ecies.decrypt(userLoginDto.getPassword(), KeyType.PrivateKey)));
         userLoginDto.setPassword(EncryptUtils.encrypt(userLoginDto.getPassword(), userLoginDto.getUsername()));

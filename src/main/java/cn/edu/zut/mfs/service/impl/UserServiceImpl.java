@@ -7,9 +7,8 @@ import cn.edu.zut.mfs.domain.Permission;
 import cn.edu.zut.mfs.domain.Role;
 import cn.edu.zut.mfs.domain.RoleRelation;
 import cn.edu.zut.mfs.domain.User;
-import cn.edu.zut.mfs.dto.FindPageDto;
+import cn.edu.zut.mfs.dto.FindUserPageDto;
 import cn.edu.zut.mfs.service.UserService;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,18 +46,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Page<User> list(FindPageDto findPageDto) {
-        Page<User> page = Page.of(findPageDto.getPageNum(), findPageDto.getPageSize());
-        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.like(User::getUsername, findPageDto.getKeyword()).or().like(User::getNickname, findPageDto.getKeyword());
-        userDao.selectPage(page, queryWrapper);
-        return page;
-    }
-
-    @Override
-    public Page<User> listByRoleId(FindPageDto findPageDto) {
-        Page<User> page = Page.of(findPageDto.getPageNum(), findPageDto.getPageSize());
-        return userDao.listByRoleId(page, findPageDto.getKeyword());
+    public Page<User> list(FindUserPageDto findUserPageDto) {
+        Page<User> page = Page.of(findUserPageDto.getPageNum(), findUserPageDto.getPageSize());
+        return userDao.list(page, findUserPageDto.getRoleId(), findUserPageDto.getKeyword());
     }
 
     @Override

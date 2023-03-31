@@ -12,5 +12,4 @@ public class ForwardMessage {
     private String client;
     private String topic;
     //private Date timeStamp;
-
 }

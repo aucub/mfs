@@ -31,7 +31,6 @@ public class RoleController {
     }
 
     @Operation(summary = "获取角色列表")
-    @SaCheckPermission("role:list")
     @GetMapping(value = "/list")
     public BaseResponse<List<Role>> getRoleList() {
         return BaseResponse.success(roleService.list());

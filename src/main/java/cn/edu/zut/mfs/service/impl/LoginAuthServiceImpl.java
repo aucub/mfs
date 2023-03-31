@@ -44,7 +44,6 @@ public class LoginAuthServiceImpl implements LoginAuthService {
         Map<String, Object> params = new HashMap<>();
         params.put("username", userLoginDto.getUsername());
         params.put("password", userLoginDto.getPassword());
-
         if (loginDao.selectByMap(params).isEmpty()) {
             return loginDao.updateById(userLoginDto) == 1;
         } else throw new BaseException("密码格式错误");
