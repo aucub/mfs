@@ -3,6 +3,7 @@ plugins {
     id 'org.springframework.boot' version '3.0.5'
     id 'io.spring.dependency-management' version '1.1.0'
     //id 'org.graalvm.buildtools.native' version '0.9.18'
+    id 'com.google.cloud.tools.jib' version '3.3.1'
 }
 
 group = 'cn.edu.zut'
@@ -87,13 +88,4 @@ dependencies {
 tasks.named('test') {
     outputs.dir snippetsDir
     useJUnitPlatform()
-}
-
-tasks.named("bootBuildImage") {
-    docker {
-        publishRegistry {
-            username = "azumide"
-            password = "T6c:U-u4_eC6G7W"
-        }
-    }
 }

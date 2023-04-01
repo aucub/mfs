@@ -12,6 +12,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+      - uses: oNaiPs/secrets-to-env-action@v1
+        with:
+          secrets: ${{ toJSON(secrets) }}
+
+      - uses: actions/checkout@v3
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
@@ -26,4 +31,5 @@ jobs:
         uses: gradle/gradle-build-action@v2.4.0
 
       - name: Execute Gradle build
-        run: ./gradlew build bootBuildImage --imageName=docker.io/azumide/mfs:latest --publishImage
+        # run: ./gradlew build bootBuildImage --imageName=docker.io/azumide/mfs:latest --publishImage
+        run: gradle jib -Djib.to.image=docker.io/azumide/mfs:latest -Djib.to.auth.username=$DOCKERHUB_USERNAME -Djib.to.auth.password=$DOCKERHUB_TOKEN
