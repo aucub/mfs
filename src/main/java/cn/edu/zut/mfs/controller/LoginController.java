@@ -77,6 +77,8 @@ public class LoginController {
         encryptService.encrypt(userLoginDto);
         if ((Boolean.TRUE.equals(loginAuthService.login(userLoginDto)))) {
             StpUtil.login(userLoginDto.getUsername(), false);
+            // 校验：当前账号是否含有指定角色标识, 如果验证未通过，则抛出异常: NotRoleException
+            //StpUtil.checkRole("root");
             // 获取 Token  相关参数，这里需要把 Token 信息从响应体中返回到前端
             SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
             return BaseResponse.success(tokenInfo);
@@ -126,8 +128,8 @@ public class LoginController {
     }
 
     @Operation(summary = "修改密码")
-    @PostMapping("/updatePass")
-    public BaseResponse<String> updatePass(@RequestBody UserLoginDto userLoginDto) {
+    @PostMapping("/updatePassword")
+    public BaseResponse<String> updatePassword(@RequestBody UserLoginDto userLoginDto) {
         if (encryptService.transformer(userLoginDto) && (Boolean.TRUE.equals(loginAuthService.updatePassword(userLoginDto)))) {
             return BaseResponse.success("修改密码成功");
         }

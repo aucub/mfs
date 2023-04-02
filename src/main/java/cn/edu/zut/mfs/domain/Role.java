@@ -1,8 +1,6 @@
 package cn.edu.zut.mfs.domain;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -14,5 +12,7 @@ public class Role {
     private String id;
     private String name;
     private String description;
-    private int status;
+    @TableLogic()
+    @TableField(select = false)
+    private int deleted;
 }

@@ -14,19 +14,19 @@ public enum ResultCode {
     /**
      * JSON解析错误
      **/
-    JSONError(301, "JSON解析错误"),
+    JSONError(400, "JSON解析错误"),
     /**
      * Api异常
      **/
-    APIException(302, "API异常"),
+    APIException(503, "API异常"),
     /**
      * SaToken异常
      **/
-    SaTokenException(303, "SaToken异常"),
+    SaTokenException(401, "SaToken异常"),
     /**
      * 异常
      **/
-    BaseException(300, "异常");
+    BaseException(503, "异常");
 
     /**
      * 自定义状态码

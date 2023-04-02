@@ -9,16 +9,6 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface UserDao extends BaseMapper<User> {
     /**
-     * 更新用户信息
-     */
-    Integer update(User user);
-
-    /**
-     * 根据用户id获取用户
-     */
-    User getItem(String id);
-
-    /**
      * 获取用户
      */
     Page<User> list(Page<User> page, @Param("roleId") String roleId, @Param("keyword") String keyword);

@@ -44,7 +44,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Boolean create(Role role) {
+    public Boolean save(Role role) {
         Map<String, Object> params = new HashMap<>();
         params.put("name", role.getName());
         if (roleDao.selectByMap(params).isEmpty()) {

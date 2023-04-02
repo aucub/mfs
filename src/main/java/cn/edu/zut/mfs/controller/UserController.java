@@ -50,9 +50,9 @@ public class UserController {
     }
 
     @Operation(summary = "用户查询")
-    @SaCheckPermission("user:pageList")
-    @PostMapping("/pageList")
-    public BaseResponse<Page<User>> pageList(@RequestBody FindUserPageDto findUserPageDto) {
+    @SaCheckPermission("user:list")
+    @PostMapping("/list")
+    public BaseResponse<Page<User>> list(@RequestBody FindUserPageDto findUserPageDto) {
         return BaseResponse.success(userService.list(findUserPageDto));
     }
 
@@ -100,7 +100,7 @@ public class UserController {
 
     @Operation(summary = "获取登录用户信息")
     @GetMapping("/getLoginUserInfo")
-    public BaseResponse<User> getUserInfo() {
+    public BaseResponse<User> getLoginUserInfo() {
         return BaseResponse.success(userService.getUserByUsername(StpUtil.getLoginIdAsString()));
     }
 

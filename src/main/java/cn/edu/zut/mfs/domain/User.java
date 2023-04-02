@@ -1,6 +1,7 @@
 package cn.edu.zut.mfs.domain;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,10 +26,6 @@ public class User {
      * 用户昵称
      */
     private String nickname;
-    /**
-     * 用户状态
-     */
-    private Boolean status;
     @TableField("create_time")
     private Date createTime;
     @TableField("last_update_time")
@@ -36,4 +33,7 @@ public class User {
     @TableField("login_time")
     private Date loginTime;
     private String note;
+    @TableLogic()
+    @TableField(select = false)
+    private Boolean deleted;
 }

@@ -1,5 +1,7 @@
 package cn.edu.zut.mfs.domain;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,5 +14,7 @@ public class Permission {
     private String pid;
     private String name;
     private String value;
-    private int status;
+    @TableLogic()
+    @TableField(select = false)
+    private int deleted;
 }

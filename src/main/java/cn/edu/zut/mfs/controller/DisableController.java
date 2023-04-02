@@ -7,9 +7,7 @@ import cn.edu.zut.mfs.pojo.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Sa-Token 账号封禁
@@ -24,7 +22,7 @@ public class DisableController {
     @Operation(summary = "封禁指定账号")
     @SaCheckPermission("user:disable")
     @PostMapping("disable")
-    public BaseResponse<String> disable(DisableAccountDto disableAccountDto) {
+    public BaseResponse<String> disable(@RequestBody DisableAccountDto disableAccountDto) {
         /*
          * 账号封禁：
          * 	参数1：要封禁的账号id
@@ -37,7 +35,7 @@ public class DisableController {
     @Operation(summary = "解封指定账号")
     @SaCheckPermission("user:untieDisable")
     @PostMapping("untieDisable")
-    public BaseResponse<String> untieDisable(String userId) {
+    public BaseResponse<String> untieDisable(@RequestParam String userId) {
         StpUtil.untieDisable(userId);
         return BaseResponse.success("账号 " + userId + " 解封成功");
     }

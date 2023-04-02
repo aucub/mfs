@@ -32,7 +32,7 @@ public class RoleController {
 
     @Operation(summary = "获取角色列表")
     @GetMapping(value = "/list")
-    public BaseResponse<List<Role>> getRoleList() {
+    public BaseResponse<List<Role>> list() {
         return BaseResponse.success(roleService.list());
     }
 
@@ -40,7 +40,7 @@ public class RoleController {
     @SaCheckPermission("role:save")
     @PostMapping(value = "/save")
     public BaseResponse<String> save(@RequestBody Role role) {
-        if (Boolean.TRUE.equals(roleService.create(role))) {
+        if (Boolean.TRUE.equals(roleService.save(role))) {
             return BaseResponse.success("添加成功");
         }
         return BaseResponse.fail("添加失败");

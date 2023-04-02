@@ -10,7 +10,7 @@ public interface RoleService {
     /**
      * 添加角色
      */
-    Boolean create(Role role);
+    Boolean save(Role role);
 
     /**
      * 删除角色

@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -21,7 +22,7 @@ public class KickoutController {
     @Operation(summary = "将指定账号强制注销")
     @SaCheckPermission("user:logout")
     @PostMapping("logout")
-    public BaseResponse<String> logout(String userId) {
+    public BaseResponse<String> logout(@RequestParam String userId) {
 
         // 强制注销等价于对方主动调用了注销方法，再次访问会提示：Token无效。
         StpUtil.logout(userId);
@@ -33,7 +34,7 @@ public class KickoutController {
     @Operation(summary = "将指定账号踢下线")
     @SaCheckPermission("user:kickout")
     @PostMapping("kickout")
-    public BaseResponse<String> kickout(String userId) {
+    public BaseResponse<String> kickout(@RequestParam String userId) {
 
         // 踢人下线不会清除Token信息，而是将其打上特定标记，再次访问会提示：Token已被踢下线。
         StpUtil.kickout(userId);
@@ -45,7 +46,7 @@ public class KickoutController {
 
     /*@Operation(summary = "根据 Token 值踢人")
     @PostMapping("kickoutByTokenValue")
-    public BaseResponse<String> kickoutByTokenValue(@RequestBody String tokenValue) {
+    public BaseResponse<String> kickoutByTokenValue(@RequestParam String tokenValue) {
 
         StpUtil.kickoutByTokenValue(tokenValue);
 

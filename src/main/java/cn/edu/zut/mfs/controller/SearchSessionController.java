@@ -26,9 +26,9 @@ import java.util.List;
 public class SearchSessionController {
 
     @Operation(summary = "会话查询接口----根据分页参数获取会话列表")
-    @SaCheckPermission("searchSession:getList")
-    @PostMapping("getList")
-    public BaseResponse<List<SaSession>> getList(@RequestBody SearchSessionDto searchSessionDto) {
+    @SaCheckPermission("searchSession:list")
+    @PostMapping("list")
+    public BaseResponse<List<SaSession>> list(@RequestBody SearchSessionDto searchSessionDto) {
         // 创建集合
         List<SaSession> sessionList = new ArrayList<>();
         // 分页查询数据
