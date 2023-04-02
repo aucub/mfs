@@ -47,7 +47,9 @@ public class PublishStreamServiceImpl implements PublishStreamService {
             stream(forwardMessage.getTopic());
             setRabbitStreamTemplate(forwardMessage.getTopic());
             rabbitStreamTemplate.send(new org.springframework.amqp.core.Message(mapper.writeValueAsBytes(forwardMessage), streamMessageProperties));
-            questService.publish(forwardMessage);
+            Thread.startVirtualThread(() -> {
+                questService.publish(forwardMessage);
+            });
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

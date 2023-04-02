@@ -10,10 +10,12 @@ import io.rsocket.metadata.TaggingMetadataCodec;
 import io.rsocket.util.ByteBufPayload;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.rsocket.RSocketRequester;
+import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import java.util.Collections;
 
+@Service
 @Slf4j
 public class RSocketServerImpl implements RSocketServer {
 
