@@ -8,13 +8,12 @@ import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.ByteBufUtil;
 import io.rsocket.metadata.TaggingMetadataCodec;
 import io.rsocket.util.ByteBufPayload;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.rsocket.RSocketRequester;
 import reactor.core.publisher.Mono;
 
 import java.util.Collections;
-
-import static cn.dev33.satoken.SaManager.log;
-
+@Slf4j
 public class RSocketServerImpl implements RSocketServer {
 
     @Override
