@@ -1,5 +1,9 @@
 package cn.edu.zut.mfs.controller;
 
+import cn.dev33.satoken.exception.NotLoginException;
+import cn.dev33.satoken.exception.NotPermissionException;
+import cn.dev33.satoken.stp.StpUtil;
+import cn.edu.zut.mfs.domain.MetadataHeader;
 import cn.edu.zut.mfs.service.RequestProcessor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,14 +29,19 @@ public class ConnectController {
     }
 
     @ConnectMapping("connect")
-    public Mono<Void> connect1(RSocketRequester requester, @Headers Map<String, Object> metadata) {
-        System.out.println(metadata.get("traceId"));
-        for (Map.Entry<String, Object> entry : metadata.entrySet()) {
-            System.out.println(entry.getKey() + "---------" + entry.getValue());
+    public Mono<Void> connect(RSocketRequester requester, @Headers Map<String, Object> metadata) {
+        /*MetadataHeader metadataHeader= (MetadataHeader) metadata.get("metadataHeader");
+        if(StpUtil.getLoginIdByToken(metadataHeader.getToken())==null){
+            throw new NotLoginException(null,null,null);
         }
-        requester.rsocket()
-                .onClose()
-                .subscribe();
+        StpUtil.getTokenSessionByToken(metadataHeader.getToken());
+        if(!StpUtil.hasPermission("message:connect")){
+            throw new  NotPermissionException("message:connect");
+        }
+        System.out.println(metadataHeader);*/
+        System.out.println(metadata);
+       // System.out.println(metadata.get("topic"));
+        //requestProcessor.processRequests(requester, metadataHeader.getClient());
         return Mono.empty();
     }
 }

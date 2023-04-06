@@ -1,12 +1,13 @@
 package cn.edu.zut.mfs.config;
 
+import cn.edu.zut.mfs.domain.MetadataHeader;
 import io.cloudevents.spring.codec.CloudEventDecoder;
 import io.cloudevents.spring.codec.CloudEventEncoder;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.annotation.Order;
 import org.springframework.boot.rsocket.messaging.RSocketStrategiesCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.codec.StringDecoder;
 import org.springframework.core.io.buffer.DefaultDataBufferFactory;
 import org.springframework.http.codec.cbor.Jackson2CborDecoder;
 import org.springframework.http.codec.cbor.Jackson2CborEncoder;
@@ -20,6 +21,8 @@ import org.springframework.security.config.annotation.rsocket.RSocketSecurity;
 import org.springframework.security.rsocket.core.PayloadSocketAcceptorInterceptor;
 import org.springframework.util.MimeType;
 import org.springframework.web.util.pattern.PathPatternRouteMatcher;
+
+import java.util.Map;
 
 
 @Configuration
@@ -41,14 +44,20 @@ public class RSocketConfig {
     public RSocketStrategies rsocketStrategies() {
         return RSocketStrategies.builder()
                 .metadataExtractorRegistry(registry -> {
-                    registry.metadataToExtract(MimeType.valueOf("message/x.hello.trace"), String.class, "traceId");
+                     registry.metadataToExtract(
+                                    MimeType.valueOf("application/x.metadata+json"),
+                            new ParameterizedTypeReference<Map<String,String>>() {},
+                            (jsonMap, outputMap) -> {
+                                outputMap.putAll(jsonMap);
+                            });
+                     registry.metadataToExtract(MimeType.valueOf("application/x.meta+json"), MetadataHeader.class,"meta");
+                     registry.metadataToExtract(MimeType.valueOf("application/x.token+json"), String.class,"satoken");
                 })
                 .encoders(encoders -> {
                     encoders.add(new Jackson2CborEncoder());
                     encoders.add(new Jackson2JsonEncoder());
                 })
                 .decoders(decoders -> {
-                    decoders.add(StringDecoder.allMimeTypes());
                     decoders.add(new Jackson2CborDecoder());
                     decoders.add(new Jackson2JsonDecoder());
                 })

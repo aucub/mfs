@@ -2,6 +2,7 @@ package cn.edu.zut.mfs.service.impl;
 
 import cn.edu.zut.mfs.dao.RoleRelationDao;
 import cn.edu.zut.mfs.dao.UserDao;
+import cn.edu.zut.mfs.dao.UserLoginLogDao;
 import cn.edu.zut.mfs.dao.UserPermissionRelationDao;
 import cn.edu.zut.mfs.domain.Permission;
 import cn.edu.zut.mfs.domain.Role;

@@ -9,9 +9,9 @@ import cn.edu.zut.mfs.dto.RoleRelationDto;
 import cn.edu.zut.mfs.dto.UserLoginDto;
 import cn.edu.zut.mfs.dto.UserRegisterDto;
 import cn.edu.zut.mfs.pojo.BaseResponse;
-import cn.edu.zut.mfs.service.EncryptService;
 import cn.edu.zut.mfs.service.RegisterService;
 import cn.edu.zut.mfs.service.UserService;
+import cn.edu.zut.mfs.utils.EncryptUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,17 +31,11 @@ import java.util.List;
 @RestController
 public class UserController {
     UserService userService;
-    EncryptService encryptService;
     RegisterService registerService;
 
     @Autowired
     public void setUserService(UserService userService) {
         this.userService = userService;
-    }
-
-    @Autowired
-    public void setEncryptService(EncryptService encryptService) {
-        this.encryptService = encryptService;
     }
 
     @Autowired
@@ -63,7 +57,7 @@ public class UserController {
         UserLoginDto userLoginDto = new UserLoginDto();
         userLoginDto.setUsername(userRegisterDto.getUsername());
         userLoginDto.setPassword(userRegisterDto.getPassword());
-        encryptService.encrypt(userLoginDto);
+        EncryptUtils.encryptUser(userLoginDto);
         userRegisterDto.setPassword(userLoginDto.getPassword());
         if (registerService.register(userRegisterDto)) {
             return BaseResponse.success("添加成功");

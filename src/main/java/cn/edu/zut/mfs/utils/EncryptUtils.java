@@ -1,5 +1,6 @@
 package cn.edu.zut.mfs.utils;
 
+import cn.edu.zut.mfs.dto.UserLoginDto;
 import com.google.crypto.tink.CleartextKeysetHandle;
 import com.google.crypto.tink.DeterministicAead;
 import com.google.crypto.tink.JsonKeysetReader;
@@ -17,7 +18,13 @@ import java.util.Base64;
 public class EncryptUtils {
     private static DeterministicAead daead;
 
-    public static void init() {
+    public static Boolean encryptUser(UserLoginDto userLoginDto) {
+        init();
+        userLoginDto.setPassword(encrypt(userLoginDto.getPassword(), userLoginDto.getUsername()));
+        return true;
+    }
+
+    public final static void init() {
         try {
             TinkConfig.register();
             InputStream inputStream = new ClassPathResource("Keyset.json").getInputStream();

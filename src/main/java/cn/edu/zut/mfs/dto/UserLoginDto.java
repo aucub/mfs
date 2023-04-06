@@ -1,6 +1,6 @@
 package cn.edu.zut.mfs.dto;
 
-import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class UserLoginDto {
+    @TableId
     private String username;
-    @TableField(exist = false)
-    private String publicKey;
     private String password;
+    private Boolean isLastingCookie;
 }
