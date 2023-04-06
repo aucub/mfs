@@ -1,12 +1,9 @@
 package cn.edu.zut.mfs.controller;
 
-import cn.dev33.satoken.exception.NotLoginException;
-import cn.dev33.satoken.exception.NotPermissionException;
-import cn.dev33.satoken.stp.StpUtil;
-import cn.edu.zut.mfs.domain.MetadataHeader;
 import cn.edu.zut.mfs.service.RequestProcessor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.messaging.rsocket.RSocketRequester;
 import org.springframework.messaging.rsocket.annotation.ConnectMapping;
@@ -40,7 +37,7 @@ public class ConnectController {
         }
         System.out.println(metadataHeader);*/
         System.out.println(metadata);
-       // System.out.println(metadata.get("topic"));
+        // System.out.println(metadata.get("topic"));
         //requestProcessor.processRequests(requester, metadataHeader.getClient());
         return Mono.empty();
     }

@@ -19,22 +19,20 @@ import java.util.Map;
 public class LoginAuthServiceImpl implements LoginAuthService {
 
     LoginDao loginDao;
+    private UserLoginLogDao userLoginLogDao;
 
     @Autowired
     public void setLoginDao(LoginDao loginDao) {
         this.loginDao = loginDao;
     }
 
-
-    private UserLoginLogDao userLoginLogDao;
-
     @Autowired
     public void setUserLoginLogDao(UserLoginLogDao userLoginLogDao) {
         this.userLoginLogDao = userLoginLogDao;
     }
 
-    public Boolean save(UserLoginLog userLoginLog){
-        return userLoginLogDao.insert(userLoginLog)==1;
+    public Boolean save(UserLoginLog userLoginLog) {
+        return userLoginLogDao.insert(userLoginLog) == 1;
     }
 
     @Override
