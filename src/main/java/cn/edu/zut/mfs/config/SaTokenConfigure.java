@@ -23,11 +23,11 @@ public class SaTokenConfigure {
                 // 指定 [拦截路由]
                 .addInclude()
                 // 指定 [放行路由]
-                .addExclude("/favicon.ico","/**")
+                .addExclude("/favicon.ico","/**","/rsocket")
                 // 指定[认证函数]: 每次请求执行
                 .setAuth(r -> {
                     System.out.println("---------- sa全局认证");
-                    SaRouter.match("/**", "/test/doLogin2", () -> StpUtil.checkLogin());
+                    //SaRouter.match("/**", "/test/doLogin2", () -> StpUtil.checkLogin());
                     //SaRouter.match("/test/test", () -> StpUtil.checkLogin());
                 })
                 // 指定[异常处理函数]：每次[认证函数]发生异常时执行此函数
