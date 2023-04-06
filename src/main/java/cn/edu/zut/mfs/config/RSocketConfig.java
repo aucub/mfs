@@ -1,5 +1,9 @@
 package cn.edu.zut.mfs.config;
 
+import io.cloudevents.spring.codec.CloudEventDecoder;
+import io.cloudevents.spring.codec.CloudEventEncoder;
+import org.springframework.core.annotation.Order;
+import org.springframework.boot.rsocket.messaging.RSocketStrategiesCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.codec.StringDecoder;
@@ -21,7 +25,7 @@ import org.springframework.web.util.pattern.PathPatternRouteMatcher;
 @Configuration
 @EnableRSocketSecurity
 @EnableReactiveMethodSecurity
-public class RSocketSecurityConfig {
+public class RSocketConfig {
     @Bean
     PayloadSocketAcceptorInterceptor authorization(RSocketSecurity security) {
         security.authorizePayload(authorize ->
@@ -52,4 +56,15 @@ public class RSocketSecurityConfig {
                 .dataBufferFactory(new DefaultDataBufferFactory(true))
                 .build();
     }
+
+    @Bean
+    @Order(-1)
+    public RSocketStrategiesCustomizer cloudEventsCustomizer() {
+        return strategies -> {
+            strategies.encoder(new CloudEventEncoder());
+            strategies.decoder(new CloudEventDecoder());
+        };
+
+    }
+
 }
