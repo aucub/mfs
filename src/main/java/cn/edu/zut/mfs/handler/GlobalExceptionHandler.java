@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 /**
  * 异常处理
  */
-@ControllerAdvice
+//@ControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
 

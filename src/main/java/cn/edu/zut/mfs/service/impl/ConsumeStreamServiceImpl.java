@@ -31,7 +31,7 @@ public class ConsumeStreamServiceImpl implements ConsumeStreamService {
     RSocketServer rSocketServer;
 
     @Autowired
-    public void setrSocketServer(RSocketServer rSocketServer) {
+    public void setSocketServer(RSocketServer rSocketServer) {
         this.rSocketServer = rSocketServer;
     }
 
@@ -44,10 +44,12 @@ public class ConsumeStreamServiceImpl implements ConsumeStreamService {
                         .offset(OffsetSpecification.first())
                         .autoTrackingStrategy()
                         .builder()
-                        .messageHandler((context, message) -> Thread.startVirtualThread(() -> {
-                            System.out.println(message.getBody());
+                        .messageHandler((context, message) ->System.out.println(message.getBody())
+                        /* Thread.startVirtualThread(() -> {
+
                             questService.consume(new ConsumeRecord("78904",consume.getQueue(), consume.getClient()));
-                        }))
+                        })*/
+                        )
                         .build();
         consumer.storedOffset();
         try {

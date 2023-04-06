@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @Slf4j
 @RestController
-@RequestMapping("/login/")
+@RequestMapping("/test/")
 @Tag(name = "登录")
 public class LoginController {
     LoginAuthService loginAuthService;
@@ -72,8 +72,9 @@ public class LoginController {
     }
 
     @Operation(summary = "登录")
-    @PostMapping("doLogin2")
-    public BaseResponse<SaTokenInfo> doLogin2(@RequestBody UserLoginDto userLoginDto) {
+    @RequestMapping("doLogin2")
+    public String doLogin2() {
+        UserLoginDto userLoginDto=new UserLoginDto("root",null,"root");
         encryptService.encrypt(userLoginDto);
         if ((Boolean.TRUE.equals(loginAuthService.login(userLoginDto)))) {
             StpUtil.login(userLoginDto.getUsername(), false);
@@ -81,10 +82,9 @@ public class LoginController {
             //StpUtil.checkRole("root");
             // 获取 Token  相关参数，这里需要把 Token 信息从响应体中返回到前端
             SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
-            return BaseResponse.success(tokenInfo);
-
+            return tokenInfo.getTokenValue();
         }
-        return BaseResponse.fail(null);
+        return "null";
     }
 
 

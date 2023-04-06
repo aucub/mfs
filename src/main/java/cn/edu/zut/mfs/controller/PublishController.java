@@ -6,12 +6,12 @@ import cn.edu.zut.mfs.service.PublishStreamService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 @Slf4j
 @RestController
-@MessageMapping("publish")
 public class PublishController {
 
     private PublishStreamService publishStreamService;
@@ -29,8 +29,14 @@ public class PublishController {
     }
 
 
+    @MessageMapping("publish1")
+    public Mono<String> publish(Mono<String> body) {
+        System.out.println(body);
+        return body;
+    }
+
     @MessageMapping("publish")
-    public Mono<String> publish(ForwardMessage forwardMessage) {
+    public Mono<String> publish(@Payload ForwardMessage forwardMessage) {
         publishService.publish(forwardMessage);
         return Mono.just("messageId:" + forwardMessage.getId() + "已投递");
     }

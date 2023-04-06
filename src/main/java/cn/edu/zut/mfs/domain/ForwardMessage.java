@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 public class ForwardMessage {
     private String id;
     private String client;
-    private String topic;
-    //private Date timeStamp;
+    private String exchange;
+    private String queue;
+    private byte[] body;
 }

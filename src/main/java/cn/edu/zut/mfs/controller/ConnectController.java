@@ -3,7 +3,6 @@ package cn.edu.zut.mfs.controller;
 import cn.edu.zut.mfs.service.RequestProcessor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.rsocket.RSocketRequester;
 import org.springframework.messaging.rsocket.annotation.ConnectMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,9 +23,10 @@ public class ConnectController {
     }
 
     @ConnectMapping("connect")
-    public Mono<Void> connect(RSocketRequester requester,
-                              @Payload String client) {
-        requestProcessor.processRequests(requester, client);
+    public Mono<Void> connect(RSocketRequester requester) {
+        requester.rsocket()
+                .onClose()
+                .subscribe();
         return Mono.empty();
     }
 }

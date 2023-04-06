@@ -44,12 +44,12 @@ public class PublishStreamServiceImpl implements PublishStreamService {
     public void publish(ForwardMessage forwardMessage) {
         StreamMessageProperties streamMessageProperties = new StreamMessageProperties();
         try {
-            stream(forwardMessage.getTopic());
-            setRabbitStreamTemplate(forwardMessage.getTopic());
+            stream(forwardMessage.getQueue());
+            setRabbitStreamTemplate(forwardMessage.getQueue());
             rabbitStreamTemplate.send(new org.springframework.amqp.core.Message(mapper.writeValueAsBytes(forwardMessage), streamMessageProperties));
-            Thread.startVirtualThread(() -> {
+            /*Thread.startVirtualThread(() -> {
                 questService.publish(forwardMessage);
-            });
+            });*/
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
