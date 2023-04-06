@@ -26,9 +26,9 @@ public class RSocketSecurityConfig {
     PayloadSocketAcceptorInterceptor authorization(RSocketSecurity security) {
         security.authorizePayload(authorize ->
                 authorize
-                        .setup().permitAll() // blocks connections
-                        .anyExchange().permitAll() // blocks connections
-                        .anyRequest().permitAll() // blocks all other requests
+                        .setup().permitAll()
+                        .anyExchange().permitAll()
+                        .anyRequest().permitAll()
         ).simpleAuthentication(Customizer.withDefaults());
         return security.build();
     }

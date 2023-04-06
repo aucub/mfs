@@ -3,7 +3,6 @@ package cn.edu.zut.mfs.controller;
 import cn.edu.zut.mfs.service.RequestProcessor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.messaging.rsocket.RSocketRequester;
 import org.springframework.messaging.rsocket.annotation.ConnectMapping;
@@ -26,21 +25,8 @@ public class ConnectController {
     }
 
     @ConnectMapping("connect")
-    public Mono<Void> connect(RSocketRequester requester, @Headers MessageHeaders messageHeaders) {
-        System.out.println(messageHeaders.toString());
-        for (Map.Entry<String, Object> entry : messageHeaders.entrySet()) {
-            System.out.println(entry.getKey() + "---------" + entry.getValue());
-        }
-        messageHeaders.get("dataBufferFactory");
-        requester.rsocket()
-                .onClose()
-                .subscribe();
-        return Mono.empty();
-    }
-
-    @ConnectMapping("connect1")
     public Mono<Void> connect1(RSocketRequester requester, @Headers Map<String, Object> metadata) {
-        System.out.println(metadata.containsKey("traceId"));
+        System.out.println(metadata.get("traceId"));
         for (Map.Entry<String, Object> entry : metadata.entrySet()) {
             System.out.println(entry.getKey() + "---------" + entry.getValue());
         }

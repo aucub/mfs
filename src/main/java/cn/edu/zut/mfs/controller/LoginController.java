@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @Slf4j
 @RestController
-@RequestMapping("/test/")
+@RequestMapping("/login/")
 @Tag(name = "登录")
 public class LoginController {
     LoginAuthService loginAuthService;
@@ -73,8 +73,7 @@ public class LoginController {
 
     @Operation(summary = "登录")
     @RequestMapping("doLogin2")
-    public String doLogin2() {
-        UserLoginDto userLoginDto = new UserLoginDto("root", null, "root");
+    public String doLogin2(UserLoginDto userLoginDto) {
         encryptService.encrypt(userLoginDto);
         if ((Boolean.TRUE.equals(loginAuthService.login(userLoginDto)))) {
             StpUtil.login(userLoginDto.getUsername(), false);
