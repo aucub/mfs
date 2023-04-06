@@ -2,6 +2,7 @@
 
 - [x]  接口文档:http://47.113.201.150:8080/doc.html#/home
 - [x]  测试文档:https://gitee.com/aucub/fast-request-syncdoc
+- [x]  客户端样例:https://github.com/aucub/demo
 - [ ]  ~~weblog~~
 
 ## 后端用户管理
@@ -45,10 +46,10 @@
 ## 通信接口
 
 - [ ]  ~~流量控制~~
-- [ ]  安全
+- [x]  安全
 - [ ]  ~~消息顺序~~
 - [ ]  ~~幂等性~~
 
 ## 接口
 
-- [ ]  安全
+- [x]  安全
