@@ -1,8 +1,6 @@
 package cn.edu.zut.mfs.service.impl;
 
 import cn.edu.zut.mfs.domain.Consume;
-import cn.edu.zut.mfs.domain.ConsumeRecord;
-import cn.edu.zut.mfs.domain.ForwardMessage;
 import cn.edu.zut.mfs.service.ConsumeStreamService;
 import cn.edu.zut.mfs.service.QuestService;
 import cn.edu.zut.mfs.service.RSocketServer;
@@ -16,19 +14,17 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class ConsumeStreamServiceImpl implements ConsumeStreamService {
+    private final static Environment environment = Environment.builder()
+            .uri("rabbitmq-stream://root:root@47.113.201.150:5552/%2fmfs")
+            .build();
     QuestService questService;
+    RSocketServer rSocketServer;
+    private Consumer consumer;
 
     @Autowired
     public void setQuestService(QuestService questService) {
         this.questService = questService;
     }
-
-    private final static Environment environment = Environment.builder()
-            .uri("rabbitmq-stream://root:root@47.113.201.150:5552/%2fmfs")
-            .build();
-    private Consumer consumer;
-
-    RSocketServer rSocketServer;
 
     @Autowired
     public void setSocketServer(RSocketServer rSocketServer) {
@@ -44,7 +40,7 @@ public class ConsumeStreamServiceImpl implements ConsumeStreamService {
                         .offset(OffsetSpecification.first())
                         .autoTrackingStrategy()
                         .builder()
-                        .messageHandler((context, message) ->System.out.println(message.getBody())
+                        .messageHandler((context, message) -> System.out.println(message.getBody())
                         /* Thread.startVirtualThread(() -> {
 
                             questService.consume(new ConsumeRecord("78904",consume.getQueue(), consume.getClient()));

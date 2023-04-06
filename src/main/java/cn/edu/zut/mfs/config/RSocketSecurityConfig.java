@@ -17,8 +17,6 @@ import org.springframework.security.rsocket.core.PayloadSocketAcceptorIntercepto
 import org.springframework.util.MimeType;
 import org.springframework.web.util.pattern.PathPatternRouteMatcher;
 
-import java.util.HashMap;
-
 
 @Configuration
 @EnableRSocketSecurity
@@ -34,6 +32,7 @@ public class RSocketSecurityConfig {
         ).simpleAuthentication(Customizer.withDefaults());
         return security.build();
     }
+
     @Bean
     public RSocketStrategies rsocketStrategies() {
         return RSocketStrategies.builder()

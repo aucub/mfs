@@ -16,7 +16,7 @@ public class TestController {
 
     // 测试登录接口 [同步模式]， 浏览器访问： http://localhost:8081/test/login
     @RequestMapping("login")
-    public AjaxJson login(@RequestParam(defaultValue="10001") String id) {
+    public AjaxJson login(@RequestParam(defaultValue = "10001") String id) {
         StpUtil.login(id);
         return AjaxJson.getSuccess("登录成功");
     }
@@ -52,8 +52,8 @@ public class TestController {
     public Mono<AjaxJson> isLogin4() {
         System.out.println("当前会话是否登录：" + StpUtil.isLogin());
         System.out.println("线程id-----" + Thread.currentThread().getId());
-        return Mono.delay(Duration.ofSeconds(1)).flatMap(r->{
-            return SaReactorHolder.getContext().map(rr->{
+        return Mono.delay(Duration.ofSeconds(1)).flatMap(r -> {
+            return SaReactorHolder.getContext().map(rr -> {
                 System.out.println("线程id---内--" + Thread.currentThread().getId());
                 System.out.println("当前会话是否登录2：" + StpUtil.isLogin());
                 return AjaxJson.getSuccessData(StpUtil.getTokenInfo());

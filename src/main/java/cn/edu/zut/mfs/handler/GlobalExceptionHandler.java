@@ -4,7 +4,6 @@ import cn.dev33.satoken.exception.*;
 import cn.edu.zut.mfs.exception.JsonException;
 import cn.edu.zut.mfs.pojo.BaseResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 /**

@@ -2,8 +2,6 @@ package cn.edu.zut.mfs.config;
 
 import cn.dev33.satoken.context.SaHolder;
 import cn.dev33.satoken.reactor.filter.SaReactorFilter;
-import cn.dev33.satoken.router.SaRouter;
-import cn.dev33.satoken.stp.StpUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,7 +21,7 @@ public class SaTokenConfigure {
                 // 指定 [拦截路由]
                 .addInclude()
                 // 指定 [放行路由]
-                .addExclude("/favicon.ico","/**","/rsocket")
+                .addExclude("/favicon.ico", "/**", "/rsocket")
                 // 指定[认证函数]: 每次请求执行
                 .setAuth(r -> {
                     System.out.println("---------- sa全局认证");

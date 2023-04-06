@@ -14,6 +14,7 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 public class DefineRoutes {
     /**
      * 函数式编程，初始化路由表
+     *
      * @return 路由表
      */
     @SuppressWarnings("deprecation")

@@ -74,7 +74,7 @@ public class LoginController {
     @Operation(summary = "登录")
     @RequestMapping("doLogin2")
     public String doLogin2() {
-        UserLoginDto userLoginDto=new UserLoginDto("root",null,"root");
+        UserLoginDto userLoginDto = new UserLoginDto("root", null, "root");
         encryptService.encrypt(userLoginDto);
         if ((Boolean.TRUE.equals(loginAuthService.login(userLoginDto)))) {
             StpUtil.login(userLoginDto.getUsername(), false);

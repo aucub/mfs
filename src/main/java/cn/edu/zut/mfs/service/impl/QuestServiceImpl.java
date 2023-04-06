@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class QuestServiceImpl implements QuestService {
     private static final ObjectMapper mapper = new ObjectMapper();
+
     @Override
     public void publish(ForwardMessage forwardMessage) {
         try (Sender sender = Sender.builder().address("47.113.201.150:9009").build()) {
