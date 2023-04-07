@@ -3,6 +3,8 @@ package cn.edu.zut.mfs.config;
 import cn.edu.zut.mfs.domain.MetadataHeader;
 import io.cloudevents.spring.codec.CloudEventDecoder;
 import io.cloudevents.spring.codec.CloudEventEncoder;
+import io.cloudevents.spring.webflux.CloudEventHttpMessageReader;
+import io.cloudevents.spring.webflux.CloudEventHttpMessageWriter;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.springframework.boot.rsocket.messaging.RSocketStrategiesCustomizer;
 import org.springframework.context.annotation.Bean;
@@ -59,11 +61,13 @@ public class RSocketConfig {
                     registry.metadataToExtract(MimeType.valueOf("application/x.token+json"), String.class, "satoken");
                 })
                 .encoders(encoders -> {
+                    //encoders.add(new CloudEventEncoder());
                     encoders.add(new Jackson2CborEncoder());
                     encoders.add(new Jackson2JsonEncoder());
                     encoders.add(new SimpleAuthenticationEncoder());
                 })
                 .decoders(decoders -> {
+                    decoders.add(new CloudEventDecoder());
                     decoders.add(new Jackson2CborDecoder());
                     decoders.add(new Jackson2JsonDecoder());
                 })
@@ -72,7 +76,7 @@ public class RSocketConfig {
                 .build();
     }
 
-    @Bean
+    /*@Bean
     @Order(-1)
     public RSocketStrategiesCustomizer cloudEventsCustomizer() {
         return strategies -> {
@@ -81,5 +85,5 @@ public class RSocketConfig {
         };
 
     }
-
+*/
 }
