@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.annotation.Order;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Headers;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.rsocket.RSocketRequester;
 import org.springframework.messaging.rsocket.RSocketStrategies;
 import org.springframework.messaging.rsocket.annotation.ConnectMapping;
@@ -58,6 +59,30 @@ public class ConnectController {
         System.out.println(metadataHeader);*/
         System.out.println(metadata);
         System.out.println(cloudEventV1.toString());
+        /*System.out.println(cloudEvent);
+        PojoCloudEventData<Location> cloudEventData = mapData(
+                cloudEvent,
+                PojoCloudEventDataMapper.from(mapper,Location.class)
+        );*/
+        //System.out.println(cloudEventData.getValue());
+        // System.out.println(metadata.get("topic"));
+        //requestProcessor.processRequests(requester, metadataHeader.getClient());
+        return Mono.empty();
+    }
+
+    @ConnectMapping("connect1")
+    public Mono<Void> connect1(RSocketRequester requester, @Headers Map<String, Object> metadata, @Payload byte[] body) {
+        /*MetadataHeader metadataHeader= (MetadataHeader) metadata.get("metadataHeader");
+        if(StpUtil.getLoginIdByToken(metadataHeader.getToken())==null){
+            throw new NotLoginException(null,null,null);
+        }
+        StpUtil.getTokenSessionByToken(metadataHeader.getToken());
+        if(!StpUtil.hasPermission("message:connect")){
+            throw new  NotPermissionException("message:connect");
+        }
+        System.out.println(metadataHeader);*/
+        System.out.println(metadata);
+        System.out.println(new String(body));
         /*System.out.println(cloudEvent);
         PojoCloudEventData<Location> cloudEventData = mapData(
                 cloudEvent,
