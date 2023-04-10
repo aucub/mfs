@@ -32,7 +32,7 @@ public class LoginController {
     public BaseResponse<String> doLogin(@RequestBody UserLoginDto userLoginDto) {
         if (EncryptUtils.encryptUser(userLoginDto) && (Boolean.TRUE.equals(loginAuthService.login(userLoginDto)))) {
             // 先检查此账号是否已被封禁
-            StpUtil.checkDisable(userLoginDto.getUsername());
+            //StpUtil.checkDisable(userLoginDto.getUsername());
             StpUtil.login(userLoginDto.getUsername(), userLoginDto.getIsLastingCookie());
             // 获取 Token  相关参数，这里需要把 Token 信息从响应体中返回到前端
             SaTokenInfo tokenInfo = StpUtil.getTokenInfo();

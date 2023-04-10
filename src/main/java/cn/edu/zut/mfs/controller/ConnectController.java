@@ -1,35 +1,20 @@
 package cn.edu.zut.mfs.controller;
 
-import cn.edu.zut.mfs.domain.Location;
 import cn.edu.zut.mfs.service.RequestProcessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.cloudevents.CloudEvent;
-import io.cloudevents.core.data.PojoCloudEventData;
 import io.cloudevents.core.v1.CloudEventV1;
-import io.cloudevents.jackson.PojoCloudEventDataMapper;
-import io.cloudevents.spring.codec.CloudEventDecoder;
-import io.cloudevents.spring.codec.CloudEventEncoder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.rsocket.messaging.RSocketStrategiesCustomizer;
-import org.springframework.context.annotation.Bean;
-import org.springframework.core.annotation.Order;
-import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.rsocket.RSocketRequester;
-import org.springframework.messaging.rsocket.RSocketStrategies;
 import org.springframework.messaging.rsocket.annotation.ConnectMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
-import java.io.IOException;
-import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
-
-import static io.cloudevents.core.CloudEventUtils.mapData;
 
 @Slf4j
 @RestController
@@ -39,7 +24,7 @@ public class ConnectController {
     private RequestProcessor requestProcessor;
 
 
-    private  ObjectMapper mapper = new ObjectMapper();
+    private ObjectMapper mapper = new ObjectMapper();
 
     @Autowired
     public void setRequestProcessor(RequestProcessor requestProcessor) {
@@ -47,7 +32,7 @@ public class ConnectController {
     }
 
     @ConnectMapping("connect")
-    public Mono<Void> connect(RSocketRequester requester, @Headers Map<String, Object> metadata,CloudEventV1 cloudEventV1) {
+    public Mono<Void> connect(RSocketRequester requester, @Headers Map<String, Object> metadata, CloudEventV1 cloudEventV1) {
         /*MetadataHeader metadataHeader= (MetadataHeader) metadata.get("metadataHeader");
         if(StpUtil.getLoginIdByToken(metadataHeader.getToken())==null){
             throw new NotLoginException(null,null,null);

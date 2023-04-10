@@ -2,15 +2,10 @@ package cn.edu.zut.mfs.config;
 
 import cn.edu.zut.mfs.domain.MetadataHeader;
 import io.cloudevents.spring.codec.CloudEventDecoder;
-import io.cloudevents.spring.codec.CloudEventEncoder;
-import io.cloudevents.spring.webflux.CloudEventHttpMessageReader;
-import io.cloudevents.spring.webflux.CloudEventHttpMessageWriter;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.springframework.boot.rsocket.messaging.RSocketStrategiesCustomizer;
+import org.springframework.boot.rsocket.server.RSocketServerCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.core.annotation.Order;
 import org.springframework.core.io.buffer.DefaultDataBufferFactory;
 import org.springframework.http.codec.cbor.Jackson2CborDecoder;
 import org.springframework.http.codec.cbor.Jackson2CborEncoder;
@@ -21,10 +16,12 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 import org.springframework.security.config.annotation.rsocket.EnableRSocketSecurity;
 import org.springframework.security.config.annotation.rsocket.RSocketSecurity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.MapReactiveUserDetailsService;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.rsocket.core.PayloadSocketAcceptorInterceptor;
+import org.springframework.security.rsocket.core.SecuritySocketAcceptorInterceptor;
 import org.springframework.security.rsocket.metadata.SimpleAuthenticationEncoder;
-import org.springframework.security.rsocket.metadata.UsernamePasswordMetadata;
 import org.springframework.util.MimeType;
 import org.springframework.web.util.pattern.PathPatternRouteMatcher;
 
@@ -35,14 +32,25 @@ import java.util.Map;
 @EnableRSocketSecurity
 @EnableReactiveMethodSecurity
 public class RSocketConfig {
+
+    @Bean
+    public MapReactiveUserDetailsService userDetailsService() {
+        UserDetails user = User.withDefaultPasswordEncoder()
+                .username("user")
+                .password("password")
+                .roles("USER")
+                .build();
+        return new MapReactiveUserDetailsService(user);
+    }
+
     @Bean
     PayloadSocketAcceptorInterceptor authorization(RSocketSecurity security) {
         security.authorizePayload(authorize ->
                 authorize
-                        .setup().permitAll()
+                        .setup().hasRole("USER")
                         .anyExchange().permitAll()
-                        .anyRequest().permitAll()
-        ).simpleAuthentication(Customizer.withDefaults());
+                        .anyRequest().authenticated()
+        ).simpleAuthentication(Customizer.withDefaults());;
         return security.build();
     }
 
@@ -76,14 +84,4 @@ public class RSocketConfig {
                 .build();
     }
 
-    /*@Bean
-    @Order(-1)
-    public RSocketStrategiesCustomizer cloudEventsCustomizer() {
-        return strategies -> {
-            strategies.encoder(new CloudEventEncoder());
-            strategies.decoder(new CloudEventDecoder());
-        };
-
-    }
-*/
 }
