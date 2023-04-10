@@ -5,6 +5,7 @@ import cn.edu.zut.mfs.domain.Role;
 import cn.edu.zut.mfs.domain.User;
 import cn.edu.zut.mfs.dto.FindUserPageDto;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -47,6 +48,11 @@ public interface UserService {
      * 获取指定用户的权限
      */
     List<Permission> getPermissionList(String userId);
+
+    /**
+     * 获取指定用户的权限
+     */
+    List<SimpleGrantedAuthority> getPermissions(String userId);
 
     /**
      * 根据用户名获取用户

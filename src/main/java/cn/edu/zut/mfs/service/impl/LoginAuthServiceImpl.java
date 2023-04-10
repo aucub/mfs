@@ -60,4 +60,11 @@ public class LoginAuthServiceImpl implements LoginAuthService {
             return loginDao.updateById(userLoginDto) == 1;
         } else throw new BaseException("密码格式错误");
     }
+
+    @Override
+    public String getPassword(String username) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("username", username);
+        return loginDao.selectByMap(params).get(0).getPassword();
+    }
 }

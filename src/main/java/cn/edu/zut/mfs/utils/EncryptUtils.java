@@ -12,6 +12,7 @@ import org.springframework.core.io.ClassPathResource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.GeneralSecurityException;
+import java.util.Arrays;
 import java.util.Base64;
 
 @Slf4j
@@ -38,6 +39,14 @@ public class EncryptUtils {
     public static String encrypt(String plaintext, String contextInfo) {
         try {
             return Base64.getEncoder().encodeToString(daead.encryptDeterministically(plaintext.getBytes(), contextInfo.getBytes()));
+        } catch (GeneralSecurityException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static String decrypt(String plaintext, String contextInfo) {
+        try {
+            return Arrays.toString(daead.decryptDeterministically(Base64.getDecoder().decode(plaintext), contextInfo.getBytes()));
         } catch (GeneralSecurityException e) {
             throw new RuntimeException(e);
         }

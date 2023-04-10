@@ -14,4 +14,9 @@ public interface UserPermissionRelationDao extends BaseMapper<UserPermissionRela
      * 获取用户权限
      */
     List<Permission> getPermissionList(@Param("userId") String userId);
+
+    /**
+     * 获取用户权限
+     */
+    List<String> getPermissions(@Param("userId") String userId);
 }

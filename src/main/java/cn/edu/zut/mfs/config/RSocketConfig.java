@@ -2,7 +2,6 @@ package cn.edu.zut.mfs.config;
 
 import cn.edu.zut.mfs.domain.MetadataHeader;
 import io.cloudevents.spring.codec.CloudEventDecoder;
-import org.springframework.boot.rsocket.server.RSocketServerCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.ParameterizedTypeReference;
@@ -16,11 +15,9 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 import org.springframework.security.config.annotation.rsocket.EnableRSocketSecurity;
 import org.springframework.security.config.annotation.rsocket.RSocketSecurity;
-import org.springframework.security.core.userdetails.MapReactiveUserDetailsService;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.rsocket.core.PayloadSocketAcceptorInterceptor;
-import org.springframework.security.rsocket.core.SecuritySocketAcceptorInterceptor;
 import org.springframework.security.rsocket.metadata.SimpleAuthenticationEncoder;
 import org.springframework.util.MimeType;
 import org.springframework.web.util.pattern.PathPatternRouteMatcher;
@@ -34,13 +31,8 @@ import java.util.Map;
 public class RSocketConfig {
 
     @Bean
-    public MapReactiveUserDetailsService userDetailsService() {
-        UserDetails user = User.withDefaultPasswordEncoder()
-                .username("user")
-                .password("password")
-                .roles("USER")
-                .build();
-        return new MapReactiveUserDetailsService(user);
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
@@ -50,7 +42,8 @@ public class RSocketConfig {
                         .setup().hasRole("USER")
                         .anyExchange().permitAll()
                         .anyRequest().authenticated()
-        ).simpleAuthentication(Customizer.withDefaults());;
+        ).simpleAuthentication(Customizer.withDefaults());
+        ;
         return security.build();
     }
 

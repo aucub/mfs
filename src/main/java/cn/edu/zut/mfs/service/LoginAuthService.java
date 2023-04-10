@@ -10,4 +10,5 @@ public interface LoginAuthService {
      */
     Boolean updatePassword(UserLoginDto userLoginDto);
 
+    String getPassword(String username);
 }
