@@ -1,8 +1,6 @@
 package cn.edu.zut.mfs.config;
 
-import cn.dev33.satoken.jwt.StpLogicJwtForStateless;
 import cn.dev33.satoken.reactor.filter.SaReactorFilter;
-import cn.dev33.satoken.stp.StpLogic;
 import cn.dev33.satoken.strategy.SaStrategy;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +14,6 @@ import org.springframework.core.annotation.AnnotatedElementUtils;
 @Configuration
 @Slf4j
 public class SaTokenConfigure {
-
-    @Bean
-    public StpLogic getStpLogicJwt() {
-        return new StpLogicJwtForStateless();
-    }
-
     /**
      * [sa-token全局过滤器]
      */

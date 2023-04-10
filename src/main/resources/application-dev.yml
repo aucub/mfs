@@ -5,13 +5,11 @@ server:
 logging:
   level:
     root: info
-  file:
-    path: ./logs
 
 spring:
   main:
     web-application-type: reactive
-    # lazy-initialization: true
+    lazy-initialization: true
 
   rsocket:
     server:
@@ -71,8 +69,6 @@ spring:
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
-  application:
-    name: mfs
 
 mybatis-plus:
   configuration:
@@ -112,9 +108,6 @@ sa-token:
   token-style: uuid
   # 是否输出操作日志
   is-log: true
-  # jwt秘钥
-  jwt-secret-key: asdasdasifhueuiwyurfewbfjsdafjk
-  log-level: trace
 
 # springdoc-openapi项目配置
 springdoc:
