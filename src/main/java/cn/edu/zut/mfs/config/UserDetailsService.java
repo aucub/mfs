@@ -13,7 +13,7 @@ import reactor.core.publisher.Mono;
 
 @Configuration
 @Service
-public class UserDetailsService implements ReactiveUserDetailsService {
+public class UserDetailsService implements ReactiveUserDetailsService{
 
     private LoginAuthService loginAuthService;
     private UserService userService;
@@ -28,7 +28,7 @@ public class UserDetailsService implements ReactiveUserDetailsService {
         this.userService = userService;
     }
 
-    @Override
+
     public Mono<UserDetails> findByUsername(String username) {
         return Mono.just(new User(username, EncryptUtils.decrypt(loginAuthService.getPassword(username), username), userService.getPermissions(username)));
     }

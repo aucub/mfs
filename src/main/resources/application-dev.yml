@@ -9,7 +9,7 @@ logging:
 spring:
   main:
     web-application-type: reactive
-    lazy-initialization: true
+    # lazy-initialization: true
 
   rsocket:
     server:

@@ -34,7 +34,6 @@ public class RSocketConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
     @Bean
     PayloadSocketAcceptorInterceptor authorization(RSocketSecurity security) {
         security.authorizePayload(authorize ->
@@ -43,7 +42,6 @@ public class RSocketConfig {
                         .anyExchange().permitAll()
                         .anyRequest().authenticated()
         ).simpleAuthentication(Customizer.withDefaults());
-        ;
         return security.build();
     }
 
