@@ -4,11 +4,11 @@ server:
 
 logging:
   level:
-    root: info
+    root: trace
 
 spring:
   main:
-    web-application-type: reactive
+    web-application-type: servlet
     # lazy-initialization: true
 
   rsocket:
