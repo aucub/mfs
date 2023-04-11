@@ -1,22 +1,21 @@
 server:
   port: 8080
-
-
+  netty:
+    connection-timeout: 1000000000
 logging:
   level:
-    root: trace
+    root: debug
 
 spring:
   main:
-    web-application-type: servlet
-    # lazy-initialization: true
-
+    web-application-type: reactive
+    lazy-initialization: false
   rsocket:
     server:
       address: localhost
       port: 9898
       # mapping-path: /rsocket/
-      # transport: websocket
+      transport: tcp
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -65,10 +64,24 @@ spring:
           max-idle: 10
           # 连接池中的最小空闲连接
           min-idle: 0
+  security:
+    filter:
+      order: -30
 
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
+  integration:
+    rsocket:
+      server:
+        message-mapping-enabled: false
+  reactor:
+    netty:
+      shutdown-quiet-period: 100000
+    debug-agent:
+      enabled: true
+  webflux:
+    base-path: /admin/
 
 mybatis-plus:
   configuration:
@@ -108,6 +121,11 @@ sa-token:
   token-style: uuid
   # 是否输出操作日志
   is-log: true
+  is-print: true
+  log-level: trace
+  is-read-body: false
+  is-read-cookie: false
+  is-write-header: false
 
 # springdoc-openapi项目配置
 springdoc:
@@ -115,9 +133,12 @@ springdoc:
     path: /swagger-ui.html
     tags-sorter: alpha
     operations-sorter: alpha
+    enabled: false
+
   api-docs:
     path: /v3/api-docs
   group-configs:
     - group: 'default'
       paths-to-match: '/**'
       packages-to-scan: cn.edu.zut.mfs.controller
+  enable-spring-security: false

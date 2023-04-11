@@ -11,11 +11,9 @@ import org.springframework.http.codec.cbor.Jackson2CborEncoder;
 import org.springframework.http.codec.json.Jackson2JsonDecoder;
 import org.springframework.http.codec.json.Jackson2JsonEncoder;
 import org.springframework.messaging.rsocket.RSocketStrategies;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 import org.springframework.security.config.annotation.rsocket.EnableRSocketSecurity;
 import org.springframework.security.config.annotation.rsocket.RSocketSecurity;
-import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.NimbusReactiveJwtDecoder;
@@ -34,8 +32,6 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.util.Map;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
 
 @Configuration
 @EnableRSocketSecurity
@@ -43,10 +39,17 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class RSocketConfig {
 
     @Bean
+    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http){
+        http.csrf().disable();
+        http.httpBasic().disable();
+        return http.build();
+    }
+
+    @Bean
     PayloadSocketAcceptorInterceptor authorization(RSocketSecurity security) {
         security.authorizePayload(authorize ->
                 authorize
-                        .setup().authenticated()
+                        .setup().permitAll()
                         .anyExchange().permitAll()
                         .anyRequest().authenticated()
         ).jwt(jwtSpec -> {
