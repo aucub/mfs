@@ -1,19 +1,23 @@
 ## 基础设施
 
-- [x]  接口文档:http://47.113.201.150:8080/doc.html#/home
+- [x]  接口文档:/doc.html#/home
 - [x]  测试文档:https://gitee.com/aucub/fast-request-syncdoc
 - [x]  客户端样例:https://github.com/aucub/demo
 - [ ]  ~~weblog~~
 
-## 后端用户管理
+## 用户管理
 
 - [x]  登录
-- [x]  注册
+- [x]  添加
 - [x]  角色管理
 - [x]  权限管理
 - [x]  用户管理
-- [ ]  修改密码
-- [x]  在线用户
+- [x]  修改密码
+- [ ]  在线用户
+
+## 设备接入
+
+- [x]  注册
 
 ## 消息发送
 

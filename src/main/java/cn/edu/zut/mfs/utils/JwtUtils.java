@@ -9,10 +9,10 @@ public class JwtUtils {
 
     Algorithm algorithm = Algorithm.HMAC256("JAC1O17W1F3QB9E8B4B1MT6QKYOQB36V");
 
-    public String generate(JwtDto jwtDto){
+    public String generate(JwtDto jwtDto) {
         return JWT.create()
                 .withJWTId(jwtDto.getJwtId())
-                .withIssuer("mfs")
+                .withIssuer(jwtDto.getIssuer())
                 .withSubject(jwtDto.getSubject())
                 .withExpiresAt(jwtDto.getExpiresAt())
                 .withAudience(jwtDto.getAudience())
