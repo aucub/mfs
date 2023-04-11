@@ -2,6 +2,7 @@ package cn.edu.zut.mfs.config;
 
 import cn.edu.zut.mfs.domain.MetadataHeader;
 import io.cloudevents.spring.codec.CloudEventDecoder;
+import io.cloudevents.spring.codec.CloudEventEncoder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.ParameterizedTypeReference;
@@ -39,9 +40,11 @@ import java.util.Map;
 public class RSocketConfig {
 
     @Bean
-    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http){
+    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         http.csrf().disable();
         http.httpBasic().disable();
+        http.cors().disable();
+        http.formLogin().disable();
         return http.build();
     }
 
@@ -51,7 +54,7 @@ public class RSocketConfig {
                 authorize
                         .setup().permitAll()
                         .anyExchange().permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
         ).jwt(jwtSpec -> {
             try {
                 jwtSpec.authenticationManager(jwtReactiveAuthenticationManager(reactiveJwtDecoder()));
@@ -66,7 +69,6 @@ public class RSocketConfig {
     public ReactiveJwtDecoder reactiveJwtDecoder() throws Exception {
         Mac mac = Mac.getInstance("HmacSHA256");
         SecretKeySpec secretKey = new SecretKeySpec("JAC1O17W1F3QB9E8B4B1MT6QKYOQB36V".getBytes(), mac.getAlgorithm());
-
         return NimbusReactiveJwtDecoder.withSecretKey(secretKey)
                 .macAlgorithm(MacAlgorithm.HS256)
                 .build();
@@ -75,12 +77,11 @@ public class RSocketConfig {
     @Bean
     public JwtReactiveAuthenticationManager jwtReactiveAuthenticationManager(ReactiveJwtDecoder reactiveJwtDecoder) {
         JwtReactiveAuthenticationManager jwtReactiveAuthenticationManager = new JwtReactiveAuthenticationManager(reactiveJwtDecoder);
-
         JwtAuthenticationConverter authenticationConverter = new JwtAuthenticationConverter();
         JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
         jwtGrantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
         authenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
-        jwtReactiveAuthenticationManager.setJwtAuthenticationConverter( new ReactiveJwtAuthenticationConverterAdapter(authenticationConverter));
+        jwtReactiveAuthenticationManager.setJwtAuthenticationConverter(new ReactiveJwtAuthenticationConverterAdapter(authenticationConverter));
         return jwtReactiveAuthenticationManager;
     }
 
@@ -96,10 +97,9 @@ public class RSocketConfig {
                                 outputMap.putAll(jsonMap);
                             });
                     registry.metadataToExtract(MimeType.valueOf("application/x.meta+json"), MetadataHeader.class, "meta");
-                    registry.metadataToExtract(MimeType.valueOf("application/x.token+json"), String.class, "satoken");
                 })
                 .encoders(encoders -> {
-                    //encoders.add(new CloudEventEncoder());
+                    encoders.add(new CloudEventEncoder());
                     encoders.add(new Jackson2CborEncoder());
                     encoders.add(new Jackson2JsonEncoder());
                     encoders.add(new SimpleAuthenticationEncoder());

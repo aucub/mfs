@@ -3,9 +3,12 @@ package cn.edu.zut.mfs.config;
 import cn.dev33.satoken.reactor.filter.SaReactorFilter;
 import cn.dev33.satoken.router.SaRouter;
 import cn.dev33.satoken.stp.StpUtil;
+import cn.dev33.satoken.strategy.SaStrategy;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.core.annotation.Order;
 
 /**
@@ -13,7 +16,7 @@ import org.springframework.core.annotation.Order;
  */
 @Configuration
 @Slf4j
-public class SaTokenConfigure  {
+public class SaTokenConfigure {
 
     /**
      * [sa-token全局过滤器]
@@ -38,18 +41,12 @@ public class SaTokenConfigure  {
                     return e.getMessage();
                 });
     }
+
     // 重写 Sa-Token 框架内部算法策略
-   /* @Autowired
+    @Autowired
     public void rewriteSaStrategy() {
         // 重写Sa-Token的注解处理器，增加注解合并功能
         SaStrategy.me.getAnnotation = AnnotatedElementUtils::getMergedAnnotation;
-    }*/
-   /* @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        // 注册 Sa-Token 拦截器，校验规则为 StpUtil.checkLogin() 登录校验。
-        registry.addInterceptor(new SaInterceptor(handle -> StpUtil.checkLogin()))
-                .addPathPatterns("/**")
-                .excludePathPatterns("/user/**");
-    }*/
+    }
 
 }
