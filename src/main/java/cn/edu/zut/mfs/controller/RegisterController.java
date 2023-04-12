@@ -3,9 +3,8 @@ package cn.edu.zut.mfs.controller;
 import cn.edu.zut.mfs.dto.UserLoginDto;
 import cn.edu.zut.mfs.dto.UserRegisterDto;
 import cn.edu.zut.mfs.pojo.BaseResponse;
-import cn.edu.zut.mfs.service.EncryptService;
 import cn.edu.zut.mfs.service.RegisterService;
-import cn.edu.zut.mfs.service.impl.EncryptServiceImpl;
+import cn.edu.zut.mfs.utils.EncryptUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -24,16 +23,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class RegisterController {
     RegisterService registerService;
-    EncryptService encryptService;
 
     @Autowired
     public void setRegisterService(RegisterService registerService) {
         this.registerService = registerService;
-    }
-
-    @Autowired
-    public void setEncryptService(EncryptServiceImpl encryptService) {
-        this.encryptService = encryptService;
     }
 
     @Operation(summary = "用户注册")
@@ -42,8 +35,7 @@ public class RegisterController {
         UserLoginDto userLoginDto = new UserLoginDto();
         userLoginDto.setUsername(userRegisterDto.getUsername());
         userLoginDto.setPassword(userRegisterDto.getPassword());
-        userLoginDto.setPublicKey(userRegisterDto.getPublicKey());
-        if (encryptService.transformer(userLoginDto)) {
+        if (EncryptUtils.encryptUser(userLoginDto)) {
             userRegisterDto.setPassword(userLoginDto.getPassword());
             if (registerService.register(userRegisterDto)) {
                 return BaseResponse.success("注册成功");

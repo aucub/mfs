@@ -1,6 +1,8 @@
 package cn.edu.zut.mfs.service.impl;
 
 import cn.edu.zut.mfs.dao.LoginDao;
+import cn.edu.zut.mfs.dao.UserLoginLogDao;
+import cn.edu.zut.mfs.domain.UserLoginLog;
 import cn.edu.zut.mfs.dto.UserLoginDto;
 import cn.edu.zut.mfs.exception.BaseException;
 import cn.edu.zut.mfs.service.LoginAuthService;
@@ -17,10 +19,20 @@ import java.util.Map;
 public class LoginAuthServiceImpl implements LoginAuthService {
 
     LoginDao loginDao;
+    private UserLoginLogDao userLoginLogDao;
 
     @Autowired
     public void setLoginDao(LoginDao loginDao) {
         this.loginDao = loginDao;
+    }
+
+    @Autowired
+    public void setUserLoginLogDao(UserLoginLogDao userLoginLogDao) {
+        this.userLoginLogDao = userLoginLogDao;
+    }
+
+    public Boolean save(UserLoginLog userLoginLog) {
+        return userLoginLogDao.insert(userLoginLog) == 1;
     }
 
     @Override
@@ -47,5 +59,12 @@ public class LoginAuthServiceImpl implements LoginAuthService {
         if (loginDao.selectByMap(params).isEmpty()) {
             return loginDao.updateById(userLoginDto) == 1;
         } else throw new BaseException("密码格式错误");
+    }
+
+    @Override
+    public String getPassword(String username) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("username", username);
+        return loginDao.selectByMap(params).get(0).getPassword();
     }
 }

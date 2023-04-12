@@ -24,8 +24,6 @@ public class UserRegisterDto {
      * 用户名
      */
     private String username;
-    @TableField(exist = false)
-    private String publicKey;
     private String password;
     /**
      * 用户昵称

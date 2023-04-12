@@ -33,7 +33,8 @@ public class PublishServiceImpl implements PublishService {
     @Override
     @SneakyThrows
     public void publish(ForwardMessage forwardMessage) {
-        amqpAdmin.declareQueue(new Queue(forwardMessage.getTopic(), true, false, true));
-        rabbitTemplate.send(forwardMessage.getTopic(), new Message(mapper.writeValueAsBytes(forwardMessage)));
+        amqpAdmin.declareQueue(new Queue(forwardMessage.getQueue(), true, false, true));
+        rabbitTemplate.send(forwardMessage.getQueue(), new Message(mapper.writeValueAsBytes(forwardMessage)));
     }
+
 }

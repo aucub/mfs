@@ -44,9 +44,12 @@ create table if not exists user
     username         varchar(64)       null comment '用户名',
     password         varchar(255)      null,
     nickname         varchar(64)       null,
+    creator          varchar(32)       null comment '创建者',
     create_time      datetime          null comment '注册时间',
+    updater          varchar(32)       null comment '更新者',
     last_update_time datetime          null,
     login_time       datetime          null comment '最后登录时间',
+    type             tinyint default 1 null comment '用户类型:0->系统用户',
     note             varchar(255)      null comment '备注信息',
     deleted          tinyint default 0 null,
     constraint id

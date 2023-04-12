@@ -7,10 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ForwardMessage {
-    private String id;
+public class MetadataHeader {
     private String client;
+    private String token;
     private String exchange;
     private String queue;
-    private byte[] body;
 }
