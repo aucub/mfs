@@ -28,13 +28,6 @@ public class PublishController {
         this.publishStreamService = publishStreamService;
     }
 
-
-    @MessageMapping("publish1")
-    public Mono<String> publish(Mono<String> body) {
-        System.out.println(body);
-        return body;
-    }
-
     @MessageMapping("publish")
     public Mono<String> publish(@Payload ForwardMessage forwardMessage) {
         publishService.publish(forwardMessage);

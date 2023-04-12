@@ -5,6 +5,7 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.edu.zut.mfs.dto.UserLoginDto;
 import cn.edu.zut.mfs.pojo.BaseResponse;
 import cn.edu.zut.mfs.service.LoginAuthService;
+import cn.edu.zut.mfs.service.UserService;
 import cn.edu.zut.mfs.utils.EncryptUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,6 +23,13 @@ import org.springframework.web.bind.annotation.*;
 public class LoginController {
     LoginAuthService loginAuthService;
 
+    UserService userService;
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
     @Autowired
     public void setLoginAuthService(LoginAuthService loginAuthService) {
         this.loginAuthService = loginAuthService;
@@ -31,9 +39,10 @@ public class LoginController {
     @PostMapping("doLogin")
     public BaseResponse<String> doLogin(@RequestBody UserLoginDto userLoginDto) {
         if (EncryptUtils.encryptUser(userLoginDto) && (Boolean.TRUE.equals(loginAuthService.login(userLoginDto)))) {
+            String userId = userService.getUserByUsername(userLoginDto.getUsername()).getId();
             // 先检查此账号是否已被封禁
-            //StpUtil.checkDisable(userLoginDto.getUsername());
-            StpUtil.login(userLoginDto.getUsername(), userLoginDto.getIsLastingCookie());
+            StpUtil.checkDisable(userId);
+            StpUtil.login(userId, userLoginDto.getIsLastingCookie());
             // 获取 Token  相关参数，这里需要把 Token 信息从响应体中返回到前端
             SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
             return BaseResponse.success("登录成功,token:" + tokenInfo);
@@ -77,8 +86,8 @@ public class LoginController {
     @GetMapping("getLoginIdAsString")
     public BaseResponse<String> getLoginIdAsString() {
         // 获取当前会话账号id, 如果未登录，则抛出异常：`NotLoginException`
-        String username = StpUtil.getLoginIdAsString();
-        return BaseResponse.success("当前客户端登录的账号是：" + username);
+        String userId = StpUtil.getLoginIdAsString();
+        return BaseResponse.success("当前客户端登录的账号是：" + userId);
     }
 
     @Operation(summary = "修改密码")

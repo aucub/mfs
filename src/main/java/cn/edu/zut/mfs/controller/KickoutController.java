@@ -42,15 +42,4 @@ public class KickoutController {
         // 返回
         return BaseResponse.success("账号 " + userId + "下线成功");
     }
-
-
-    /*@Operation(summary = "根据 Token 值踢人")
-    @PostMapping("kickoutByTokenValue")
-    public BaseResponse<String> kickoutByTokenValue(@RequestParam String tokenValue) {
-
-        StpUtil.kickoutByTokenValue(tokenValue);
-
-        // 返回
-        return BaseResponse.success("Token " + tokenValue + "下线成功");
-    }*/
 }

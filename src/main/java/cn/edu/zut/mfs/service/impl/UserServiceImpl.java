@@ -12,7 +12,6 @@ import cn.edu.zut.mfs.service.UserService;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -97,10 +96,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<SimpleGrantedAuthority> getPermissions(String userId) {
-        List<SimpleGrantedAuthority> permissions = new ArrayList<>();
-        //permissions.addAll(roleRelationDao.getPermissionList(userId));
-        userPermissionRelationDao.getPermissions(userId).forEach(item -> permissions.add(new SimpleGrantedAuthority(item)));
+    public List<String> getPermissions(String userId) {
+        List<String> permissions = new ArrayList<>();
+        roleRelationDao.getPermissionList(userId).forEach(item -> permissions.add(item.getValue()));
+        userPermissionRelationDao.getPermissionList(userId).forEach(item -> permissions.add(item.getValue()));
         return permissions;
     }
 

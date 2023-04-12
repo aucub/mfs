@@ -9,12 +9,4 @@
           AND permission.id IS NOT NULL
         GROUP BY permission.id
     </select>
-    <select id="getPermissions" resultType="java.lang.String">
-        SELECT permission.value
-        FROM user_permission_relation
-                 LEFT JOIN permission ON permission.id = user_permission_relation.permission_id
-        WHERE user_permission_relation.user_id = #{userId}
-          AND permission.id IS NOT NULL
-        GROUP BY permission.id
-    </select>
 </mapper>

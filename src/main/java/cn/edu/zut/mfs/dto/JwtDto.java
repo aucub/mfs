@@ -4,17 +4,19 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.Instant;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class JwtDto {
     private String jwtId;
-    private String issuer;//签发者
-    private String subject;//主题
-    private Date expiresAt;//过期时间,Date.from(Instant.now().plus(30, ChronoUnit.MINUTES))
+    private String issuer;//签发人
+    private String subject;//主题，用户
+    private Instant expiresAt;//过期时间
     private String audience;//接收人
-    private String scope;//授权范围
-
+    private Instant notBefore;//生效时间
+    private Instant issuedAt;//签发时间
+    private List<String> authorities;//授权
 }

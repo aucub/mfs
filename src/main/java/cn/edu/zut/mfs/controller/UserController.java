@@ -4,14 +4,12 @@ import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.edu.zut.mfs.domain.Role;
 import cn.edu.zut.mfs.domain.User;
-import cn.edu.zut.mfs.dto.FindUserPageDto;
-import cn.edu.zut.mfs.dto.RoleRelationDto;
-import cn.edu.zut.mfs.dto.UserLoginDto;
-import cn.edu.zut.mfs.dto.UserRegisterDto;
+import cn.edu.zut.mfs.dto.*;
 import cn.edu.zut.mfs.pojo.BaseResponse;
 import cn.edu.zut.mfs.service.RegisterService;
 import cn.edu.zut.mfs.service.UserService;
 import cn.edu.zut.mfs.utils.EncryptUtils;
+import cn.edu.zut.mfs.utils.JwtUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -20,7 +18,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * 用户管理
@@ -92,10 +92,17 @@ public class UserController {
         return BaseResponse.success(userService.getUserByUsername(username));
     }
 
+    @Operation(summary = "根据用户Id获取用户信息")
+    @SaCheckPermission("user:getUserInfoByUserId")
+    @PostMapping(value = "/getUserInfoByUserId")
+    public BaseResponse<User> getUserInfoByUserId(@NotBlank(message = "用户Id不能为空") @RequestParam String userId) {
+        return BaseResponse.success(userService.getUserById(userId));
+    }
+
     @Operation(summary = "获取登录用户信息")
     @GetMapping("/getLoginUserInfo")
     public BaseResponse<User> getLoginUserInfo() {
-        return BaseResponse.success(userService.getUserByUsername(StpUtil.getLoginIdAsString()));
+        return BaseResponse.success(userService.getUserById(StpUtil.getLoginIdAsString()));
     }
 
     @Operation(summary = "获取用户的角色列表")
@@ -113,6 +120,20 @@ public class UserController {
             return BaseResponse.success("保存成功");
         }
         return BaseResponse.fail("保存失败");
+    }
+
+    @Operation(summary = "得到Jwt")
+    @SaCheckPermission("user:getJwt")
+    @PostMapping(value = "/getJwt")
+    public BaseResponse<String> getJwt(JwtDto jwtDto) {
+        return BaseResponse.success(JwtUtils.generate(new JwtDto(UUID.randomUUID().toString(), StpUtil.getLoginIdAsString(), StpUtil.getLoginIdAsString(), jwtDto.getExpiresAt(), "mfs", jwtDto.getNotBefore(), Instant.now(), userService.getPermissions(StpUtil.getLoginIdAsString()))));
+    }
+
+    @Operation(summary = "生成Jwt")
+    @SaCheckPermission("user:generateJwt")
+    @PostMapping(value = "/generateJwt")
+    public BaseResponse<String> generateJwt(JwtDto jwtDto) {
+        return BaseResponse.success(JwtUtils.generate(new JwtDto(UUID.randomUUID().toString(), StpUtil.getLoginIdAsString(), jwtDto.getSubject(), jwtDto.getExpiresAt(), "mfs", jwtDto.getNotBefore(), Instant.now(), userService.getPermissions(StpUtil.getLoginIdAsString()))));
     }
 
 }
