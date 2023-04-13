@@ -34,13 +34,10 @@ public class RegisterController {
     public BaseResponse<String> user(@RequestBody UserRegisterDto userRegisterDto) {
         UserLoginDto userLoginDto = new UserLoginDto();
         userLoginDto.setUsername(userRegisterDto.getUsername());
-        userLoginDto.setPassword(userRegisterDto.getPassword());
-        if (EncryptUtils.encryptUser(userLoginDto)) {
-            userRegisterDto.setPassword(userLoginDto.getPassword());
+            userRegisterDto.setPassword(EncryptUtils.encrypt(userRegisterDto.getPassword(),userRegisterDto.getUsername()));
             if (registerService.register(userRegisterDto)) {
                 return BaseResponse.success("注册成功");
             }
-        }
         return BaseResponse.fail("注册失败");
     }
 }

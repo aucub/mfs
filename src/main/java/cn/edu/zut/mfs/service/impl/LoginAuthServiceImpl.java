@@ -18,7 +18,7 @@ import java.util.Map;
 @Service
 public class LoginAuthServiceImpl implements LoginAuthService {
 
-    LoginDao loginDao;
+    private LoginDao loginDao;
     private UserLoginLogDao userLoginLogDao;
 
     @Autowired
@@ -48,6 +48,7 @@ public class LoginAuthServiceImpl implements LoginAuthService {
         } else throw new BaseException("账号或密码错误");
     }
 
+
     @Override
     public Boolean updatePassword(UserLoginDto userLoginDto) {
         if (CharSequenceUtil.isEmpty(userLoginDto.getUsername()) || CharSequenceUtil.isEmpty(userLoginDto.getPassword())) {
@@ -61,10 +62,9 @@ public class LoginAuthServiceImpl implements LoginAuthService {
         } else throw new BaseException("密码格式错误");
     }
 
+
     @Override
-    public String getPassword(String username) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("username", username);
-        return loginDao.selectByMap(params).get(0).getPassword();
+    public Boolean addLoginLog(UserLoginLog userLoginLog) {
+        return userLoginLogDao.insert(userLoginLog) == 1;
     }
 }

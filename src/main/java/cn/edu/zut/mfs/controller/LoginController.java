@@ -2,6 +2,7 @@ package cn.edu.zut.mfs.controller;
 
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
+import cn.edu.zut.mfs.domain.UserLoginLog;
 import cn.edu.zut.mfs.dto.UserLoginDto;
 import cn.edu.zut.mfs.pojo.BaseResponse;
 import cn.edu.zut.mfs.service.LoginAuthService;
@@ -12,6 +13,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.Instant;
+import java.util.Date;
 
 /**
  * Sa-Token 登录
@@ -38,10 +42,12 @@ public class LoginController {
     @Operation(summary = "登录")
     @PostMapping("doLogin")
     public BaseResponse<String> doLogin(@RequestBody UserLoginDto userLoginDto) {
-        if (EncryptUtils.encryptUser(userLoginDto) && (Boolean.TRUE.equals(loginAuthService.login(userLoginDto)))) {
+        userLoginDto.setPassword(EncryptUtils.encrypt(userLoginDto.getPassword(),userLoginDto.getUsername()));
+        if (Boolean.TRUE.equals(loginAuthService.login(userLoginDto))) {
             String userId = userService.getUserByUsername(userLoginDto.getUsername()).getId();
             // 先检查此账号是否已被封禁
             StpUtil.checkDisable(userId);
+            loginAuthService.addLoginLog(new UserLoginLog(null, userId, Date.from(Instant.now()), null));
             StpUtil.login(userId, userLoginDto.getIsLastingCookie());
             // 获取 Token  相关参数，这里需要把 Token 信息从响应体中返回到前端
             SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
@@ -93,7 +99,8 @@ public class LoginController {
     @Operation(summary = "修改密码")
     @PostMapping("/updatePassword")
     public BaseResponse<String> updatePassword(@RequestBody UserLoginDto userLoginDto) {
-        if (EncryptUtils.encryptUser(userLoginDto) && (Boolean.TRUE.equals(loginAuthService.updatePassword(userLoginDto)))) {
+        userLoginDto.setPassword(EncryptUtils.encrypt(userLoginDto.getPassword(),userLoginDto.getUsername()));
+        if (Boolean.TRUE.equals(loginAuthService.updatePassword(userLoginDto))) {
             return BaseResponse.success("修改密码成功");
         }
         return BaseResponse.fail("修改密码失败");

@@ -51,7 +51,7 @@ public interface UserService {
     /**
      * 获取指定用户的权限
      */
-    List<String> getPermissions(String userId);
+    List<String> getPermissionAsString(String userId);
 
     /**
      * 根据用户名获取用户

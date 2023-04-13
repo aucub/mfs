@@ -46,6 +46,10 @@ spring:
       username: root
       password: root
       name: mfs
+    publisher-returns: true
+    publisher-confirm-type: correlated
+    template:
+      mandatory: true
 
   data:
     redis:

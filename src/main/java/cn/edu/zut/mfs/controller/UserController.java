@@ -56,8 +56,7 @@ public class UserController {
     public BaseResponse<String> save(@RequestBody UserRegisterDto userRegisterDto) {
         UserLoginDto userLoginDto = new UserLoginDto();
         userLoginDto.setUsername(userRegisterDto.getUsername());
-        userLoginDto.setPassword(userRegisterDto.getPassword());
-        EncryptUtils.encryptUser(userLoginDto);
+        userLoginDto.setPassword(EncryptUtils.encrypt(userRegisterDto.getPassword(),userRegisterDto.getUsername()));
         userRegisterDto.setPassword(userLoginDto.getPassword());
         if (registerService.register(userRegisterDto)) {
             return BaseResponse.success("添加成功");
@@ -126,14 +125,14 @@ public class UserController {
     @SaCheckPermission("user:getJwt")
     @PostMapping(value = "/getJwt")
     public BaseResponse<String> getJwt(JwtDto jwtDto) {
-        return BaseResponse.success(JwtUtils.generate(new JwtDto(UUID.randomUUID().toString(), StpUtil.getLoginIdAsString(), StpUtil.getLoginIdAsString(), jwtDto.getExpiresAt(), "mfs", jwtDto.getNotBefore(), Instant.now(), userService.getPermissions(StpUtil.getLoginIdAsString()))));
+        return BaseResponse.success(JwtUtils.generate(new JwtDto(UUID.randomUUID().toString(), StpUtil.getLoginIdAsString(), StpUtil.getLoginIdAsString(), jwtDto.getExpiresAt(), "mfs", jwtDto.getNotBefore(), Instant.now(), userService.getPermissionAsString(StpUtil.getLoginIdAsString()))));
     }
 
     @Operation(summary = "生成Jwt")
     @SaCheckPermission("user:generateJwt")
     @PostMapping(value = "/generateJwt")
     public BaseResponse<String> generateJwt(JwtDto jwtDto) {
-        return BaseResponse.success(JwtUtils.generate(new JwtDto(UUID.randomUUID().toString(), StpUtil.getLoginIdAsString(), jwtDto.getSubject(), jwtDto.getExpiresAt(), "mfs", jwtDto.getNotBefore(), Instant.now(), userService.getPermissions(StpUtil.getLoginIdAsString()))));
+        return BaseResponse.success(JwtUtils.generate(new JwtDto(UUID.randomUUID().toString(), StpUtil.getLoginIdAsString(), jwtDto.getSubject(), jwtDto.getExpiresAt(), "mfs", jwtDto.getNotBefore(), Instant.now(), userService.getPermissionAsString(StpUtil.getLoginIdAsString()))));
     }
 
 }

@@ -1,5 +1,6 @@
 package cn.edu.zut.mfs.service;
 
+import cn.edu.zut.mfs.domain.UserLoginLog;
 import cn.edu.zut.mfs.dto.UserLoginDto;
 
 public interface LoginAuthService {
@@ -10,5 +11,10 @@ public interface LoginAuthService {
      */
     Boolean updatePassword(UserLoginDto userLoginDto);
 
-    String getPassword(String username);
+    /**
+     * 添加登录日志
+     * @param userLoginLog
+     * @return
+     */
+    Boolean addLoginLog(UserLoginLog userLoginLog);
 }

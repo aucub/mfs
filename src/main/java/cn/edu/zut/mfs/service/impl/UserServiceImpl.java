@@ -96,7 +96,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<String> getPermissions(String userId) {
+    public List<String> getPermissionAsString(String userId) {
         List<String> permissions = new ArrayList<>();
         roleRelationDao.getPermissionList(userId).forEach(item -> permissions.add(item.getValue()));
         userPermissionRelationDao.getPermissionList(userId).forEach(item -> permissions.add(item.getValue()));
