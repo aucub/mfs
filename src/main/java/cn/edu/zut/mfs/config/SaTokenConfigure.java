@@ -16,23 +16,24 @@ import org.springframework.core.annotation.Order;
  */
 @Configuration
 @Slf4j
-public class SaTokenConfigure {
+public class SaTokenConfigure{
 
     /**
      * [sa-token全局过滤器]
      */
-    @Order(-1000)
     @Bean
+    @Order(-1000)
     public SaReactorFilter getSaReactorFilter() {
         return new SaReactorFilter()
                 // 指定 [拦截路由]
-                .addInclude("")
+                .addInclude("/**")
                 // 指定 [放行路由]
-                .addExclude("/**", "/favicon.ico", "/login/**", "/rsocket/**")
+                .addExclude("", "/favicon.ico", "/login/**", "/rsocket/**")
                 // 指定[认证函数]: 每次请求执行
                 .setAuth(r -> {
                     System.out.println("---------- sa全局认证 ----------");
-                    SaRouter.match("/**", "/login/**", () -> StpUtil.checkLogin());
+                    //SaRouter.match("/**", "/login/**", () -> StpUtil.checkLogin());
+                    //SaRouter.match("/**", "/login/**", () -> StpUtil.checkPermission("test"));
                 })
                 // 指定[异常处理函数]：每次[认证函数]发生异常时执行此函数
                 .setError(e -> {
