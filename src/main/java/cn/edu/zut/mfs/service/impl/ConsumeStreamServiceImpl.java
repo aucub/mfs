@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
+import java.time.Duration;
+
 @Slf4j
 @Service
 public class ConsumeStreamServiceImpl implements ConsumeStreamService {
@@ -34,7 +36,7 @@ public class ConsumeStreamServiceImpl implements ConsumeStreamService {
 
     @Override
     public Flux<byte[]> consume(Consume consume) {
-        Flux<byte[]> f = Flux.<byte[]> create(emitter -> {
+        Flux<byte[]> f = Flux.<byte[]>create(emitter -> {
             consumer =
                     environment.consumerBuilder()
                             .stream(consume.getQueue())
@@ -49,6 +51,8 @@ public class ConsumeStreamServiceImpl implements ConsumeStreamService {
                 consumer.close();
             });
         });
-       return f;
+        return Flux.interval(Duration.ofSeconds(5))
+                .map(v -> "No news is good news".getBytes())
+                .mergeWith(f);
     }
 }

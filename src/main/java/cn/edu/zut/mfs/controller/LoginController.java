@@ -42,7 +42,7 @@ public class LoginController {
     @Operation(summary = "登录")
     @PostMapping("doLogin")
     public BaseResponse<String> doLogin(@RequestBody UserLoginDto userLoginDto) {
-        userLoginDto.setPassword(EncryptUtils.encrypt(userLoginDto.getPassword(),userLoginDto.getUsername()));
+        userLoginDto.setPassword(EncryptUtils.encrypt(userLoginDto.getPassword(), userLoginDto.getUsername()));
         if (Boolean.TRUE.equals(loginAuthService.login(userLoginDto))) {
             String userId = userService.getUserByUsername(userLoginDto.getUsername()).getId();
             // 先检查此账号是否已被封禁
@@ -97,9 +97,9 @@ public class LoginController {
     }
 
     @Operation(summary = "修改密码")
-    @PostMapping("/updatePassword")
+    @PostMapping("updatePassword")
     public BaseResponse<String> updatePassword(@RequestBody UserLoginDto userLoginDto) {
-        userLoginDto.setPassword(EncryptUtils.encrypt(userLoginDto.getPassword(),userLoginDto.getUsername()));
+        userLoginDto.setPassword(EncryptUtils.encrypt(userLoginDto.getPassword(), userLoginDto.getUsername()));
         if (Boolean.TRUE.equals(loginAuthService.updatePassword(userLoginDto))) {
             return BaseResponse.success("修改密码成功");
         }

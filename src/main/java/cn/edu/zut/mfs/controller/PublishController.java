@@ -1,6 +1,5 @@
 package cn.edu.zut.mfs.controller;
 
-import cn.edu.zut.mfs.domain.ForwardMessage;
 import cn.edu.zut.mfs.domain.MetadataHeader;
 import cn.edu.zut.mfs.service.PublishService;
 import cn.edu.zut.mfs.service.PublishStreamService;
@@ -35,9 +34,9 @@ public class PublishController {
     }
 
     @MessageMapping("publish")
-    public Mono<Void> publish(@Headers Map<String, Object> metadata,@Payload Flux<CloudEventV1> cloudEventV1Flux) {
+    public Mono<Void> publish(@Headers Map<String, Object> metadata, @Payload Flux<CloudEventV1> cloudEventV1Flux) {
         MetadataHeader metadataHeader = (MetadataHeader) metadata.get("metadataHeader");
-        cloudEventV1Flux.subscribe(item->publishService.publish(null));
+        cloudEventV1Flux.limitRate(100).subscribe(item -> publishService.publish(null));
         return Mono.empty();
     }
 }

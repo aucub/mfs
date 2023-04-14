@@ -60,9 +60,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Boolean delete(String id) {
-        User user = new User();
-        user.setId(id);
-        return userDao.deleteById(user) == 1;
+        return userDao.deleteById(id) == 1;
     }
 
     @Override

@@ -1,8 +1,6 @@
 package cn.edu.zut.mfs.controller;
 
 import cn.edu.zut.mfs.domain.Consume;
-import cn.edu.zut.mfs.domain.ForwardMessage;
-import cn.edu.zut.mfs.pojo.BaseResponse;
 import cn.edu.zut.mfs.service.ConsumeService;
 import cn.edu.zut.mfs.service.ConsumeStreamService;
 import lombok.extern.slf4j.Slf4j;

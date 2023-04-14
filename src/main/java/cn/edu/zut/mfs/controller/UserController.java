@@ -56,7 +56,7 @@ public class UserController {
     public BaseResponse<String> save(@RequestBody UserRegisterDto userRegisterDto) {
         UserLoginDto userLoginDto = new UserLoginDto();
         userLoginDto.setUsername(userRegisterDto.getUsername());
-        userLoginDto.setPassword(EncryptUtils.encrypt(userRegisterDto.getPassword(),userRegisterDto.getUsername()));
+        userLoginDto.setPassword(EncryptUtils.encrypt(userRegisterDto.getPassword(), userRegisterDto.getUsername()));
         userRegisterDto.setPassword(userLoginDto.getPassword());
         if (registerService.register(userRegisterDto)) {
             return BaseResponse.success("添加成功");

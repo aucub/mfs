@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MetadataHeader {
     private String client;
-    private String token;
     private String exchange;
     private String queue;
 }

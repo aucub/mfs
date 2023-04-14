@@ -6,6 +6,7 @@ public interface RegisterService {
 
     /**
      * 用户注册
+     *
      * @param userRegisterDto
      * @return
      */
