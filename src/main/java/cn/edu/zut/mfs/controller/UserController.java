@@ -125,14 +125,14 @@ public class UserController {
     @SaCheckPermission("user:getJwt")
     @PostMapping(value = "/getJwt")
     public BaseResponse<String> getJwt(JwtDto jwtDto) {
-        return BaseResponse.success(JwtUtils.generate(new JwtDto(UUID.randomUUID().toString(), StpUtil.getLoginIdAsString(), StpUtil.getLoginIdAsString(), jwtDto.getExpiresAt(), "mfs", jwtDto.getNotBefore(), Instant.now(), userService.getPermissionAsString(StpUtil.getLoginIdAsString()))));
+        return BaseResponse.success(JwtUtils.generate(new JwtDto(UUID.randomUUID().toString(), StpUtil.getLoginIdAsString(), StpUtil.getLoginIdAsString(), jwtDto.getExpiresAt(), "mfs", jwtDto.getNotBefore(), Instant.now(), userService.getPermissionListAsString(StpUtil.getLoginIdAsString()))));
     }
 
     @Operation(summary = "生成Jwt")
     @SaCheckPermission("user:generateJwt")
     @PostMapping(value = "/generateJwt")
     public BaseResponse<String> generateJwt(JwtDto jwtDto) {
-        return BaseResponse.success(JwtUtils.generate(new JwtDto(UUID.randomUUID().toString(), StpUtil.getLoginIdAsString(), jwtDto.getSubject(), jwtDto.getExpiresAt(), "mfs", jwtDto.getNotBefore(), Instant.now(), userService.getPermissionAsString(StpUtil.getLoginIdAsString()))));
+        return BaseResponse.success(JwtUtils.generate(new JwtDto(UUID.randomUUID().toString(), StpUtil.getLoginIdAsString(), jwtDto.getSubject(), jwtDto.getExpiresAt(), "mfs", jwtDto.getNotBefore(), Instant.now(), userService.getPermissionListAsString(StpUtil.getLoginIdAsString()))));
     }
 
 }

@@ -1,8 +1,8 @@
 package cn.edu.zut.mfs.service;
 
 import cn.edu.zut.mfs.domain.Consume;
-import cn.edu.zut.mfs.domain.ForwardMessage;
+import reactor.core.publisher.Flux;
 
 public interface ConsumeService {
-    ForwardMessage consume(Consume consume);
+    Flux<byte[]> consume(Consume consume);
 }

@@ -26,12 +26,15 @@ public class User {
      * 用户昵称
      */
     private String nickname;
+    private String creator;
     @TableField("create_time")
     private Date createTime;
+    private String updater;
     @TableField("last_update_time")
     private Date lastUpdateTime;
     @TableField("login_time")
     private Date loginTime;
+    private Boolean type;
     private String note;
     @TableLogic()
     @TableField(select = false)

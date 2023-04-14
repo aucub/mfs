@@ -44,6 +44,11 @@ public interface UserService {
     List<Role> getRoleList(String userId);
 
     /**
+     * 获取用户对应角色
+     */
+    List<String> getRoleListAsString(String userId);
+
+    /**
      * 获取指定用户的权限
      */
     List<Permission> getPermissionList(String userId);
@@ -51,7 +56,7 @@ public interface UserService {
     /**
      * 获取指定用户的权限
      */
-    List<String> getPermissionAsString(String userId);
+    List<String> getPermissionListAsString(String userId);
 
     /**
      * 根据用户名获取用户

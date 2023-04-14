@@ -13,6 +13,7 @@ import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,6 +66,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public Boolean updateRole(String userId, List<String> roleIds) {
         int count = roleIds == null ? 0 : roleIds.size();
         Map<String, Object> params = new HashMap<>();
@@ -88,15 +90,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<String> getRoleListAsString(String userId) {
+        List<String> roles = new ArrayList<>();
+        roleRelationDao.getRoleList(userId).forEach(item -> roles.add(item.getName()));
+        return roles;
+    }
+
+    @Override
     public List<Permission> getPermissionList(String userId) {
         List<Permission> permissions = new ArrayList<>();
-        //permissions.addAll(roleRelationDao.getPermissionList(userId));
+        permissions.addAll(roleRelationDao.getPermissionList(userId));
         permissions.addAll(userPermissionRelationDao.getPermissionList(userId));
         return permissions;
     }
 
     @Override
-    public List<String> getPermissionAsString(String userId) {
+    public List<String> getPermissionListAsString(String userId) {
         List<String> permissions = new ArrayList<>();
         roleRelationDao.getPermissionList(userId).forEach(item -> permissions.add(item.getValue()));
         userPermissionRelationDao.getPermissionList(userId).forEach(item -> permissions.add(item.getValue()));

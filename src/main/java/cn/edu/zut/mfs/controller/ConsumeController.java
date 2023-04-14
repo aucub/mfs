@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Flux;
 
 
 @Slf4j
@@ -31,13 +32,13 @@ public class ConsumeController {
     }
 
     @MessageMapping("consume")
-    public BaseResponse<ForwardMessage> consume(Consume consume) {
-        return BaseResponse.success(consumeService.consume(consume));
+    public Flux<byte[]> consume(Consume consume) {
+        return consumeService.consume(consume);
     }
 
     @MessageMapping("consumeStream")
-    public void consumeStream(Consume consume) {
-        consumeStreamService.consume(consume);
+    public Flux<byte[]> consumeStream(Consume consume) {
+        return consumeStreamService.consume(consume);
     }
 
 }

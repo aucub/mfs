@@ -10,6 +10,7 @@ import com.rabbitmq.stream.OffsetSpecification;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 
 @Slf4j
 @Service
@@ -32,26 +33,22 @@ public class ConsumeStreamServiceImpl implements ConsumeStreamService {
     }
 
     @Override
-    public void consume(Consume consume) {
-        consumer =
-                environment.consumerBuilder()
-                        .stream(consume.getQueue())
-                        .name(consume.getClient())
-                        .offset(OffsetSpecification.first())
-                        .autoTrackingStrategy()
-                        .builder()
-                        .messageHandler((context, message) -> System.out.println(message.getBody())
-                        /* Thread.startVirtualThread(() -> {
-
-                            questService.consume(new ConsumeRecord("78904",consume.getQueue(), consume.getClient()));
-                        })*/
-                        )
-                        .build();
-        consumer.storedOffset();
-        try {
-            wait(10000000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+    public Flux<byte[]> consume(Consume consume) {
+        Flux<byte[]> f = Flux.<byte[]> create(emitter -> {
+            consumer =
+                    environment.consumerBuilder()
+                            .stream(consume.getQueue())
+                            .name(consume.getClient())
+                            .offset(OffsetSpecification.first())
+                            .autoTrackingStrategy()
+                            .builder()
+                            .messageHandler((context, message) -> emitter.next(message.getBodyAsBinary())
+                            )
+                            .build();
+            emitter.onDispose(() -> {
+                consumer.close();
+            });
+        });
+       return f;
     }
 }

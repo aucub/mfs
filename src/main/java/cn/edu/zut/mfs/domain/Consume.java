@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Consume {
+    private String queueType;
     private String queue;
     private String client;
 }

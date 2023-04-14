@@ -32,20 +32,7 @@ public class ConnectController {
 
     @ConnectMapping("connect")
     public Mono<Void> connect(RSocketRequester requester, @Headers Map<String, Object> metadata, CloudEventV1 cloudEventV1) {
-        /*
-        if(StpUtil.getLoginIdByToken(metadataHeader.getToken())==null){
-            throw new NotLoginException(null,null,null);
-        }
-        StpUtil.getTokenSessionByToken(metadataHeader.getToken());
-        if(!StpUtil.hasPermission("message:connect")){
-            throw new  NotPermissionException("message:connect");
-        }*/
         MetadataHeader metadataHeader = (MetadataHeader) metadata.get("metadataHeader");
-        /*System.out.println(cloudEvent);
-        PojoCloudEventData<Location> cloudEventData = mapData(
-                cloudEvent,
-                PojoCloudEventDataMapper.from(mapper,Location.class)
-        );*/
         requestProcessor.processRequests(requester, metadataHeader.getClient());
         return Mono.empty();
     }

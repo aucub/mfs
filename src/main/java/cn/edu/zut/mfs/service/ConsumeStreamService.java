@@ -1,7 +1,8 @@
 package cn.edu.zut.mfs.service;
 
 import cn.edu.zut.mfs.domain.Consume;
+import reactor.core.publisher.Flux;
 
 public interface ConsumeStreamService {
-    void consume(Consume consume);
+    Flux<byte[]> consume(Consume consume);
 }

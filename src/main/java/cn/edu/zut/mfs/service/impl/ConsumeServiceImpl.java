@@ -1,16 +1,16 @@
 package cn.edu.zut.mfs.service.impl;
 
 import cn.edu.zut.mfs.domain.Consume;
-import cn.edu.zut.mfs.domain.ForwardMessage;
 import cn.edu.zut.mfs.service.ConsumeService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.config.SimpleRabbitListenerEndpoint;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.io.IOException;
-import java.util.Objects;
+import reactor.core.publisher.Flux;
 
 @Slf4j
 @Service
@@ -18,17 +18,33 @@ public class ConsumeServiceImpl implements ConsumeService {
     private final static ObjectMapper mapper = new ObjectMapper();
     private RabbitTemplate rabbitTemplate;
 
+    private ConnectionFactory connectionFactory;
+
     @Autowired
     public void setRabbitTemplate(RabbitTemplate rabbitTemplate) {
         this.rabbitTemplate = rabbitTemplate;
     }
 
+    @Autowired
+    public void setConnectionFactory(ConnectionFactory connectionFactory) {
+        this.connectionFactory = connectionFactory;
+    }
+
     @Override
-    public ForwardMessage consume(Consume consume) {
-        try {
-            return mapper.readValue((Objects.requireNonNull(rabbitTemplate.receive(consume.getQueue()))).getBody(), ForwardMessage.class);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public Flux<byte[]> consume(Consume consume) {
+        SimpleMessageListenerContainer simpleMessageListenerContainer = new SimpleMessageListenerContainer(connectionFactory);
+        simpleMessageListenerContainer.addQueueNames(consume.getQueue());
+        Flux<byte[]> f = Flux.<byte[]> create(emitter -> {
+            simpleMessageListenerContainer.setupMessageListener(message -> {
+                emitter.next(message.getBody());
+            });
+            emitter.onRequest(v -> {
+                simpleMessageListenerContainer.start();
+            });
+            emitter.onDispose(() -> {
+                simpleMessageListenerContainer.stop();
+            });
+        });
+        return f;
     }
 }

@@ -12,5 +12,6 @@ public class ForwardMessage {
     private String client;
     private String exchange;
     private String queue;
+    private String queueType;
     private byte[] body;
 }

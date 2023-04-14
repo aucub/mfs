@@ -2,6 +2,8 @@ package cn.edu.zut.mfs.interfaceImpl;
 
 
 import cn.dev33.satoken.stp.StpInterface;
+import cn.edu.zut.mfs.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -12,6 +14,12 @@ import java.util.List;
  */
 @Component    // 打开此注解，保证此类被springboot扫描，即可完成sa-token的自定义权限验证扩展
 public class StpInterfaceImpl implements StpInterface {
+    private UserService userService;
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
 
     /**
      * 返回一个账号所拥有的权限码集合
@@ -20,12 +28,7 @@ public class StpInterfaceImpl implements StpInterface {
     public List<String> getPermissionList(Object loginId, String loginType) {
         // 查询权限list
         List<String> list = new ArrayList<String>();
-        list.add("101");
-        list.add("user-add");
-        list.add("user-delete");
-        list.add("user-update");
-        list.add("user-get");
-        list.add("article-get");
+        list.addAll(userService.getPermissionListAsString((String) loginId));
         return list;
     }
 
@@ -36,8 +39,7 @@ public class StpInterfaceImpl implements StpInterface {
     public List<String> getRoleList(Object loginId, String loginType) {
         // 查询角色list
         List<String> list = new ArrayList<String>();
-        list.add("admin");
-        list.add("super-admin");
+        list.addAll(userService.getRoleListAsString((String) loginId));
         return list;
     }
 
