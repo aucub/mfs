@@ -43,7 +43,8 @@ public class PublishController {
         //cloudEventV1Flux.limitRate(100).subscribe(item -> System.out.println(item.toString()));
         cloudEventFlux.subscribe(item->{
             log.info(item.getId());
-            publishService.publish(new ForwardMessage(UUID.randomUUID().toString(),"test","","test","classic",UUID.randomUUID().toString().getBytes()));
+            publishStreamService.publish(new ForwardMessage(UUID.randomUUID().toString(),"test","","test8","classic",UUID.randomUUID().toString().getBytes()));
+            //publishService.publish(new ForwardMessage(UUID.randomUUID().toString(),"test","","test","classic",UUID.randomUUID().toString().getBytes()));
         });
         //return Mono.just("test");
         return Flux.interval(Duration.ofSeconds(1)).map(i-> UUID.randomUUID().toString());
