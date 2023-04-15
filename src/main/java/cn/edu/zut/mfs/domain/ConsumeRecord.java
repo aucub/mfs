@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ConsumeRecord {
-    private String id;
+    private String messageId;
     private String queue;
-    private String client;
+    private String userId;
 }

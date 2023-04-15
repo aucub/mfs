@@ -16,13 +16,15 @@ import reactor.core.publisher.Mono;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 连接控制器
+ */
 @Slf4j
 @RestController
 public class ConnectController {
 
-    Message message;
-
     public final static HashMap<String, RSocketRequester> requesters = new HashMap<>();
+    Message message;
     private RequestProcessor requestProcessor;
 
 
@@ -36,7 +38,7 @@ public class ConnectController {
     @ConnectMapping("connect")
     public Mono<Void> connect(RSocketRequester requester, @Headers Map<String, Object> metadata, CloudEventV1 cloudEventV1) {
         MetadataHeader metadataHeader = (MetadataHeader) metadata.get("metadataHeader");
-        requestProcessor.processRequests(requester, metadataHeader.getClient());
+        requestProcessor.processRequests(requester, metadataHeader.getUserId());
         return Mono.empty();
     }
 

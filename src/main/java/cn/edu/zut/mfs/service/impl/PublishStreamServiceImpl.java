@@ -1,22 +1,21 @@
 package cn.edu.zut.mfs.service.impl;
 
-import cn.edu.zut.mfs.domain.ForwardMessage;
+import cn.edu.zut.mfs.domain.MetadataHeader;
 import cn.edu.zut.mfs.service.PublishStreamService;
 import cn.edu.zut.mfs.service.QuestService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import cn.edu.zut.mfs.utils.MessageConverter;
 import com.rabbitmq.stream.ByteCapacity;
 import com.rabbitmq.stream.Environment;
+import io.cloudevents.CloudEvent;
+import io.cloudevents.core.v1.CloudEventV1;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.rabbit.stream.producer.RabbitStreamTemplate;
-import org.springframework.rabbit.stream.support.StreamMessageProperties;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
 public class PublishStreamServiceImpl implements PublishStreamService {
-    private static final ObjectMapper mapper = new ObjectMapper();
     private Environment environment = Environment.builder()
             .uri("rabbitmq-stream://root:root@47.113.201.150:5552/%2fmfs")
             .build();
@@ -41,17 +40,12 @@ public class PublishStreamServiceImpl implements PublishStreamService {
     }
 
     @Override
-    public void publish(ForwardMessage forwardMessage) {
-        StreamMessageProperties streamMessageProperties = new StreamMessageProperties();
-        try {
-            stream(forwardMessage.getQueue());
-            setRabbitStreamTemplate(forwardMessage.getQueue());
-            rabbitStreamTemplate.send(new org.springframework.amqp.core.Message(mapper.writeValueAsBytes(forwardMessage), streamMessageProperties));
+    public void publish(CloudEvent cloudEvent, MetadataHeader metadataHeader) {
+        stream(metadataHeader.getRoutingKey());
+        setRabbitStreamTemplate(metadataHeader.getRoutingKey());
+        rabbitStreamTemplate.send(MessageConverter.toMessage((CloudEventV1) cloudEvent));
             /*Thread.startVirtualThread(() -> {
                 questService.publish(forwardMessage);
             });*/
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

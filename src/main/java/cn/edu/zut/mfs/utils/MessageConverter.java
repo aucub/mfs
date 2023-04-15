@@ -12,24 +12,26 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MessageConverter {
-    public Message toMessage(CloudEventV1 payload) {
+    public static Message toMessage(CloudEventV1 payload) {
         if (payload != null) {
-            Map<String, Object> headers=new HashMap<>();
+            Map<String, Object> headers = new HashMap<>();
             MessageProperties messageProperties = new MessageProperties();
             messageProperties.setMessageId(payload.getId());
             messageProperties.setContentType(payload.getDataContentType());
             messageProperties.setType(payload.getType());
             messageProperties.setTimestamp(Date.from(payload.getTime().toInstant()));
-            payload.getExtensionNames().forEach(item->{
+            payload.getExtensionNames().forEach(item -> {
                 switch (item) {
                     case "userId" -> messageProperties.setUserId((String) payload.getExtension("userId"));
                     case "appId" -> messageProperties.setAppId((String) payload.getExtension("appId"));
+                    case "priority" -> messageProperties.setPriority((Integer) payload.getExtension("priority"));
                     case "correlationId" ->
                             messageProperties.setCorrelationId((String) payload.getExtension("correlationId"));
                     case "replyTo" -> messageProperties.setReplyTo((String) payload.getExtension("replyTo"));
                     case "contentEncoding" ->
                             messageProperties.setContentEncoding((String) payload.getExtension("contentEncoding"));
                     case "expiration" -> messageProperties.setExpiration((String) payload.getExtension("expiration"));
+                    case "x-delay" -> messageProperties.setDelay((Integer) payload.getExtension("x-delay"));
                     default -> headers.put(item, payload.getExtension(item));
                 }
             });
@@ -38,10 +40,11 @@ public class MessageConverter {
         }
         return null;
     }
-    public CloudEventV1 fromMessage(Message payload){
-        URI source=payload.getMessageProperties().getHeader("source");
-        URI dataschema=payload.getMessageProperties().getHeader("dataschema");
-        String subject=payload.getMessageProperties().getHeader("subject");
+
+    public static CloudEventV1 fromMessage(Message payload) {
+        URI source = payload.getMessageProperties().getHeader("source");
+        URI dataschema = payload.getMessageProperties().getHeader("dataschema");
+        String subject = payload.getMessageProperties().getHeader("subject");
         payload.getMessageProperties().getHeaders().remove("source");
         payload.getMessageProperties().getHeaders().remove("dataschema");
         payload.getMessageProperties().getHeaders().remove("subject");

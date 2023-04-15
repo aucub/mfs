@@ -36,11 +36,11 @@ public class ConsumeStreamServiceImpl implements ConsumeStreamService {
 
     @Override
     public Flux<byte[]> consume(Consume consume) {
-        Flux<byte[]> f = Flux.<byte[]>create(emitter -> {
+        Flux<byte[]> f = Flux.create(emitter -> {
             consumer =
                     environment.consumerBuilder()
                             .stream(consume.getQueue())
-                            .name(consume.getClient())
+                            .name(consume.getUserId())
                             .offset(OffsetSpecification.first())
                             .autoTrackingStrategy()
                             .builder()
@@ -52,7 +52,7 @@ public class ConsumeStreamServiceImpl implements ConsumeStreamService {
             });
         });
         return Flux.interval(Duration.ofSeconds(5))
-                .map(v -> "No news is good news".getBytes())
+                .map(v -> "暂无新消息".getBytes())
                 .mergeWith(f);
     }
 }

@@ -7,7 +7,6 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 /**
  * RabbitMQ配置
- *
  */
 public class RabbitConfig {
     @Bean

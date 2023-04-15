@@ -10,17 +10,17 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ForwardMessage {
-    private Date timestamp;//
-    private String messageId;//
+    private Date timestamp;
+    private String messageId;
     private String userId;
     private String appId;
-    private String type;//
+    private String type;
     private String correlationId;
     private String replyTo;
-    private String contentType;//
+    private String contentType;
     private String contentEncoding;
     private String expiration;
-    private Integer priority=0;
+    private Integer priority = 0;
     private String exchange;
     private String queue;
     private String queueType;

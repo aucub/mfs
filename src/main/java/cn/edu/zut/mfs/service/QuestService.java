@@ -1,10 +1,10 @@
 package cn.edu.zut.mfs.service;
 
 import cn.edu.zut.mfs.domain.ConsumeRecord;
-import cn.edu.zut.mfs.domain.ForwardMessage;
+import cn.edu.zut.mfs.domain.PublishRecord;
 
 public interface QuestService {
-    void publish(ForwardMessage forwardMessage);
+    void publish(PublishRecord publishRecord);
 
     void consume(ConsumeRecord consumeRecord);
 }
