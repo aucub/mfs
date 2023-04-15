@@ -8,7 +8,7 @@
   "projectName": "mfs",
   "framework": "spring",
   "sortByTitle": false,
-  "showAuthor": true,
+  "showAuthor": false,
   "allInOneDocFileName": "doc.md",
   "requestFieldToUnderline": true,
   "responseFieldToUnderline": true,
