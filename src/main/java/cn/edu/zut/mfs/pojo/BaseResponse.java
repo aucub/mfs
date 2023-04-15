@@ -4,9 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * @param <T>
- */
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

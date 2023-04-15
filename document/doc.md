@@ -2,12 +2,12 @@
 
 | Version | Update Time | Status | Author | Description |
 |---------|-------------|--------|--------|-------------|
-|v2023-04-15 15:38:35|2023-04-15 15:38:35|auto|@yrumily|Created by smart-doc|
+|v2023-04-15 23:29:46|2023-04-15 23:29:46|auto|@yrumily|Created by smart-doc|
 
 
 
-## 
-## 
+## 连接控制器
+## 消费控制器
 ## Sa-Token 账号封禁
 ### 
 **URL:** /disable/disable.do
@@ -29,8 +29,8 @@
 **Request-example:**
 ```
 curl -X POST -H 'Content-Type: application/json' -i /disable/disable.do --data '{
-  "user_id": "192",
-  "time": 1681544714656
+  "user_id": "164",
+  "time": 1681572587660
 }'
 ```
 **Response-fields:**
@@ -44,9 +44,9 @@ curl -X POST -H 'Content-Type: application/json' -i /disable/disable.do --data '
 **Response-example:**
 ```
 {
-  "code": 679,
+  "code": 660,
   "message": "success",
-  "data": "bsl0it"
+  "data": "12tv2o"
 }
 ```
 
@@ -68,7 +68,7 @@ curl -X POST -H 'Content-Type: application/json' -i /disable/disable.do --data '
 
 **Request-example:**
 ```
-curl -X POST -i /disable/untieDisable.do --data 'user_id=192'
+curl -X POST -i /disable/untieDisable.do --data 'user_id=164'
 ```
 **Response-fields:**
 
@@ -81,13 +81,13 @@ curl -X POST -i /disable/untieDisable.do --data 'user_id=192'
 **Response-example:**
 ```
 {
-  "code": 238,
+  "code": 519,
   "message": "success",
-  "data": "83no97"
+  "data": "eb5pt1"
 }
 ```
 
-## Sa-Token 权限认证
+## Sa-Token 权限
 ### 
 **URL:** /jur/getPermission.do
 
@@ -115,12 +115,12 @@ curl -X GET -i /jur/getPermission.do
 **Response-example:**
 ```
 {
-  "code": 393,
+  "code": 450,
   "message": "success",
   "data": {
     "mapKey": [
-      "7n4wgn",
-      "azmxyu"
+      "6wzsum",
+      "x1fyj4"
     ]
   }
 }
@@ -145,7 +145,7 @@ curl -X GET -i /jur/getPermission.do
 
 **Request-example:**
 ```
-curl -X POST -i /kickout/logout.do --data 'user_id=192'
+curl -X POST -i /kickout/logout.do --data 'user_id=164'
 ```
 **Response-fields:**
 
@@ -158,9 +158,9 @@ curl -X POST -i /kickout/logout.do --data 'user_id=192'
 **Response-example:**
 ```
 {
-  "code": 451,
+  "code": 709,
   "message": "success",
-  "data": "r2pwqx"
+  "data": "k1isfi"
 }
 ```
 
@@ -182,7 +182,7 @@ curl -X POST -i /kickout/logout.do --data 'user_id=192'
 
 **Request-example:**
 ```
-curl -X POST -i /kickout/kickout.do --data 'user_id=192'
+curl -X POST -i /kickout/kickout.do --data 'user_id=164'
 ```
 **Response-fields:**
 
@@ -195,9 +195,9 @@ curl -X POST -i /kickout/kickout.do --data 'user_id=192'
 **Response-example:**
 ```
 {
-  "code": 421,
+  "code": 32,
   "message": "success",
-  "data": "ema1i4"
+  "data": "9igrhk"
 }
 ```
 
@@ -223,8 +223,8 @@ curl -X POST -i /kickout/kickout.do --data 'user_id=192'
 **Request-example:**
 ```
 curl -X POST -H 'Content-Type: application/json' -i /login/doLogin.do --data '{
-  "username": "marilou.lubowitz",
-  "password": "w1ynir",
+  "username": "nick.fisher",
+  "password": "hsrtep",
   "is_lasting_cookie": true
 }'
 ```
@@ -239,9 +239,9 @@ curl -X POST -H 'Content-Type: application/json' -i /login/doLogin.do --data '{
 **Response-example:**
 ```
 {
-  "code": 723,
+  "code": 236,
   "message": "success",
-  "data": "0m2z2z"
+  "data": "m3xx5f"
 }
 ```
 
@@ -270,9 +270,9 @@ curl -X GET -i /login/isLogin.do
 **Response-example:**
 ```
 {
-  "code": 416,
+  "code": 265,
   "message": "success",
-  "data": "bnxcgb"
+  "data": "q1x1h7"
 }
 ```
 
@@ -301,9 +301,9 @@ curl -X GET -i /login/logout.do
 **Response-example:**
 ```
 {
-  "code": 659,
+  "code": 905,
   "message": "success",
-  "data": "jug86g"
+  "data": "mi8p89"
 }
 ```
 
@@ -332,9 +332,9 @@ curl -X GET -i /login/checkLogin.do
 **Response-example:**
 ```
 {
-  "code": 99,
+  "code": 173,
   "message": "success",
-  "data": "oa1l59"
+  "data": "0jhvlm"
 }
 ```
 
@@ -363,9 +363,9 @@ curl -X GET -i /login/getLoginIdAsString.do
 **Response-example:**
 ```
 {
-  "code": 367,
+  "code": 968,
   "message": "success",
-  "data": "hhw0ud"
+  "data": "ojv6s3"
 }
 ```
 
@@ -390,8 +390,8 @@ curl -X GET -i /login/getLoginIdAsString.do
 **Request-example:**
 ```
 curl -X POST -H 'Content-Type: application/json' -i /login/updatePassword.do --data '{
-  "username": "marilou.lubowitz",
-  "password": "zdarp3",
+  "username": "nick.fisher",
+  "password": "shez5p",
   "is_lasting_cookie": true
 }'
 ```
@@ -406,9 +406,9 @@ curl -X POST -H 'Content-Type: application/json' -i /login/updatePassword.do --d
 **Response-example:**
 ```
 {
-  "code": 536,
+  "code": 123,
   "message": "success",
-  "data": "36nt9r"
+  "data": "riy1l8"
 }
 ```
 
@@ -439,13 +439,13 @@ curl -X POST -H 'Content-Type: application/json' -i /login/updatePassword.do --d
 **Request-example:**
 ```
 curl -X POST -H 'Content-Type: application/json' -i /register/user.do --data '{
-  "id": "192",
-  "username": "marilou.lubowitz",
-  "password": "tumqar",
-  "nickname": "hoyt.schimmel",
-  "create_time": "2023-04-15 15:45:14",
-  "last_update_time": "2023-04-15 15:45:14",
-  "note": "m2p8nd",
+  "id": "164",
+  "username": "nick.fisher",
+  "password": "bgaa2j",
+  "nickname": "natividad.hane",
+  "create_time": "2023-04-15 23:30:51",
+  "last_update_time": "2023-04-15 23:30:51",
+  "note": "cfjwmg",
   "deleted": true
 }'
 ```
@@ -460,9 +460,9 @@ curl -X POST -H 'Content-Type: application/json' -i /register/user.do --data '{
 **Response-example:**
 ```
 {
-  "code": 306,
+  "code": 295,
   "message": "success",
-  "data": "dy9s0g"
+  "data": "c98qmc"
 }
 ```
 
@@ -496,14 +496,14 @@ curl -X GET -i /role/list.do
 **Response-example:**
 ```
 {
-  "code": 221,
+  "code": 795,
   "message": "success",
   "data": [
     {
-      "id": "192",
-      "name": "marilou.lubowitz",
-      "description": "6jjk1a",
-      "deleted": 609
+      "id": "164",
+      "name": "nick.fisher",
+      "description": "x3t8se",
+      "deleted": 6
     }
   ]
 }
@@ -531,10 +531,10 @@ curl -X GET -i /role/list.do
 **Request-example:**
 ```
 curl -X POST -H 'Content-Type: application/json' -i /role/save.do --data '{
-  "id": "192",
-  "name": "marilou.lubowitz",
-  "description": "ok9ngt",
-  "deleted": 949
+  "id": "164",
+  "name": "nick.fisher",
+  "description": "04kaq3",
+  "deleted": 162
 }'
 ```
 **Response-fields:**
@@ -548,9 +548,9 @@ curl -X POST -H 'Content-Type: application/json' -i /role/save.do --data '{
 **Response-example:**
 ```
 {
-  "code": 594,
+  "code": 785,
   "message": "success",
-  "data": "7xjgyi"
+  "data": "5vlnhu"
 }
 ```
 
@@ -576,10 +576,10 @@ curl -X POST -H 'Content-Type: application/json' -i /role/save.do --data '{
 **Request-example:**
 ```
 curl -X POST -H 'Content-Type: application/json' -i /role/update.do --data '{
-  "id": "192",
-  "name": "marilou.lubowitz",
-  "description": "qultum",
-  "deleted": 177
+  "id": "164",
+  "name": "nick.fisher",
+  "description": "q9nf74",
+  "deleted": 709
 }'
 ```
 **Response-fields:**
@@ -593,9 +593,9 @@ curl -X POST -H 'Content-Type: application/json' -i /role/update.do --data '{
 **Response-example:**
 ```
 {
-  "code": 662,
+  "code": 792,
   "message": "success",
-  "data": "zvbx3f"
+  "data": "t6sv3n"
 }
 ```
 
@@ -617,7 +617,7 @@ curl -X POST -H 'Content-Type: application/json' -i /role/update.do --data '{
 
 **Request-example:**
 ```
-curl -X POST -i /role/delete.do --data 'id=192'
+curl -X POST -i /role/delete.do --data 'id=164'
 ```
 **Response-fields:**
 
@@ -630,9 +630,9 @@ curl -X POST -i /role/delete.do --data 'id=192'
 **Response-example:**
 ```
 {
-  "code": 237,
+  "code": 478,
   "message": "success",
-  "data": "3bl1lo"
+  "data": "7ijryp"
 }
 ```
 
@@ -656,9 +656,9 @@ curl -X POST -i /role/delete.do --data 'id=192'
 **Request-example:**
 ```
 curl -X POST -H 'Content-Type: application/json' -i /role/allocPermission.do --data '{
-  "role_id": "192",
+  "role_id": "164",
   "permission_ids": [
-    "pjuhuc"
+    "aygf2s"
   ]
 }'
 ```
@@ -673,9 +673,9 @@ curl -X POST -H 'Content-Type: application/json' -i /role/allocPermission.do --d
 **Response-example:**
 ```
 {
-  "code": 62,
+  "code": 795,
   "message": "success",
-  "data": "30jhnu"
+  "data": "ijqucf"
 }
 ```
 
@@ -697,7 +697,7 @@ curl -X POST -H 'Content-Type: application/json' -i /role/allocPermission.do --d
 
 **Request-example:**
 ```
-curl -X GET -i /role/listPermission.do?role_id=192 --data '&192'
+curl -X GET -i /role/listPermission.do?role_id=164 --data '&164'
 ```
 **Response-fields:**
 
@@ -715,15 +715,15 @@ curl -X GET -i /role/listPermission.do?role_id=192 --data '&192'
 **Response-example:**
 ```
 {
-  "code": 307,
+  "code": 323,
   "message": "success",
   "data": [
     {
-      "id": "192",
-      "pid": "192",
-      "name": "marilou.lubowitz",
-      "value": "3pnrnn",
-      "deleted": 626
+      "id": "164",
+      "pid": "164",
+      "name": "nick.fisher",
+      "value": "ptp11j",
+      "deleted": 693
     }
   ]
 }
@@ -750,7 +750,7 @@ curl -X GET -i /role/listPermission.do?role_id=192 --data '&192'
 **Request-example:**
 ```
 curl -X POST -H 'Content-Type: application/json' -i /searchSession/list.do --data '{
-  "start": 487,
+  "start": 879,
   "size": 10
 }'
 ```
@@ -765,7 +765,7 @@ curl -X POST -H 'Content-Type: application/json' -i /searchSession/list.do --dat
 **Response-example:**
 ```
 {
-  "code": 829,
+  "code": 844,
   "message": "success",
   "data": [
     {}
@@ -797,10 +797,10 @@ curl -X POST -H 'Content-Type: application/json' -i /searchSession/list.do --dat
 **Request-example:**
 ```
 curl -X POST -H 'Content-Type: application/json' -i /user/list.do --data '{
-  "keyword": "bww0vc",
-  "role_id": "192",
+  "keyword": "zgw938",
+  "role_id": "164",
   "page_size": 10,
-  "page_num": 337
+  "page_num": 615
 }'
 ```
 **Response-fields:**
@@ -814,7 +814,7 @@ curl -X POST -H 'Content-Type: application/json' -i /user/list.do --data '{
 **Response-example:**
 ```
 {
-  "code": 379,
+  "code": 688,
   "message": "success",
   "data": {}
 }
@@ -846,13 +846,13 @@ curl -X POST -H 'Content-Type: application/json' -i /user/list.do --data '{
 **Request-example:**
 ```
 curl -X POST -H 'Content-Type: application/json' -i /user/save.do --data '{
-  "id": "192",
-  "username": "marilou.lubowitz",
-  "password": "0v4du0",
-  "nickname": "hoyt.schimmel",
-  "create_time": "2023-04-15 15:45:14",
-  "last_update_time": "2023-04-15 15:45:14",
-  "note": "9zzhsm",
+  "id": "164",
+  "username": "nick.fisher",
+  "password": "oi3vrg",
+  "nickname": "natividad.hane",
+  "create_time": "2023-04-15 23:30:51",
+  "last_update_time": "2023-04-15 23:30:51",
+  "note": "vcxhls",
   "deleted": true
 }'
 ```
@@ -867,9 +867,9 @@ curl -X POST -H 'Content-Type: application/json' -i /user/save.do --data '{
 **Response-example:**
 ```
 {
-  "code": 713,
+  "code": 699,
   "message": "success",
-  "data": "oq9yhq"
+  "data": "rk6dhe"
 }
 ```
 
@@ -902,16 +902,16 @@ curl -X POST -H 'Content-Type: application/json' -i /user/save.do --data '{
 **Request-example:**
 ```
 curl -X POST -H 'Content-Type: application/json' -i /user/update.do --data '{
-  "id": "192",
-  "username": "marilou.lubowitz",
-  "nickname": "hoyt.schimmel",
-  "creator": "i98wii",
-  "create_time": "2023-04-15 15:45:14",
-  "updater": "va9q1n",
-  "last_update_time": "2023-04-15 15:45:14",
-  "login_time": "2023-04-15 15:45:14",
+  "id": "164",
+  "username": "nick.fisher",
+  "nickname": "natividad.hane",
+  "creator": "a72shy",
+  "create_time": "2023-04-15 23:30:51",
+  "updater": "ly3qj0",
+  "last_update_time": "2023-04-15 23:30:51",
+  "login_time": "2023-04-15 23:30:51",
   "type": true,
-  "note": "54vnzt",
+  "note": "odqsz5",
   "deleted": true
 }'
 ```
@@ -926,9 +926,9 @@ curl -X POST -H 'Content-Type: application/json' -i /user/update.do --data '{
 **Response-example:**
 ```
 {
-  "code": 815,
+  "code": 12,
   "message": "success",
-  "data": "o131d4"
+  "data": "2x2l8e"
 }
 ```
 
@@ -950,7 +950,7 @@ curl -X POST -H 'Content-Type: application/json' -i /user/update.do --data '{
 
 **Request-example:**
 ```
-curl -X POST -i /user/delete.do --data 'id=192'
+curl -X POST -i /user/delete.do --data 'id=164'
 ```
 **Response-fields:**
 
@@ -963,9 +963,9 @@ curl -X POST -i /user/delete.do --data 'id=192'
 **Response-example:**
 ```
 {
-  "code": 72,
+  "code": 304,
   "message": "success",
-  "data": "3e70xd"
+  "data": "c80zso"
 }
 ```
 
@@ -987,7 +987,7 @@ curl -X POST -i /user/delete.do --data 'id=192'
 
 **Request-example:**
 ```
-curl -X POST -i /user/getUserInfoByUsername.do --data 'username=marilou.lubowitz'
+curl -X POST -i /user/getUserInfoByUsername.do --data 'username=nick.fisher'
 ```
 **Response-fields:**
 
@@ -1011,19 +1011,19 @@ curl -X POST -i /user/getUserInfoByUsername.do --data 'username=marilou.lubowitz
 **Response-example:**
 ```
 {
-  "code": 801,
+  "code": 105,
   "message": "success",
   "data": {
-    "id": "192",
-    "username": "marilou.lubowitz",
-    "nickname": "hoyt.schimmel",
-    "creator": "16oe8e",
-    "create_time": "2023-04-15 15:45:14",
-    "updater": "u3rvwx",
-    "last_update_time": "2023-04-15 15:45:14",
-    "login_time": "2023-04-15 15:45:14",
+    "id": "164",
+    "username": "nick.fisher",
+    "nickname": "natividad.hane",
+    "creator": "q768ap",
+    "create_time": "2023-04-15 23:30:51",
+    "updater": "ciw2a8",
+    "last_update_time": "2023-04-15 23:30:51",
+    "login_time": "2023-04-15 23:30:51",
     "type": true,
-    "note": "xi81k9",
+    "note": "2bj77o",
     "deleted": true
   }
 }
@@ -1047,7 +1047,7 @@ curl -X POST -i /user/getUserInfoByUsername.do --data 'username=marilou.lubowitz
 
 **Request-example:**
 ```
-curl -X POST -i /user/getUserInfoByUserId.do --data 'user_id=192'
+curl -X POST -i /user/getUserInfoByUserId.do --data 'user_id=164'
 ```
 **Response-fields:**
 
@@ -1071,19 +1071,19 @@ curl -X POST -i /user/getUserInfoByUserId.do --data 'user_id=192'
 **Response-example:**
 ```
 {
-  "code": 564,
+  "code": 651,
   "message": "success",
   "data": {
-    "id": "192",
-    "username": "marilou.lubowitz",
-    "nickname": "hoyt.schimmel",
-    "creator": "kjh26f",
-    "create_time": "2023-04-15 15:45:14",
-    "updater": "qnt7lw",
-    "last_update_time": "2023-04-15 15:45:14",
-    "login_time": "2023-04-15 15:45:14",
+    "id": "164",
+    "username": "nick.fisher",
+    "nickname": "natividad.hane",
+    "creator": "180jfr",
+    "create_time": "2023-04-15 23:30:51",
+    "updater": "2tgkpb",
+    "last_update_time": "2023-04-15 23:30:51",
+    "login_time": "2023-04-15 23:30:51",
     "type": true,
-    "note": "47nmsb",
+    "note": "qxlmx8",
     "deleted": true
   }
 }
@@ -1125,19 +1125,19 @@ curl -X GET -i /user/getLoginUserInfo.do
 **Response-example:**
 ```
 {
-  "code": 60,
+  "code": 567,
   "message": "success",
   "data": {
-    "id": "192",
-    "username": "marilou.lubowitz",
-    "nickname": "hoyt.schimmel",
-    "creator": "esgdaf",
-    "create_time": "2023-04-15 15:45:14",
-    "updater": "ky3l8k",
-    "last_update_time": "2023-04-15 15:45:14",
-    "login_time": "2023-04-15 15:45:14",
+    "id": "164",
+    "username": "nick.fisher",
+    "nickname": "natividad.hane",
+    "creator": "ttxxcu",
+    "create_time": "2023-04-15 23:30:51",
+    "updater": "a2f2fc",
+    "last_update_time": "2023-04-15 23:30:51",
+    "login_time": "2023-04-15 23:30:51",
     "type": true,
-    "note": "jjm5aa",
+    "note": "tbb9n7",
     "deleted": true
   }
 }
@@ -1161,7 +1161,7 @@ curl -X GET -i /user/getLoginUserInfo.do
 
 **Request-example:**
 ```
-curl -X POST -i /user/getRoleListByUserId.do --data 'user_id=192'
+curl -X POST -i /user/getRoleListByUserId.do --data 'user_id=164'
 ```
 **Response-fields:**
 
@@ -1178,14 +1178,14 @@ curl -X POST -i /user/getRoleListByUserId.do --data 'user_id=192'
 **Response-example:**
 ```
 {
-  "code": 127,
+  "code": 92,
   "message": "success",
   "data": [
     {
-      "id": "192",
-      "name": "marilou.lubowitz",
-      "description": "jf8b0h",
-      "deleted": 89
+      "id": "164",
+      "name": "nick.fisher",
+      "description": "rrz275",
+      "deleted": 681
     }
   ]
 }
@@ -1211,9 +1211,9 @@ curl -X POST -i /user/getRoleListByUserId.do --data 'user_id=192'
 **Request-example:**
 ```
 curl -X POST -H 'Content-Type: application/json' -i /user/saveAuthRole.do --data '{
-  "user_id": "192",
+  "user_id": "164",
   "role_ids": [
-    "ad6v24"
+    "qdwfo7"
   ]
 }'
 ```
@@ -1228,9 +1228,9 @@ curl -X POST -H 'Content-Type: application/json' -i /user/saveAuthRole.do --data
 **Response-example:**
 ```
 {
-  "code": 572,
+  "code": 740,
   "message": "success",
-  "data": "5ve93e"
+  "data": "t76jp8"
 }
 ```
 
@@ -1259,7 +1259,7 @@ curl -X POST -H 'Content-Type: application/json' -i /user/saveAuthRole.do --data
 
 **Request-example:**
 ```
-curl -X POST -i /user/getJwt.do --data 'jwt_id=192&issuer=chin7m&subject=mczj12&audience=pre3oe&authorities=0ygov2,0ygov2'
+curl -X POST -i /user/getJwt.do --data 'jwt_id=164&issuer=18ptil&subject=08idzk&audience=6yzcbx&authorities=87gwd2,87gwd2'
 ```
 **Response-fields:**
 
@@ -1272,9 +1272,9 @@ curl -X POST -i /user/getJwt.do --data 'jwt_id=192&issuer=chin7m&subject=mczj12&
 **Response-example:**
 ```
 {
-  "code": 762,
+  "code": 147,
   "message": "success",
-  "data": "kb94c8"
+  "data": "0fwsin"
 }
 ```
 
@@ -1303,7 +1303,7 @@ curl -X POST -i /user/getJwt.do --data 'jwt_id=192&issuer=chin7m&subject=mczj12&
 
 **Request-example:**
 ```
-curl -X POST -i /user/generateJwt.do --data 'jwt_id=192&issuer=e65dn8&subject=405rbw&audience=4gjrza&authorities=zovt1q,zovt1q'
+curl -X POST -i /user/generateJwt.do --data 'jwt_id=164&issuer=poah1d&subject=p6jy7a&audience=28bfwf&authorities=f6wv1i,f6wv1i'
 ```
 **Response-fields:**
 
@@ -1316,11 +1316,10 @@ curl -X POST -i /user/generateJwt.do --data 'jwt_id=192&issuer=e65dn8&subject=40
 **Response-example:**
 ```
 {
-  "code": 81,
+  "code": 776,
   "message": "success",
-  "data": "g0o12b"
+  "data": "oi2e40"
 }
 ```
 
-## broker管理
 

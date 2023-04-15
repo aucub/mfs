@@ -36,7 +36,6 @@ import java.util.Map;
 
 /**
  * rsocket配置
- *
  */
 @Configuration
 @EnableRSocketSecurity

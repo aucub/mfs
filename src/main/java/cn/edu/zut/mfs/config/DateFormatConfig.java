@@ -15,7 +15,6 @@ import java.util.TimeZone;
 
 /**
  * 日期格式配置
- *
  */
 @JsonComponent
 public class DateFormatConfig {

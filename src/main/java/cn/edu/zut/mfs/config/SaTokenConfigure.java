@@ -1,8 +1,6 @@
 package cn.edu.zut.mfs.config;
 
 import cn.dev33.satoken.reactor.filter.SaReactorFilter;
-import cn.dev33.satoken.router.SaRouter;
-import cn.dev33.satoken.stp.StpUtil;
 import cn.dev33.satoken.strategy.SaStrategy;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +14,7 @@ import org.springframework.core.annotation.Order;
  */
 @Configuration
 @Slf4j
-public class SaTokenConfigure{
+public class SaTokenConfigure {
 
     /**
      * sa-token全局过滤器

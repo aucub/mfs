@@ -13,7 +13,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
- * Sa-Token 权限认证
+ * Sa-Token 权限
  */
 @Slf4j
 @RestController

@@ -6,10 +6,6 @@ import org.springframework.boot.web.codec.CodecCustomizer;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.codec.CodecConfigurer;
 
-/**
- * CloudEventHandlerConfiguration
- *
- */
 @Configuration
 public class CloudEventHandlerConfiguration implements CodecCustomizer {
 

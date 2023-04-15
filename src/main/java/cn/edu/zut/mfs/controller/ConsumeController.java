@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 
 
+/**
+ * 消费控制器
+ */
 @Slf4j
 @RestController
 public class ConsumeController {
@@ -30,12 +33,10 @@ public class ConsumeController {
 
     @MessageMapping("consume")
     public Flux<byte[]> consume(Consume consume) {
+        if (consume.getQueueType().equals("stream")) {
+            return consumeStreamService.consume(consume);
+        }
         return consumeService.consume(consume);
-    }
-
-    @MessageMapping("consumeStream")
-    public Flux<byte[]> consumeStream(Consume consume) {
-        return consumeStreamService.consume(consume);
     }
 
 }

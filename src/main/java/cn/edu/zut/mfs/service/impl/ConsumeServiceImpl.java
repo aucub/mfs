@@ -35,7 +35,7 @@ public class ConsumeServiceImpl implements ConsumeService {
     public Flux<byte[]> consume(Consume consume) {
         SimpleMessageListenerContainer simpleMessageListenerContainer = new SimpleMessageListenerContainer(connectionFactory);
         simpleMessageListenerContainer.addQueueNames(consume.getQueue());
-        Flux<byte[]> f = Flux.<byte[]>create(emitter -> {
+        Flux<byte[]> f = Flux.create(emitter -> {
             simpleMessageListenerContainer.setupMessageListener(message -> {
                 emitter.next(message.getBody());
             });
@@ -47,7 +47,7 @@ public class ConsumeServiceImpl implements ConsumeService {
             });
         });
         return Flux.interval(Duration.ofSeconds(5))
-                .map(v -> "No news is good news".getBytes())
+                .map(v -> "暂无新消息".getBytes())
                 .mergeWith(f);
     }
 }

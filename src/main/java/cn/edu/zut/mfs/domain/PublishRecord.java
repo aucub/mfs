@@ -7,9 +7,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MetadataHeader {
+public class PublishRecord {
+    private String messageId;
     private String userId;
     private String exchange;
     private String routingKey;
     private String queueType;
+    private int offset;
 }
