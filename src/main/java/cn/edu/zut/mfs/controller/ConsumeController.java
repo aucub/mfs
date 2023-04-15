@@ -12,7 +12,6 @@ import reactor.core.publisher.Flux;
 
 @Slf4j
 @RestController
-@MessageMapping("consume")
 public class ConsumeController {
     private ConsumeStreamService consumeStreamService;
 
