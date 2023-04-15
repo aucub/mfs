@@ -10,15 +10,14 @@
   "sortByTitle": false,
   "showAuthor": false,
   "allInOneDocFileName": "doc.md",
-  "requestFieldToUnderline": true,
-  "responseFieldToUnderline": true,
+  "requestFieldToUnderline": false,
+  "responseFieldToUnderline": false,
   "inlineEnum": true,
   "recursionLimit": 7,
-  "requestExample": "true",
-  "responseExample": "true",
+  "requestExample": "false",
+  "responseExample": "false",
   "requestParamsTable": true,
   "responseParamsTable": true,
-  "urlSuffix": ".do",
-  "displayActualType": false,
-  "tornaDebug": false
+  "urlSuffix": "",
+  "displayActualType": false
 }
