@@ -38,7 +38,7 @@ spring:
           max-interval: 10000
     cache:
       channel:
-        size: 1
+        size: 10
         checkout-timeout: 1
     stream:
       host: 47.113.201.150
