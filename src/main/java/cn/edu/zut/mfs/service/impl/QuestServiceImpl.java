@@ -20,8 +20,8 @@ public class QuestServiceImpl implements QuestService {
             try {
                 sender.table("ForwardMessage")
                         .symbol("exchange", forwardMessage.getExchange())
-                        .longColumn("ID", Long.parseLong(forwardMessage.getId()))
-                        .stringColumn("client", forwardMessage.getClient())
+                        //.longColumn("ID", Long.parseLong(forwardMessage.getId()))
+                        //.stringColumn("client", forwardMessage.getClient())
                         .stringColumn("queue", forwardMessage.getQueue())
                         .stringColumn("message", mapper.writeValueAsString(forwardMessage))
                         .atNow();

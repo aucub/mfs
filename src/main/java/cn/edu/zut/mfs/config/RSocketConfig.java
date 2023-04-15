@@ -34,6 +34,10 @@ import javax.crypto.spec.SecretKeySpec;
 import java.util.Map;
 
 
+/**
+ * rsocket配置
+ *
+ */
 @Configuration
 @EnableRSocketSecurity
 @EnableReactiveMethodSecurity

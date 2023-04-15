@@ -5,6 +5,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
+/**
+ * RabbitMQ配置
+ *
+ */
 public class RabbitConfig {
     @Bean
     TaskExecutor exec() {

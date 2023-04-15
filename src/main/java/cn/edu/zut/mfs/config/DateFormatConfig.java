@@ -13,6 +13,10 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.TimeZone;
 
+/**
+ * 日期格式配置
+ *
+ */
 @JsonComponent
 public class DateFormatConfig {
 

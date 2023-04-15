@@ -7,6 +7,10 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * MybatisPlus配置
+ *
+ */
 @Configuration
 @MapperScan("cn.edu.zut.mfs.dao")
 public class MybatisPlusConfig {

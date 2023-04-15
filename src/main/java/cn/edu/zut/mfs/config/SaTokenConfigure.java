@@ -19,7 +19,7 @@ import org.springframework.core.annotation.Order;
 public class SaTokenConfigure{
 
     /**
-     * [sa-token全局过滤器]
+     * sa-token全局过滤器
      */
     @Bean
     @Order(-1000)
@@ -43,7 +43,9 @@ public class SaTokenConfigure{
                 });
     }
 
-    // 重写 Sa-Token 框架内部算法策略
+    /**
+     * 重写 Sa-Token 框架内部算法策略
+     */
     @Autowired
     public void rewriteSaStrategy() {
         // 重写Sa-Token的注解处理器，增加注解合并功能

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cloudevents.core.v1.CloudEventV1;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.Message;
 import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.messaging.rsocket.RSocketRequester;
 import org.springframework.messaging.rsocket.annotation.ConnectMapping;
@@ -18,6 +19,8 @@ import java.util.Map;
 @Slf4j
 @RestController
 public class ConnectController {
+
+    Message message;
 
     public final static HashMap<String, RSocketRequester> requesters = new HashMap<>();
     private RequestProcessor requestProcessor;
