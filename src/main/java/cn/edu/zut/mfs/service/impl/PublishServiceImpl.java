@@ -51,7 +51,7 @@ public class PublishServiceImpl implements PublishService {
     @SneakyThrows
     public void publish(CloudEvent cloudEvent, MetadataHeader metadataHeader) {
         amqpAdmin.declareQueue(new Queue(metadataHeader.getRoutingKey(), true, false, true));
-        rabbitTemplate.send(metadataHeader.getExchange(),metadataHeader.getRoutingKey(),MessageConverter.toMessage((CloudEventV1) cloudEvent));
+        rabbitTemplate.send(metadataHeader.getExchange(), metadataHeader.getRoutingKey(), MessageConverter.toMessage((CloudEventV1) cloudEvent));
     }
 
 }

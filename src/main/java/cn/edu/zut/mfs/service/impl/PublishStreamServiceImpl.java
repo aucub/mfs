@@ -43,7 +43,7 @@ public class PublishStreamServiceImpl implements PublishStreamService {
     public void publish(CloudEvent cloudEvent, MetadataHeader metadataHeader) {
         stream(metadataHeader.getRoutingKey());
         setRabbitStreamTemplate(metadataHeader.getRoutingKey());
-        rabbitStreamTemplate.send(MessageConverter.toMessage((CloudEventV1) cloudEvent));
+        rabbitStreamTemplate.send(MessageConverter.toStreamMessage((CloudEventV1) cloudEvent));
             /*Thread.startVirtualThread(() -> {
                 questService.publish(forwardMessage);
             });*/

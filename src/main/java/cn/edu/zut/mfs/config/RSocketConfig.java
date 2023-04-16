@@ -1,12 +1,9 @@
 package cn.edu.zut.mfs.config;
 
 import cn.edu.zut.mfs.domain.MetadataHeader;
-import io.cloudevents.spring.codec.CloudEventEncoder;
-import org.springframework.boot.rsocket.messaging.RSocketStrategiesCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.core.annotation.Order;
 import org.springframework.core.io.buffer.DefaultDataBufferFactory;
 import org.springframework.http.codec.cbor.Jackson2CborDecoder;
 import org.springframework.http.codec.cbor.Jackson2CborEncoder;
@@ -90,7 +87,7 @@ public class RSocketConfig {
     }
 
     @Bean
-   // @Order(-1)
+    // @Order(-1)
     public RSocketStrategies rsocketStrategies() {
         return RSocketStrategies.builder()
                 .metadataExtractorRegistry(registry -> {
@@ -118,18 +115,5 @@ public class RSocketConfig {
                 .dataBufferFactory(new DefaultDataBufferFactory(true))
                 .build();
     }
-
-   /* @Bean
-    @Order(-100)
-    public RSocketStrategiesCustomizer cloudEventsCustomizer() {
-        return new RSocketStrategiesCustomizer() {
-            @Override
-            public void customize(RSocketStrategies.Builder strategies) {
-                strategies.encoder(new CloudEventEncoder());
-                strategies.decoder(new CloudEventDecoder());
-            }
-        };
-
-    }*/
 
 }
