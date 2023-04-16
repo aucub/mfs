@@ -67,12 +67,12 @@ public class PublishController {
     }
 
     @MessageMapping("publish1")
-    public Mono<String> publish(@Headers Map<String, Object> metadata, Mono<CloudEvent> cloudEventFlux) {
+    public Flux<String> publish1(@Headers Map<String, Object> metadata, Flux<CloudEvent> cloudEventFlux) {
         //MetadataHeader metadataHeader = (MetadataHeader) metadata.get("metadataHeader");
         cloudEventFlux.subscribe(item -> {
             System.out.println(item);
         });
-        return Mono.just("hello");
+        return Flux.interval(Duration.ofSeconds(1)).map(i -> UUID.randomUUID().toString());
     }
     @Bean
     @Order(-1)

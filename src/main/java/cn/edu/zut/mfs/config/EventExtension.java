@@ -73,21 +73,6 @@ public final class EventExtension implements CloudEventExtension {
                 '}';
     }
 
-  /*  @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        io.cloudevents.core.extensions.DistributedTracingExtension that = (io.cloudevents.core.extensions.DistributedTracingExtension) o;
-        return Objects.equals(getAppid(), that.getTraceparent()) &&
-                Objects.equals(getReplyto(), that.getTracestate());
-    }
-
-
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getAppid(), getReplyto());
-    }*/
 
     @Override
     public boolean equals(Object o) {
