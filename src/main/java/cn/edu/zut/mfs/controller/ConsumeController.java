@@ -3,9 +3,11 @@ package cn.edu.zut.mfs.controller;
 import cn.edu.zut.mfs.domain.Consume;
 import cn.edu.zut.mfs.service.ConsumeService;
 import cn.edu.zut.mfs.service.ConsumeStreamService;
+import cn.edu.zut.mfs.service.RequestProcessor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.rsocket.RSocketRequester;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 
@@ -20,6 +22,12 @@ public class ConsumeController {
 
     private ConsumeService consumeService;
 
+    private RequestProcessor requestProcessor;
+
+    @Autowired
+    public void setRequestProcessor(RequestProcessor requestProcessor) {
+        this.requestProcessor = requestProcessor;
+    }
 
     @Autowired
     public void setConsumeService(ConsumeService consumeService) {
@@ -32,7 +40,8 @@ public class ConsumeController {
     }
 
     @MessageMapping("consume")
-    public Flux<byte[]> consume(Consume consume) {
+    public Flux<byte[]> consume(RSocketRequester requester, Consume consume) {
+        requestProcessor.processRequests(requester, consume.getUserId(), "consume");
         if (consume.getQueueType().equals("stream")) {
             return consumeStreamService.consume(consume);
         }
