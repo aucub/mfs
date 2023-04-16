@@ -1,6 +1,8 @@
 package cn.edu.zut.mfs.config;
 
 import cn.dev33.satoken.reactor.filter.SaReactorFilter;
+import cn.dev33.satoken.router.SaRouter;
+import cn.dev33.satoken.stp.StpUtil;
 import cn.dev33.satoken.strategy.SaStrategy;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,22 +22,21 @@ public class SaTokenConfigure {
      * sa-token全局过滤器
      */
     @Bean
-    @Order(-1000)
+    @Order(-1)
     public SaReactorFilter getSaReactorFilter() {
         return new SaReactorFilter()
                 // 指定 [拦截路由]
                 .addInclude("/**")
                 // 指定 [放行路由]
-                .addExclude("", "/favicon.ico", "/login/**", "/rsocket/**")
+                .addExclude("/favicon.ico", "/login/**", "/rsocket/**")
                 // 指定[认证函数]: 每次请求执行
                 .setAuth(r -> {
-                    System.out.println("---------- sa全局认证 ----------");
-                    //SaRouter.match("/**", "/login/**", () -> StpUtil.checkLogin());
-                    //SaRouter.match("/**", "/login/**", () -> StpUtil.checkPermission("test"));
+                    log.info("---------- sa全局认证 ----------");
+                    SaRouter.match("/**", "/login/**", () -> StpUtil.checkLogin());
                 })
                 // 指定[异常处理函数]：每次[认证函数]发生异常时执行此函数
                 .setError(e -> {
-                    System.out.println("---------- sa全局异常 ----------");
+                    log.error("---------- sa全局异常 ----------");
                     e.printStackTrace();
                     return e.getMessage();
                 });

@@ -17,7 +17,7 @@ public class QuestServiceImpl implements QuestService {
     public void publish(PublishRecord publishRecord) {
         try (Sender sender = Sender.builder().address("47.113.201.150:9009").build()) {
 
-            sender.table("ForwardMessage")
+            sender.table("PublishRecord")
                     .symbol("exchange", publishRecord.getExchange())
                     .longColumn("ID", Long.parseLong(publishRecord.getMessageId()))
                     .stringColumn("userId", publishRecord.getUserId())

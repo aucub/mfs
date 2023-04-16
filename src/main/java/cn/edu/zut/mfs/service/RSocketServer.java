@@ -1,8 +1,8 @@
 package cn.edu.zut.mfs.service;
 
 
-import cn.edu.zut.mfs.domain.ForwardMessage;
+import cn.edu.zut.mfs.domain.PushMessage;
 
 public interface RSocketServer {
-    void send(ForwardMessage forwardMessage);
+    void push(PushMessage pushMessage);
 }
