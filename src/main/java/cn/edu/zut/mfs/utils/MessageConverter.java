@@ -23,15 +23,13 @@ public class MessageConverter {
             payload.getExtensionNames().forEach(item -> {
                 switch (item) {
                     case "userId" -> messageProperties.setUserId((String) payload.getExtension("userId"));
-                    case "appId" -> messageProperties.setAppId((String) payload.getExtension("appId"));
-                    case "priority" -> messageProperties.setPriority((Integer) payload.getExtension("priority"));
-                    case "correlationId" ->
-                            messageProperties.setCorrelationId((String) payload.getExtension("correlationId"));
-                    case "replyTo" -> messageProperties.setReplyTo((String) payload.getExtension("replyTo"));
-                    case "contentEncoding" ->
-                            messageProperties.setContentEncoding((String) payload.getExtension("contentEncoding"));
-                    case "expiration" -> messageProperties.setExpiration((String) payload.getExtension("expiration"));
-                    case "x-delay" -> messageProperties.setDelay((Integer) payload.getExtension("x-delay"));
+                    //case "appId" -> messageProperties.setAppId((String) payload.getExtension("appId"));
+                    //case "priority" -> messageProperties.setPriority((Integer) payload.getExtension("priority"));
+                    //case "correlationId" -> messageProperties.setCorrelationId((String) payload.getExtension("correlationId"));
+                   // case "replyTo" -> messageProperties.setReplyTo((String) payload.getExtension("replyTo"));
+                    //case "contentEncoding" -> messageProperties.setContentEncoding((String) payload.getExtension("contentEncoding"));
+                    //case "expiration" -> messageProperties.setExpiration((String) payload.getExtension("expiration"));
+                    //case "x-delay" -> messageProperties.setDelay((Integer) payload.getExtension("x-delay"));
                     default -> headers.put(item, payload.getExtension(item));
                 }
             });
