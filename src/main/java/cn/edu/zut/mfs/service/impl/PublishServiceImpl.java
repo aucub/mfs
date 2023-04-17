@@ -10,7 +10,6 @@ import io.cloudevents.core.v1.CloudEventV1;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.AmqpAdmin;
-import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,7 +49,8 @@ public class PublishServiceImpl implements PublishService {
     @Override
     @SneakyThrows
     public void publish(CloudEvent cloudEvent, MetadataHeader metadataHeader) {
-        amqpAdmin.declareQueue(new Queue(metadataHeader.getRoutingKey(), true, false, true));
+        //amqpAdmin.declareQueue(new Queue(metadataHeader.getRoutingKey(), true, false, false));
+        //System.out.println("-----------------------------------------------------"+MessageConverter.toMessage((CloudEventV1) cloudEvent).getMessageProperties().getDelay());
         rabbitTemplate.send(metadataHeader.getExchange(), metadataHeader.getRoutingKey(), MessageConverter.toMessage((CloudEventV1) cloudEvent));
     }
 

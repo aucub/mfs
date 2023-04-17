@@ -53,7 +53,7 @@ public class RSocketConfig {
     PayloadSocketAcceptorInterceptor authorization(RSocketSecurity security) {
         security.authorizePayload(authorize ->
                 authorize
-                        .setup().authenticated()
+                        .setup().permitAll()
                         .anyExchange().permitAll()
                         .anyRequest().permitAll()
         ).jwt(jwtSpec -> {

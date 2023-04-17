@@ -38,7 +38,7 @@ public class ConnectController {
     @ConnectMapping("connect")
     public Mono<Void> connect(RSocketRequester requester, @Headers Map<String, Object> metadata, CloudEventV1 cloudEventV1) {
         MetadataHeader metadataHeader = (MetadataHeader) metadata.get("metadataHeader");
-        requestProcessor.processRequests(requester, metadataHeader.getUserId(),"connect");
+        requestProcessor.processRequests(requester, metadataHeader.getUserId(), "connect");
         return Mono.empty();
     }
 

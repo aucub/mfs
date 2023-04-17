@@ -34,7 +34,7 @@ public class MessageConverter {
                     case "contentencoding" ->
                             messageProperties.setContentEncoding((String) payload.getExtension("contentencoding"));
                     case "expiration" -> messageProperties.setExpiration((String) payload.getExtension("expiration"));
-                    case "x-delay" -> messageProperties.setDelay((Integer) payload.getExtension("x-delay"));
+                    case "delay" -> messageProperties.setDelay((Integer) payload.getExtension("delay"));
                     default -> headers.put(item, payload.getExtension(item));
                 }
             });
