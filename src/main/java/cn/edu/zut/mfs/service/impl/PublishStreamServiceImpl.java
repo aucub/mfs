@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.rabbit.stream.producer.RabbitStreamTemplate;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 
 @Slf4j
 @Service
@@ -40,10 +41,12 @@ public class PublishStreamServiceImpl implements PublishStreamService {
     }
 
     @Override
-    public void publish(CloudEvent cloudEvent, MetadataHeader metadataHeader) {
+    public void publish(Flux<CloudEvent> cloudEventFlux, MetadataHeader metadataHeader) {
         stream(metadataHeader.getRoutingKey());
         setRabbitStreamTemplate(metadataHeader.getRoutingKey());
-        rabbitStreamTemplate.send(MessageConverter.toStreamMessage((CloudEventV1) cloudEvent));
+        cloudEventFlux.limitRate(1000).subscribe(cloudEvent -> {
+            rabbitStreamTemplate.send(MessageConverter.toStreamMessage((CloudEventV1) cloudEvent));
+        });
             /*Thread.startVirtualThread(() -> {
                 questService.publish(forwardMessage);
             });*/

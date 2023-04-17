@@ -17,7 +17,7 @@ public class RequestProcessor {
                 .onClose()
                 .doFirst(() -> {
                     log.info("客户端: {} 连接", userId);
-                    if (requesters.containsKey(userId) && route == "connect") {
+                    if (requesters.containsKey(userId) && Objects.equals(route, "connect")) {
                         requesters.remove(userId);
                         requesters.put(userId, requester);
                     }

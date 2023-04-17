@@ -12,7 +12,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.retry.backoff.ExponentialBackOffPolicy;
+import org.springframework.retry.support.RetryTemplate;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 
 @Slf4j
 @Service
@@ -36,6 +39,13 @@ public class PublishServiceImpl implements PublishService {
     @Autowired
     public void setRabbitTemplate(RabbitTemplate rabbitTemplate) {
         this.rabbitTemplate = rabbitTemplate;
+        RetryTemplate retryTemplate = new RetryTemplate();
+        ExponentialBackOffPolicy backOffPolicy = new ExponentialBackOffPolicy();
+        backOffPolicy.setInitialInterval(500);
+        backOffPolicy.setMultiplier(10.0);
+        backOffPolicy.setMaxInterval(10000);
+        retryTemplate.setBackOffPolicy(backOffPolicy);
+        rabbitTemplate.setRetryTemplate(retryTemplate);
         rabbitTemplate.setConfirmCallback(confirmCallbackService);
         rabbitTemplate.setReturnsCallback(returnCallbackService);
         rabbitTemplate.setUsePublisherConnection(true);
@@ -48,10 +58,12 @@ public class PublishServiceImpl implements PublishService {
 
     @Override
     @SneakyThrows
-    public void publish(CloudEvent cloudEvent, MetadataHeader metadataHeader) {
+    public void publish(Flux<CloudEvent> cloudEventFlux, MetadataHeader metadataHeader) {
         //amqpAdmin.declareQueue(new Queue(metadataHeader.getRoutingKey(), true, false, false));
         //System.out.println("-----------------------------------------------------"+MessageConverter.toMessage((CloudEventV1) cloudEvent).getMessageProperties().getDelay());
-        rabbitTemplate.send(metadataHeader.getExchange(), metadataHeader.getRoutingKey(), MessageConverter.toMessage((CloudEventV1) cloudEvent));
+        cloudEventFlux.limitRate(1000).subscribe(cloudEvent -> {
+            rabbitTemplate.send(metadataHeader.getExchange(), metadataHeader.getRoutingKey(), MessageConverter.toMessage((CloudEventV1) cloudEvent));
+        });
     }
 
 }
