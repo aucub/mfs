@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequestMapping("/kickout/")
-@Tag(name = "账号注销")
+@Tag(name = "注销")
 public class KickoutController {
     @Operation(summary = "将指定账号强制注销")
     @SaCheckPermission("user:logout")

@@ -1,6 +1,8 @@
 package cn.edu.zut.mfs.config;
 
+import cn.dev33.satoken.context.SaHolder;
 import cn.dev33.satoken.reactor.filter.SaReactorFilter;
+import cn.dev33.satoken.router.SaHttpMethod;
 import cn.dev33.satoken.router.SaRouter;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.dev33.satoken.strategy.SaStrategy;
@@ -22,13 +24,13 @@ public class SaTokenConfigure {
      * sa-token全局过滤器
      */
     @Bean
-    @Order(-1)
+    @Order(-1000)
     public SaReactorFilter getSaReactorFilter() {
         return new SaReactorFilter()
                 // 指定 [拦截路由]
                 .addInclude("/**")
                 // 指定 [放行路由]
-                .addExclude("/favicon.ico", "/login/**", "/rsocket/**")
+                .addExclude("/favicon.ico","favicon.ico","/v3/**", "/login/**", "/rsocket/**")
                 // 指定[认证函数]: 每次请求执行
                 .setAuth(r -> {
                     log.info("---------- sa全局认证 ----------");
@@ -39,7 +41,25 @@ public class SaTokenConfigure {
                     log.error("---------- sa全局异常 ----------");
                     e.printStackTrace();
                     return e.getMessage();
-                });
+                })// 前置函数：在每次认证函数之前执行
+                .setBeforeAuth(obj -> {
+                    // ---------- 设置跨域响应头 ----------
+                    SaHolder.getResponse()
+                            // 允许指定域访问跨域资源
+                            .setHeader("Access-Control-Allow-Origin", "*")
+                            // 允许所有请求方式
+                            .setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE")
+                            // 有效时间
+                            .setHeader("Access-Control-Max-Age", "3600")
+                            // 允许的header参数
+                            .setHeader("Access-Control-Allow-Headers", "*");
+
+                    // 如果是预检请求，则立即返回到前端
+                    SaRouter.match(SaHttpMethod.OPTIONS)
+                            .free(r -> System.out.println("--------OPTIONS预检请求，不做处理"))
+                            .back();
+                })
+                ;
     }
 
     /**

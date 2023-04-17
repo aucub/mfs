@@ -18,7 +18,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/jur/")
-@Tag(name = "权限认证")
+@Tag(name = "权限")
 public class JurAuthController {
 
     @Operation(summary = "查询权限")

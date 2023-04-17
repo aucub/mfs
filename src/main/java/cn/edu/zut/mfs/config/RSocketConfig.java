@@ -46,6 +46,9 @@ public class RSocketConfig {
         http.httpBasic().disable();
         http.cors().disable();
         http.formLogin().disable();
+        http.logout().disable();
+        http.anonymous().disable();
+        http.headers().disable();
         return http.build();
     }
 

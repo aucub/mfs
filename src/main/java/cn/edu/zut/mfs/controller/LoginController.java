@@ -41,7 +41,7 @@ public class LoginController {
 
     @Operation(summary = "登录")
     @PostMapping("doLogin")
-    public BaseResponse<String> doLogin(@RequestBody UserLoginDto userLoginDto) {
+    public BaseResponse<Object> doLogin(@RequestBody UserLoginDto userLoginDto) {
         userLoginDto.setPassword(EncryptUtils.encrypt(userLoginDto.getPassword(), userLoginDto.getUsername()));
         if (Boolean.TRUE.equals(loginAuthService.login(userLoginDto))) {
             String userId = userService.getUserByUsername(userLoginDto.getUsername()).getId();
@@ -51,7 +51,7 @@ public class LoginController {
             StpUtil.login(userId, userLoginDto.getIsLastingCookie());
             // 获取 Token  相关参数，这里需要把 Token 信息从响应体中返回到前端
             SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
-            return BaseResponse.success("登录成功,token:" + tokenInfo);
+            return BaseResponse.success(tokenInfo);
         }
         return BaseResponse.fail("登录失败");
     }

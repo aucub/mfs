@@ -81,8 +81,8 @@ spring:
       shutdown-quiet-period: 100000
     debug-agent:
       enabled: true
-  webflux:
-    base-path: /admin/
+  # webflux:
+   # base-path: /admin/
 
 mybatis-plus:
   configuration:
@@ -109,7 +109,7 @@ mybatis-plus:
 ############## Sa-Token 配置 ##############
 sa-token:
   # token名称 (同时也是cookie名称)
-  token-name: satoken
+  token-name: token
   # token有效期，单位s 默认30天, -1代表永不过期
   timeout: 2592000
   # token临时有效期 (指定时间内无操作就视为token过期) 单位: 秒
@@ -124,13 +124,15 @@ sa-token:
   is-log: true
   is-print: true
   log-level: trace
-  is-read-body: false
-  is-read-cookie: false
-  is-write-header: false
+  isReadBody: false
+  isReadCookie: false
+  isWriteHeader: false
+  tokenSessionCheckLogin: false
 
 # springdoc-openapi项目配置
 springdoc:
   swagger-ui:
+    use-root-path: true
     path: /swagger-ui.html
     tags-sorter: alpha
     operations-sorter: alpha
