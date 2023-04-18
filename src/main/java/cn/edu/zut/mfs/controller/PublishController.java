@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.Duration;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 @RestController
@@ -21,6 +23,8 @@ public class PublishController {
     private PublishStreamService publishStreamService;
 
     private PublishService publishService;
+
+    public static AtomicInteger atomicInteger = new AtomicInteger(0);
 
 
     private PublishBatchService publishBatchService;
@@ -55,7 +59,12 @@ public class PublishController {
     }
 
     @MessageMapping("publish")
-    public Mono<Void> publish(RSocketRequester requester, @Headers Map<String, Object> metadata, Flux<CloudEvent> cloudEventFlux) {
+    public Flux<String> publish(RSocketRequester requester, @Headers Map<String, Object> metadata, Flux<CloudEvent> cloudEventFlux) {
+        atomicInteger.getAndIncrement();
+        if (atomicInteger.get() % 100 == 0) {
+            System.out.println(atomicInteger.get());
+            log.error(String.valueOf(atomicInteger.get()));
+        }
         MetadataHeader metadataHeader = (MetadataHeader) metadata.get("metadataHeader");
         requestProcessor.processRequests(requester, metadataHeader.getUserId(), "publish");
         if (metadataHeader.getQueueType().equals("stream")) {
@@ -63,7 +72,7 @@ public class PublishController {
         } else {
             publishService.publish(cloudEventFlux, metadataHeader);
         }
-        return Mono.empty();
+        return Flux.interval(Duration.ofSeconds(5)).map(i -> "OK");
     }
 
     @MessageMapping("publishTask")

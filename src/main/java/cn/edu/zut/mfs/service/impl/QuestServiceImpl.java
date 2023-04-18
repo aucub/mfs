@@ -7,10 +7,8 @@ import cn.edu.zut.mfs.service.QuestService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.questdb.client.Sender;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-@Slf4j
 @Service
 public class QuestServiceImpl implements QuestService {
     private static final ObjectMapper mapper = new ObjectMapper();

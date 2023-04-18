@@ -2,7 +2,6 @@ package cn.edu.zut.mfs.service.impl;
 
 import cn.edu.zut.mfs.service.RedisService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.messaging.rsocket.RSocketRequester;
@@ -23,16 +22,12 @@ public class RedisServiceImpl implements RedisService {
 
     public RedisServiceImpl(StringRedisTemplate stringRedisTemplate) {
         this.stringRedisTemplate = stringRedisTemplate;
+        hashOperations = stringRedisTemplate.opsForHash();
     }
 
     @Override
     public void set(String key, String value) {
         stringRedisTemplate.opsForValue().set(key, value);
-    }
-
-    @Autowired
-    public void setHashOperations(HashOperations<String, String, RSocketRequester> hashOperations) {
-        this.hashOperations = hashOperations;
     }
 
     @Override

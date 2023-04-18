@@ -6,6 +6,7 @@ import org.springframework.messaging.rsocket.RSocketRequester;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 @Service
@@ -13,6 +14,7 @@ public class RequestProcessor {
 
     private RedisService redisService;
 
+    public static AtomicInteger atomicInteger = new AtomicInteger(0);
 
     @Autowired
     public void setRedisService(RedisService redisService) {
@@ -20,6 +22,11 @@ public class RequestProcessor {
     }
 
     public void processRequests(RSocketRequester requester, String userId, String route) {
+        atomicInteger.getAndIncrement();
+        if (atomicInteger.get() % 1000 == 0) {
+            System.out.println(atomicInteger.get());
+            log.error(String.valueOf(atomicInteger.get()));
+        }
         Objects.requireNonNull(requester.rsocket())
                 .onClose()
                 .doFirst(() -> {

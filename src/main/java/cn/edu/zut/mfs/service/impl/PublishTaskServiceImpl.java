@@ -12,24 +12,23 @@ import io.cloudevents.core.v1.CloudEventV1;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.task.TaskExecutor;
 import org.springframework.retry.backoff.ExponentialBackOffPolicy;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
+import java.util.Objects;
+
 @Service
 public class PublishTaskServiceImpl implements PublishTaskService {
     private final RabbitTemplate rabbitTemplate;
-
-    private final TaskExecutor exec;
     private ConfirmCallbackService confirmCallbackService;
     private ReturnCallbackService returnCallbackService;
 
     private QuestService questService;
 
     @Autowired
-    public PublishTaskServiceImpl(RabbitTemplate rabbitTemplate, TaskExecutor exec) {
+    public PublishTaskServiceImpl(RabbitTemplate rabbitTemplate) {
         this.rabbitTemplate = rabbitTemplate;
         RetryTemplate retryTemplate = new RetryTemplate();
         ExponentialBackOffPolicy backOffPolicy = new ExponentialBackOffPolicy();
@@ -41,7 +40,6 @@ public class PublishTaskServiceImpl implements PublishTaskService {
         rabbitTemplate.setConfirmCallback(confirmCallbackService);
         rabbitTemplate.setReturnsCallback(returnCallbackService);
         rabbitTemplate.setUsePublisherConnection(true);
-        this.exec = exec;
     }
 
     @Autowired
@@ -63,7 +61,7 @@ public class PublishTaskServiceImpl implements PublishTaskService {
         cloudEventFlux.limitRate(10).subscribe(cloudEvent -> {
             Message message = MessageConverter.toMessage((CloudEventV1) cloudEvent);
             rabbitTemplate.send(metadataHeader.getExchange(), metadataHeader.getRoutingKey(), MessageConverter.toMessage((CloudEventV1) cloudEvent));
-            questService.publish(new PublishRecord(cloudEvent.getId(), message.getMessageProperties().getAppId(), message.getMessageProperties().getUserId(), message.getMessageProperties().getPriority(), message.getMessageProperties().getCorrelationId(), message.getMessageProperties().getExpiration(), metadataHeader.getExchange(), message.getMessageProperties().getDelay(), 0, metadataHeader.getRoutingKey(), "classic", 0, cloudEvent.getData().toBytes()));
+            questService.publish(new PublishRecord(cloudEvent.getId(), message.getMessageProperties().getAppId(), message.getMessageProperties().getUserId(), message.getMessageProperties().getPriority(), message.getMessageProperties().getCorrelationId(), message.getMessageProperties().getExpiration(), metadataHeader.getExchange(), message.getMessageProperties().getDelay(), 0, metadataHeader.getRoutingKey(), "classic", 0, Objects.requireNonNull(cloudEvent.getData()).toBytes()));
         });
     }
 }
