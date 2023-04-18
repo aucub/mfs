@@ -2,13 +2,14 @@ package cn.edu.zut.mfs.service.impl;
 
 import cn.edu.zut.mfs.domain.PushMessage;
 import cn.edu.zut.mfs.service.RSocketServer;
-import cn.edu.zut.mfs.service.RequestProcessor;
+import cn.edu.zut.mfs.service.RedisService;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.Unpooled;
 import io.rsocket.metadata.TaggingMetadataCodec;
 import io.rsocket.util.ByteBufPayload;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.rsocket.RSocketRequester;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -19,10 +20,17 @@ import java.util.Collections;
 @Slf4j
 public class RSocketServerImpl implements RSocketServer {
 
+    private RedisService redisService;
+
+    @Autowired
+    public void setRedisService(RedisService redisService) {
+        this.redisService = redisService;
+    }
+
     @Override
     public Boolean push(PushMessage pushMessage) {
-        if (RequestProcessor.requesters.containsKey(pushMessage.getUserId())) {
-            RSocketRequester requester = RequestProcessor.requesters.get(pushMessage.getUserId());
+        if (redisService.hasKey("rsocket", pushMessage.getUserId())) {
+            RSocketRequester requester = redisService.loadHash("rsocket", pushMessage.getUserId());
             ByteBuf routeMetadata = TaggingMetadataCodec
                     .createTaggingContent(ByteBufAllocator.DEFAULT, Collections.singletonList(pushMessage.getRoute()));
             ByteBuf body = Unpooled.wrappedBuffer(pushMessage.getBody());

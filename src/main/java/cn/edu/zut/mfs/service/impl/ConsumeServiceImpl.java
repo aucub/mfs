@@ -52,7 +52,9 @@ public class ConsumeServiceImpl implements ConsumeService {
         Flux<CloudEventV1> f = Flux.create(emitter -> {
             simpleMessageListenerContainer.setupMessageListener(message -> {
                 emitter.next(MessageConverter.fromMessage(message));
-                questService.consume(new ConsumeRecord(message.getMessageProperties().getMessageId(), 0, 0, consume.getQueue(), consume.getUserId()));
+                Thread.startVirtualThread(() -> {
+                    questService.consume(new ConsumeRecord(message.getMessageProperties().getMessageId(), 0, 0, consume.getQueue(), consume.getUserId()));
+                });
             });
             emitter.onRequest(v -> {
                 simpleMessageListenerContainer.start();

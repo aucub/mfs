@@ -2,6 +2,7 @@ package cn.edu.zut.mfs.service.impl;
 
 import cn.edu.zut.mfs.domain.ConsumeRecord;
 import cn.edu.zut.mfs.domain.PublishRecord;
+import cn.edu.zut.mfs.domain.PushMessage;
 import cn.edu.zut.mfs.service.QuestService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -49,6 +50,20 @@ public class QuestServiceImpl implements QuestService {
                     .longColumn("publishingId", consumeRecord.getPublishingId())
                     .stringColumn("userId", consumeRecord.getUserId())
                     .atNow();
+        }
+    }
+
+    public void push(PushMessage pushMessage) {
+        try (Sender sender = Sender.builder().address("47.113.201.150:9009").build()) {
+            try {
+                sender.table("Push")
+                        .symbol("route", pushMessage.getRoute())
+                        .stringColumn("userId", pushMessage.getUserId())
+                        .stringColumn("body", mapper.writeValueAsString(pushMessage.getBody()))
+                        .atNow();
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }

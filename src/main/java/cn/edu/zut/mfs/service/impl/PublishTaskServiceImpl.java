@@ -29,11 +29,6 @@ public class PublishTaskServiceImpl implements PublishTaskService {
     private QuestService questService;
 
     @Autowired
-    public void setQuestService(QuestService questService) {
-        this.questService = questService;
-    }
-
-    @Autowired
     public PublishTaskServiceImpl(RabbitTemplate rabbitTemplate, TaskExecutor exec) {
         this.rabbitTemplate = rabbitTemplate;
         RetryTemplate retryTemplate = new RetryTemplate();
@@ -47,6 +42,11 @@ public class PublishTaskServiceImpl implements PublishTaskService {
         rabbitTemplate.setReturnsCallback(returnCallbackService);
         rabbitTemplate.setUsePublisherConnection(true);
         this.exec = exec;
+    }
+
+    @Autowired
+    public void setQuestService(QuestService questService) {
+        this.questService = questService;
     }
 
     @Autowired

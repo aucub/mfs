@@ -25,13 +25,12 @@ public class PublishBatchServiceImpl implements PublishBatchService {
 
 
     private CachingConnectionFactory cachingConnectionFactory;
+    private QuestService questService;
 
     @Autowired
     public void setCachingConnectionFactory(CachingConnectionFactory cachingConnectionFactory) {
         this.cachingConnectionFactory = cachingConnectionFactory;
     }
-
-    private QuestService questService;
 
     @Autowired
     public void setQuestService(QuestService questService) {

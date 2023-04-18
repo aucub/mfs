@@ -67,7 +67,10 @@ public class ConsumeStreamServiceImpl implements ConsumeStreamService {
                             .builder()
                             .messageHandler((context, message) -> {
                                         emitter.next(MessageConverter.fromStreamMessage(context, message));
-                                        questService.consume(new ConsumeRecord(null, message.getPublishingId(), context.offset(), consume.getQueue(), consume.getUserId()));
+                                        Thread.startVirtualThread(() -> {
+                                            questService.consume(new ConsumeRecord(null, message.getPublishingId(), context.offset(), consume.getQueue(), consume.getUserId()));
+
+                                        });
                                     }
                             )
                             .build();

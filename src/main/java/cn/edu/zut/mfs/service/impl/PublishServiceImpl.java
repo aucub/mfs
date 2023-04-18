@@ -21,7 +21,7 @@ import reactor.core.publisher.Flux;
 public class PublishServiceImpl implements PublishService {
     private static AmqpAdmin amqpAdmin;
     private RabbitTemplate rabbitTemplate;
-
+    private QuestService questService;
 
     @Autowired
     public void setRabbitTemplate(RabbitTemplate rabbitTemplate) {
@@ -33,8 +33,6 @@ public class PublishServiceImpl implements PublishService {
         this.amqpAdmin = amqpAdmin;
     }
 
-    private QuestService questService;
-
     @Autowired
     public void setQuestService(QuestService questService) {
         this.questService = questService;
@@ -44,9 +42,11 @@ public class PublishServiceImpl implements PublishService {
     @SneakyThrows
     public void publish(Flux<CloudEvent> cloudEventFlux, MetadataHeader metadataHeader) {
         cloudEventFlux.limitRate(1000).subscribe(cloudEvent -> {
-            Message message = MessageConverter.toMessage((CloudEventV1) cloudEvent);
-            rabbitTemplate.send(metadataHeader.getExchange(), metadataHeader.getRoutingKey(), message);
-            questService.publish(new PublishRecord(cloudEvent.getId(), message.getMessageProperties().getAppId(), message.getMessageProperties().getUserId(), message.getMessageProperties().getPriority(), message.getMessageProperties().getCorrelationId(), message.getMessageProperties().getExpiration(), metadataHeader.getExchange(), message.getMessageProperties().getDelay(), 0, metadataHeader.getRoutingKey(), "classic", 0, cloudEvent.getData().toBytes()));
+            Thread.startVirtualThread(() -> {
+                Message message = MessageConverter.toMessage((CloudEventV1) cloudEvent);
+                rabbitTemplate.send(metadataHeader.getExchange(), metadataHeader.getRoutingKey(), message);
+                questService.publish(new PublishRecord(cloudEvent.getId(), message.getMessageProperties().getAppId(), message.getMessageProperties().getUserId(), message.getMessageProperties().getPriority(), message.getMessageProperties().getCorrelationId(), message.getMessageProperties().getExpiration(), metadataHeader.getExchange(), message.getMessageProperties().getDelay(), 0, metadataHeader.getRoutingKey(), "classic", 0, cloudEvent.getData().toBytes()));
+            });
         });
     }
 

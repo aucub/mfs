@@ -3,11 +3,14 @@ package cn.edu.zut.mfs.controller;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.session.SaSession;
 import cn.dev33.satoken.stp.StpUtil;
+import cn.edu.zut.mfs.domain.User;
 import cn.edu.zut.mfs.dto.SearchSessionDto;
 import cn.edu.zut.mfs.pojo.BaseResponse;
+import cn.edu.zut.mfs.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +28,13 @@ import java.util.List;
 @RequestMapping("/searchSession/")
 public class SearchSessionController {
 
+    private UserService userService;
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
     @Operation(summary = "会话查询接口----根据分页参数获取会话列表")
     @SaCheckPermission("searchSession:list")
     @PostMapping("list")
@@ -39,6 +49,18 @@ public class SearchSessionController {
         }
         // 返回
         return BaseResponse.success(sessionList);
+    }
+
+    @SaCheckPermission("searchSession:onlineList")
+    @PostMapping("onlineList")
+    public List<User> onlineList() {
+        return userService.onlineList();
+    }
+
+    @SaCheckPermission("searchSession:onlineUsers")
+    @PostMapping("onlineUsers")
+    public int onlineUsers() {
+        return userService.onlineUsers();
     }
 
 }

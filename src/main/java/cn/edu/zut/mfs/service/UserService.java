@@ -63,4 +63,8 @@ public interface UserService {
      */
     User getUserByUsername(String username);
 
+
+    List<User> onlineList();
+
+    int onlineUsers();
 }

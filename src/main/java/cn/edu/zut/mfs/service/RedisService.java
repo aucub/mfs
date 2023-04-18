@@ -1,5 +1,10 @@
 package cn.edu.zut.mfs.service;
 
+import org.springframework.messaging.rsocket.RSocketRequester;
+
+import java.util.Map;
+import java.util.Set;
+
 /**
  * redis操作Service,
  * 对象和数组都以json形式进行存储
@@ -31,5 +36,20 @@ public interface RedisService {
      * @param delta 自增步长
      */
     Long increment(String key, long delta);
+
+    void writeHash(String key, String userId, RSocketRequester requester);
+
+    RSocketRequester loadHash(String key, String userId);
+
+    Map<String, RSocketRequester> entries(String key);
+
+    Boolean delete(String key, String userId);
+
+    Boolean hasKey(String key, String userId);
+
+    Set<String> keys(String key);
+
+    Long size(String key);
+
 
 }

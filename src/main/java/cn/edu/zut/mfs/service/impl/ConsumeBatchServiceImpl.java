@@ -33,7 +33,9 @@ public class ConsumeBatchServiceImpl implements ConsumeBatchService {
             for (int i = 0; i < consume.getBatchSize(); i++) {
                 Message message = rabbitTemplate.receive(consume.getQueue());
                 emitter.next(MessageConverter.fromMessage(message));
-                questService.consume(new ConsumeRecord(message.getMessageProperties().getMessageId(), 0, 0, consume.getQueue(), consume.getUserId()));
+                Thread.startVirtualThread(() -> {
+                    questService.consume(new ConsumeRecord(message.getMessageProperties().getMessageId(), 0, 0, consume.getQueue(), consume.getUserId()));
+                });
             }
             emitter.complete();
         });

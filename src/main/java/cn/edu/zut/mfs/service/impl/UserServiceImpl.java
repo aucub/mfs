@@ -8,10 +8,12 @@ import cn.edu.zut.mfs.domain.Role;
 import cn.edu.zut.mfs.domain.RoleRelation;
 import cn.edu.zut.mfs.domain.User;
 import cn.edu.zut.mfs.dto.FindUserPageDto;
+import cn.edu.zut.mfs.service.RedisService;
 import cn.edu.zut.mfs.service.UserService;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +27,13 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
     private RoleRelationDao roleRelationDao;
     private UserPermissionRelationDao userPermissionRelationDao;
+
+    private RedisService redisService;
+
+    @Autowired
+    public void setRedisService(RedisService redisService) {
+        this.redisService = redisService;
+    }
 
     @Autowired
     public void setUserDao(UserDao userDao) {
@@ -50,6 +59,21 @@ public class UserServiceImpl implements UserService {
     public Page<User> list(FindUserPageDto findUserPageDto) {
         Page<User> page = Page.of(findUserPageDto.getPageNum(), findUserPageDto.getPageSize());
         return userDao.list(page, findUserPageDto.getRoleId(), findUserPageDto.getKeyword());
+    }
+
+    @Override
+    @Cacheable
+    public List<User> onlineList() {
+        List<User> users = new ArrayList<>();
+        redisService.keys("rsocket").forEach(key -> {
+            users.add(userDao.selectById(key));
+        });
+        return users;
+    }
+
+    @Override
+    public int onlineUsers() {
+        return redisService.keys("rsocket").size();
     }
 
     @Override
