@@ -1,12 +1,15 @@
 package cn.edu.zut.mfs.service.impl;
 
 import cn.edu.zut.mfs.domain.MetadataHeader;
+import cn.edu.zut.mfs.domain.PublishRecord;
 import cn.edu.zut.mfs.service.ConfirmCallbackService;
 import cn.edu.zut.mfs.service.PublishTaskService;
+import cn.edu.zut.mfs.service.QuestService;
 import cn.edu.zut.mfs.service.ReturnCallbackService;
 import cn.edu.zut.mfs.utils.MessageConverter;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.core.v1.CloudEventV1;
+import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.TaskExecutor;
@@ -22,6 +25,13 @@ public class PublishTaskServiceImpl implements PublishTaskService {
     private final TaskExecutor exec;
     private ConfirmCallbackService confirmCallbackService;
     private ReturnCallbackService returnCallbackService;
+
+    private QuestService questService;
+
+    @Autowired
+    public void setQuestService(QuestService questService) {
+        this.questService = questService;
+    }
 
     @Autowired
     public PublishTaskServiceImpl(RabbitTemplate rabbitTemplate, TaskExecutor exec) {
@@ -51,7 +61,9 @@ public class PublishTaskServiceImpl implements PublishTaskService {
 
     public void publish(Flux<CloudEvent> cloudEventFlux, MetadataHeader metadataHeader) {
         cloudEventFlux.limitRate(10).subscribe(cloudEvent -> {
+            Message message = MessageConverter.toMessage((CloudEventV1) cloudEvent);
             rabbitTemplate.send(metadataHeader.getExchange(), metadataHeader.getRoutingKey(), MessageConverter.toMessage((CloudEventV1) cloudEvent));
+            questService.publish(new PublishRecord(cloudEvent.getId(), message.getMessageProperties().getAppId(), message.getMessageProperties().getUserId(), message.getMessageProperties().getPriority(), message.getMessageProperties().getCorrelationId(), message.getMessageProperties().getExpiration(), metadataHeader.getExchange(), message.getMessageProperties().getDelay(), 0, metadataHeader.getRoutingKey(), "classic", 0, cloudEvent.getData().toBytes()));
         });
     }
 }

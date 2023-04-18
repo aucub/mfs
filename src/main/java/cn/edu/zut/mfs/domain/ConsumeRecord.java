@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ConsumeRecord {
     private String messageId;
+    private long publishingId;
+    private long offset;
     private String queue;
     private String userId;
 }

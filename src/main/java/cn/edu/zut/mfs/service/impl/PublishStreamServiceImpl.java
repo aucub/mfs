@@ -1,6 +1,7 @@
 package cn.edu.zut.mfs.service.impl;
 
 import cn.edu.zut.mfs.domain.MetadataHeader;
+import cn.edu.zut.mfs.domain.PublishRecord;
 import cn.edu.zut.mfs.service.PublishStreamService;
 import cn.edu.zut.mfs.service.QuestService;
 import com.rabbitmq.stream.ByteCapacity;
@@ -44,6 +45,7 @@ public class PublishStreamServiceImpl implements PublishStreamService {
         setRabbitStreamTemplate(metadataHeader.getRoutingKey());
         cloudEventFlux.limitRate(1000).subscribe(cloudEvent -> {
             rabbitStreamTemplate.send(rabbitStreamTemplate.messageBuilder().publishingId((Long) cloudEvent.getExtension("publishingid")).addData(cloudEvent.getData().toBytes()).build());
+            questService.publish(new PublishRecord(cloudEvent.getId(), (String) cloudEvent.getExtension("appid"), metadataHeader.getUserId(), 0, null, null, metadataHeader.getExchange(), 0, (long) cloudEvent.getExtension("publishingid"), metadataHeader.getRoutingKey(), "stream", 0, cloudEvent.getData().toBytes()));
         });
             /*Thread.startVirtualThread(() -> {
                 questService.publish(forwardMessage);

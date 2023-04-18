@@ -9,9 +9,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PublishRecord {
     private String messageId;
+    private String appId;
     private String userId;
+    private int priority;
+    private String correlationId;
+    private String expiration;
     private String exchange;
+    private int delay;
+    private long publishingId;
     private String routingKey;
     private String queueType;
-    private int offset;
+    private long offset;
+    private byte[] body;
 }

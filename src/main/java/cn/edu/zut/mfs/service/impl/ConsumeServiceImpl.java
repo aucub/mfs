@@ -1,7 +1,9 @@
 package cn.edu.zut.mfs.service.impl;
 
 import cn.edu.zut.mfs.domain.Consume;
+import cn.edu.zut.mfs.domain.ConsumeRecord;
 import cn.edu.zut.mfs.service.ConsumeService;
+import cn.edu.zut.mfs.service.QuestService;
 import cn.edu.zut.mfs.utils.MessageConverter;
 import io.cloudevents.core.data.BytesCloudEventData;
 import io.cloudevents.core.v1.CloudEventV1;
@@ -25,6 +27,7 @@ public class ConsumeServiceImpl implements ConsumeService {
     private RabbitTemplate rabbitTemplate;
 
     private ConnectionFactory connectionFactory;
+    private QuestService questService;
 
     @Autowired
     public void setRabbitTemplate(RabbitTemplate rabbitTemplate) {
@@ -36,6 +39,12 @@ public class ConsumeServiceImpl implements ConsumeService {
         this.connectionFactory = connectionFactory;
     }
 
+    @Autowired
+    public void setQuestService(QuestService questService) {
+        this.questService = questService;
+    }
+
+
     @Override
     public Flux<CloudEventV1> consume(Consume consume) {
         SimpleMessageListenerContainer simpleMessageListenerContainer = new SimpleMessageListenerContainer(connectionFactory);
@@ -43,6 +52,7 @@ public class ConsumeServiceImpl implements ConsumeService {
         Flux<CloudEventV1> f = Flux.create(emitter -> {
             simpleMessageListenerContainer.setupMessageListener(message -> {
                 emitter.next(MessageConverter.fromMessage(message));
+                questService.consume(new ConsumeRecord(message.getMessageProperties().getMessageId(), 0, 0, consume.getQueue(), consume.getUserId()));
             });
             emitter.onRequest(v -> {
                 simpleMessageListenerContainer.start();

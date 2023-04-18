@@ -1,10 +1,13 @@
 package cn.edu.zut.mfs.service.impl;
 
 import cn.edu.zut.mfs.domain.MetadataHeader;
+import cn.edu.zut.mfs.domain.PublishRecord;
 import cn.edu.zut.mfs.service.PublishBatchService;
+import cn.edu.zut.mfs.service.QuestService;
 import cn.edu.zut.mfs.utils.MessageConverter;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.core.v1.CloudEventV1;
+import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.batch.BatchingStrategy;
 import org.springframework.amqp.rabbit.batch.SimpleBatchingStrategy;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
@@ -28,6 +31,13 @@ public class PublishBatchServiceImpl implements PublishBatchService {
         this.cachingConnectionFactory = cachingConnectionFactory;
     }
 
+    private QuestService questService;
+
+    @Autowired
+    public void setQuestService(QuestService questService) {
+        this.questService = questService;
+    }
+
     public void setup(int batchSize) {
         scheduler = new ThreadPoolTaskScheduler();
         scheduler.setPoolSize(1);
@@ -39,7 +49,9 @@ public class PublishBatchServiceImpl implements PublishBatchService {
 
     public void sendMessage(Flux<CloudEvent> cloudEventFlux, MetadataHeader metadataHeader) {
         cloudEventFlux.limitRate(10).subscribe(cloudEvent -> {
-            batchingRabbitTemplate.send(metadataHeader.getExchange(), metadataHeader.getRoutingKey(), MessageConverter.toMessage((CloudEventV1) cloudEvent));
+            Message message = MessageConverter.toMessage((CloudEventV1) cloudEvent);
+            batchingRabbitTemplate.send(metadataHeader.getExchange(), metadataHeader.getRoutingKey(), message);
+            questService.publish(new PublishRecord(cloudEvent.getId(), message.getMessageProperties().getAppId(), message.getMessageProperties().getUserId(), message.getMessageProperties().getPriority(), message.getMessageProperties().getCorrelationId(), message.getMessageProperties().getExpiration(), metadataHeader.getExchange(), message.getMessageProperties().getDelay(), 0, metadataHeader.getRoutingKey(), "classic", 0, cloudEvent.getData().toBytes()));
         });
     }
 

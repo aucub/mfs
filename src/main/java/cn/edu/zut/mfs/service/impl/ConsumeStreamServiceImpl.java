@@ -1,6 +1,7 @@
 package cn.edu.zut.mfs.service.impl;
 
 import cn.edu.zut.mfs.domain.Consume;
+import cn.edu.zut.mfs.domain.ConsumeRecord;
 import cn.edu.zut.mfs.service.ConsumeStreamService;
 import cn.edu.zut.mfs.service.QuestService;
 import cn.edu.zut.mfs.service.RSocketServer;
@@ -64,7 +65,10 @@ public class ConsumeStreamServiceImpl implements ConsumeStreamService {
                             .messageCountBeforeStorage(50_000)
                             .flushInterval(Duration.ofSeconds(10))
                             .builder()
-                            .messageHandler((context, message) -> emitter.next(MessageConverter.fromStreamMessage(context, message))
+                            .messageHandler((context, message) -> {
+                                        emitter.next(MessageConverter.fromStreamMessage(context, message));
+                                        questService.consume(new ConsumeRecord(null, message.getPublishingId(), context.offset(), consume.getQueue(), consume.getUserId()));
+                                    }
                             )
                             .build();
             emitter.onDispose(() -> {
