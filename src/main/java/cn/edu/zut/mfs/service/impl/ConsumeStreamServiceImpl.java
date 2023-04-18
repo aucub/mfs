@@ -4,15 +4,22 @@ import cn.edu.zut.mfs.domain.Consume;
 import cn.edu.zut.mfs.service.ConsumeStreamService;
 import cn.edu.zut.mfs.service.QuestService;
 import cn.edu.zut.mfs.service.RSocketServer;
+import cn.edu.zut.mfs.utils.MessageConverter;
 import com.rabbitmq.stream.Consumer;
 import com.rabbitmq.stream.Environment;
 import com.rabbitmq.stream.OffsetSpecification;
+import io.cloudevents.core.data.BytesCloudEventData;
+import io.cloudevents.core.v1.CloudEventV1;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
+import java.net.URI;
 import java.time.Duration;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -35,8 +42,8 @@ public class ConsumeStreamServiceImpl implements ConsumeStreamService {
     }
 
     @Override
-    public Flux<byte[]> consume(Consume consume) {
-        Flux<byte[]> f = Flux.create(emitter -> {
+    public Flux<CloudEventV1> consume(Consume consume) {
+        Flux<CloudEventV1> f = Flux.create(emitter -> {
             consumer =
                     environment.consumerBuilder()
                             .stream(consume.getQueue())
@@ -44,7 +51,7 @@ public class ConsumeStreamServiceImpl implements ConsumeStreamService {
                             .offset(OffsetSpecification.first())
                             .autoTrackingStrategy()
                             .builder()
-                            .messageHandler((context, message) -> emitter.next(message.getBodyAsBinary())
+                            .messageHandler((context, message) -> emitter.next(MessageConverter.fromStreamMessage(context, message))
                             )
                             .build();
             emitter.onDispose(() -> {
@@ -52,7 +59,7 @@ public class ConsumeStreamServiceImpl implements ConsumeStreamService {
             });
         });
         return Flux.interval(Duration.ofSeconds(5))
-                .map(v -> "暂无新消息".getBytes())
+                .map(v -> new CloudEventV1(UUID.randomUUID().toString(), URI.create("http://example.com/mfs"), "com.example.mfs", "text/plain", URI.create("mfs"), "mfs", Instant.now().atOffset(ZoneOffset.UTC), BytesCloudEventData.wrap("暂无新消息".getBytes()), null))
                 .mergeWith(f);
     }
 }

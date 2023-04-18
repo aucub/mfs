@@ -11,6 +11,7 @@ import cn.edu.zut.mfs.service.RoleService;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -54,6 +55,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @Transactional
     public Boolean delete(String id) {
         Map<String, Object> params = new HashMap<>();
         params.put("role_id", id);
@@ -78,6 +80,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @Transactional
     public Boolean allocPermission(String roleId, List<String> permissionIds) {
         int count = permissionIds == null ? 0 : permissionIds.size();
         Map<String, Object> params = new HashMap<>();

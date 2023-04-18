@@ -3,11 +3,9 @@ package cn.edu.zut.mfs.service.impl;
 import cn.edu.zut.mfs.domain.MetadataHeader;
 import cn.edu.zut.mfs.service.PublishStreamService;
 import cn.edu.zut.mfs.service.QuestService;
-import cn.edu.zut.mfs.utils.MessageConverter;
 import com.rabbitmq.stream.ByteCapacity;
 import com.rabbitmq.stream.Environment;
 import io.cloudevents.CloudEvent;
-import io.cloudevents.core.v1.CloudEventV1;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.rabbit.stream.producer.RabbitStreamTemplate;
@@ -45,7 +43,7 @@ public class PublishStreamServiceImpl implements PublishStreamService {
         stream(metadataHeader.getRoutingKey());
         setRabbitStreamTemplate(metadataHeader.getRoutingKey());
         cloudEventFlux.limitRate(1000).subscribe(cloudEvent -> {
-            rabbitStreamTemplate.send(MessageConverter.toStreamMessage((CloudEventV1) cloudEvent));
+            rabbitStreamTemplate.send(rabbitStreamTemplate.messageBuilder().publishingId((Long) cloudEvent.getExtension("publishingid")).addData(cloudEvent.getData().toBytes()).build());
         });
             /*Thread.startVirtualThread(() -> {
                 questService.publish(forwardMessage);

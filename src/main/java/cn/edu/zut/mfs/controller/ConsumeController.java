@@ -4,6 +4,7 @@ import cn.edu.zut.mfs.domain.Consume;
 import cn.edu.zut.mfs.service.ConsumeService;
 import cn.edu.zut.mfs.service.ConsumeStreamService;
 import cn.edu.zut.mfs.service.RequestProcessor;
+import io.cloudevents.core.v1.CloudEventV1;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -40,7 +41,7 @@ public class ConsumeController {
     }
 
     @MessageMapping("consume")
-    public Flux<byte[]> consume(RSocketRequester requester, Consume consume) {
+    public Flux<CloudEventV1> consume(RSocketRequester requester, Consume consume) {
         requestProcessor.processRequests(requester, consume.getUserId(), "consume");
         if (consume.getQueueType().equals("stream")) {
             return consumeStreamService.consume(consume);

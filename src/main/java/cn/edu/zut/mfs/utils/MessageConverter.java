@@ -1,5 +1,8 @@
 package cn.edu.zut.mfs.utils;
 
+import cn.edu.zut.mfs.config.EventExtension;
+import com.rabbitmq.stream.MessageHandler;
+import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.core.data.BytesCloudEventData;
 import io.cloudevents.core.v1.CloudEventV1;
 import org.springframework.amqp.core.Message;
@@ -60,16 +63,22 @@ public class MessageConverter {
         payload.getMessageProperties().getHeaders().remove("source");
         payload.getMessageProperties().getHeaders().remove("dataschema");
         payload.getMessageProperties().getHeaders().remove("subject");
-        /*return CloudEventBuilder.v1().withId(payload.getMessageProperties().getMessageId())
-                .withDataContentType(payload.getMessageProperties().getContentType())
-                .withTime(payload.getMessageProperties().getTimestamp().toInstant().atOffset(ZoneOffset.UTC))
-                .withSource(uri)
-                .withType(payload.getMessageProperties().getType())
-                .withData(payload.getBody());*/
         return new CloudEventV1(payload.getMessageProperties().getMessageId(), source, payload.getMessageProperties().getType(), payload.getMessageProperties().getContentType(), dataschema, subject, payload.getMessageProperties().getTimestamp().toInstant().atOffset(ZoneOffset.UTC), BytesCloudEventData.wrap(payload.getBody()), payload.getMessageProperties().getHeaders());
     }
 
-    public static CloudEventV1 fromStreamMessage(Message payload) {
-        return new CloudEventV1(UUID.randomUUID().toString(), URI.create("https://spring.io/foos"), "com.github.pull.create", "text/plain", URI.create("test"), "test", Instant.now().atOffset(ZoneOffset.UTC), BytesCloudEventData.wrap(payload.getBody()), null);
+    public static CloudEventV1 fromStreamMessage(MessageHandler.Context context, com.rabbitmq.stream.Message payload) {
+        final EventExtension eventExtension = new EventExtension();
+        eventExtension.setPublishingid(payload.getPublishingId());
+        eventExtension.setOffset(context.offset());
+        return (CloudEventV1) CloudEventBuilder.v1()
+                .withDataContentType("text/plain")
+                .withId(UUID.randomUUID().toString())
+                .withSource(URI.create("http://example.com/mfs"))
+                .withType("com.example.mfs")
+                .withTime(Instant.ofEpochSecond(context.offset()).atOffset(ZoneOffset.UTC))
+                .withData(BytesCloudEventData.wrap(payload.getBodyAsBinary()))
+                .withExtension(eventExtension)
+                .build();
+        //return new CloudEventV1(UUID.randomUUID().toString(), URI.create("http://example.com/mfs"), "com.example.mfs", "text/plain", URI.create("mfs"), "mfs", Instant.now().atOffset(ZoneOffset.UTC), BytesCloudEventData.wrap(payload.getBodyAsBinary()), null);
     }
 }
