@@ -2,6 +2,7 @@ package cn.edu.zut.mfs.service.impl;
 
 import cn.edu.zut.mfs.domain.MetadataHeader;
 import cn.edu.zut.mfs.service.ConfirmCallbackService;
+import cn.edu.zut.mfs.service.PublishTaskService;
 import cn.edu.zut.mfs.service.ReturnCallbackService;
 import cn.edu.zut.mfs.utils.MessageConverter;
 import io.cloudevents.CloudEvent;
@@ -15,13 +16,14 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
 @Service
-public class PublishTaskServiceImpl {
+public class PublishTaskServiceImpl implements PublishTaskService {
     private final RabbitTemplate rabbitTemplate;
 
     private final TaskExecutor exec;
     private ConfirmCallbackService confirmCallbackService;
     private ReturnCallbackService returnCallbackService;
 
+    @Autowired
     public PublishTaskServiceImpl(RabbitTemplate rabbitTemplate, TaskExecutor exec) {
         this.rabbitTemplate = rabbitTemplate;
         RetryTemplate retryTemplate = new RetryTemplate();

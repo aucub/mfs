@@ -1,9 +1,7 @@
 package cn.edu.zut.mfs.controller;
 
 import cn.edu.zut.mfs.domain.MetadataHeader;
-import cn.edu.zut.mfs.service.PublishService;
-import cn.edu.zut.mfs.service.PublishStreamService;
-import cn.edu.zut.mfs.service.RequestProcessor;
+import cn.edu.zut.mfs.service.*;
 import io.cloudevents.CloudEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +23,10 @@ public class PublishController {
     private PublishService publishService;
 
 
+    private PublishBatchService publishBatchService;
+
+    private PublishTaskService publishTaskService;
+
     private RequestProcessor requestProcessor;
 
     @Autowired
@@ -42,6 +44,16 @@ public class PublishController {
         this.publishStreamService = publishStreamService;
     }
 
+    @Autowired
+    public void setPublishTaskService(PublishTaskService publishTaskService) {
+        this.publishTaskService = publishTaskService;
+    }
+
+    @Autowired
+    public void setPublishBatchService(PublishBatchService publishBatchService) {
+        this.publishBatchService = publishBatchService;
+    }
+
     @MessageMapping("publish")
     public Mono<Void> publish(RSocketRequester requester, @Headers Map<String, Object> metadata, Flux<CloudEvent> cloudEventFlux) {
         MetadataHeader metadataHeader = (MetadataHeader) metadata.get("metadataHeader");
@@ -51,6 +63,23 @@ public class PublishController {
         } else {
             publishService.publish(cloudEventFlux, metadataHeader);
         }
+        return Mono.empty();
+    }
+
+    @MessageMapping("publishTask")
+    public Mono<Void> publishTask(RSocketRequester requester, @Headers Map<String, Object> metadata, Flux<CloudEvent> cloudEventFlux) {
+        MetadataHeader metadataHeader = (MetadataHeader) metadata.get("metadataHeader");
+        requestProcessor.processRequests(requester, metadataHeader.getUserId(), "publish");
+        publishTaskService.publish(cloudEventFlux, metadataHeader);
+        return Mono.empty();
+    }
+
+    @MessageMapping("publishBatch")
+    public Mono<Void> publishBatch(RSocketRequester requester, @Headers Map<String, Object> metadata, Flux<CloudEvent> cloudEventFlux) {
+        MetadataHeader metadataHeader = (MetadataHeader) metadata.get("metadataHeader");
+        requestProcessor.processRequests(requester, metadataHeader.getUserId(), "publish");
+        publishBatchService.setup(metadataHeader.getBatchSize());
+        publishBatchService.sendMessage(cloudEventFlux, metadataHeader);
         return Mono.empty();
     }
 }

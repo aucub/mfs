@@ -3,7 +3,6 @@ package cn.edu.zut.mfs.service.impl;
 import cn.edu.zut.mfs.domain.Consume;
 import cn.edu.zut.mfs.service.ConsumeService;
 import cn.edu.zut.mfs.utils.MessageConverter;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cloudevents.core.data.BytesCloudEventData;
 import io.cloudevents.core.v1.CloudEventV1;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +22,6 @@ import java.util.UUID;
 @Slf4j
 @Service
 public class ConsumeServiceImpl implements ConsumeService {
-    private final static ObjectMapper mapper = new ObjectMapper();
     private RabbitTemplate rabbitTemplate;
 
     private ConnectionFactory connectionFactory;

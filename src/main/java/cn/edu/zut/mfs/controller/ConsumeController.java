@@ -1,6 +1,7 @@
 package cn.edu.zut.mfs.controller;
 
 import cn.edu.zut.mfs.domain.Consume;
+import cn.edu.zut.mfs.service.ConsumeBatchService;
 import cn.edu.zut.mfs.service.ConsumeService;
 import cn.edu.zut.mfs.service.ConsumeStreamService;
 import cn.edu.zut.mfs.service.RequestProcessor;
@@ -23,6 +24,8 @@ public class ConsumeController {
 
     private ConsumeService consumeService;
 
+    private ConsumeBatchService consumeBatchService;
+
     private RequestProcessor requestProcessor;
 
     @Autowired
@@ -40,6 +43,11 @@ public class ConsumeController {
         this.consumeStreamService = consumeStreamService;
     }
 
+    @Autowired
+    public void setConsumeBatchService(ConsumeBatchService consumeBatchService) {
+        this.consumeBatchService = consumeBatchService;
+    }
+
     @MessageMapping("consume")
     public Flux<CloudEventV1> consume(RSocketRequester requester, Consume consume) {
         requestProcessor.processRequests(requester, consume.getUserId(), "consume");
@@ -47,6 +55,12 @@ public class ConsumeController {
             return consumeStreamService.consume(consume);
         }
         return consumeService.consume(consume);
+    }
+
+    @MessageMapping("ConsumeBatch")
+    public Flux<CloudEventV1> ConsumeBatch(RSocketRequester requester, Consume consume) {
+        requestProcessor.processRequests(requester, consume.getUserId(), "consume");
+        return consumeBatchService.consume(consume);
     }
 
 }

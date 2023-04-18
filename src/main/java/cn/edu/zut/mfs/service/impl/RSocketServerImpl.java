@@ -20,7 +20,7 @@ import java.util.Collections;
 public class RSocketServerImpl implements RSocketServer {
 
     @Override
-    public void push(PushMessage pushMessage) {
+    public Boolean push(PushMessage pushMessage) {
         if (RequestProcessor.requesters.containsKey(pushMessage.getUserId())) {
             RSocketRequester requester = RequestProcessor.requesters.get(pushMessage.getUserId());
             ByteBuf routeMetadata = TaggingMetadataCodec
@@ -37,6 +37,8 @@ public class RSocketServerImpl implements RSocketServer {
                             .doOnSuccess(p -> log.info("客户端返回: {}", p.getDataUtf8()))
                     )
                     .subscribe();
+            return true;
         }
+        return false;
     }
 }

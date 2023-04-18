@@ -43,13 +43,26 @@ public class ConsumeStreamServiceImpl implements ConsumeStreamService {
 
     @Override
     public Flux<CloudEventV1> consume(Consume consume) {
+        OffsetSpecification offsetSpecification = OffsetSpecification.none();
+        if (consume.getManual()) {
+            if (consume.getTimestamp() > 0) {
+                offsetSpecification = OffsetSpecification.timestamp(consume.getTimestamp());
+            } else if (consume.getOffset() == -1) {
+                offsetSpecification = OffsetSpecification.last();
+            } else if (consume.getOffset() >= 0) {
+                offsetSpecification = OffsetSpecification.offset(consume.getOffset());
+            }
+        }
+        OffsetSpecification finalOffsetSpecification = offsetSpecification;
         Flux<CloudEventV1> f = Flux.create(emitter -> {
             consumer =
                     environment.consumerBuilder()
                             .stream(consume.getQueue())
                             .name(consume.getUserId())
-                            .offset(OffsetSpecification.first())
+                            .offset(finalOffsetSpecification)
                             .autoTrackingStrategy()
+                            .messageCountBeforeStorage(50_000)
+                            .flushInterval(Duration.ofSeconds(10))
                             .builder()
                             .messageHandler((context, message) -> emitter.next(MessageConverter.fromStreamMessage(context, message))
                             )
