@@ -1,7 +1,6 @@
 package cn.edu.zut.mfs.service.impl;
 
 import cn.edu.zut.mfs.domain.MetadataHeader;
-import cn.edu.zut.mfs.domain.PublishRecord;
 import cn.edu.zut.mfs.service.PublishStreamService;
 import cn.edu.zut.mfs.service.QuestService;
 import com.rabbitmq.stream.ByteCapacity;
@@ -43,10 +42,10 @@ public class PublishStreamServiceImpl implements PublishStreamService {
     public void publish(Flux<CloudEvent> cloudEventFlux, MetadataHeader metadataHeader) {
         stream(metadataHeader.getRoutingKey());
         setRabbitStreamTemplate(metadataHeader.getRoutingKey());
-        cloudEventFlux.limitRate(1000000).subscribe(cloudEvent -> {
+        cloudEventFlux.subscribe(cloudEvent -> {//.limitRate(10000)
             Thread.startVirtualThread(() -> {
                 rabbitStreamTemplate.send(rabbitStreamTemplate.messageBuilder().publishingId(Long.valueOf((String) cloudEvent.getExtension("publishingid"))).addData(cloudEvent.getData().toBytes()).build());
-                questService.publish(new PublishRecord(cloudEvent.getId(), (String) cloudEvent.getExtension("appid"), metadataHeader.getUserId(), 0, "", "", metadataHeader.getExchange(), 0, Long.valueOf((String) cloudEvent.getExtension("publishingid")), metadataHeader.getRoutingKey(), "stream", 0, cloudEvent.getData().toBytes()));
+                //questService.publish(new PublishRecord(cloudEvent.getId(), (String) cloudEvent.getExtension("appid"), metadataHeader.getUserId(), 0, "", "", metadataHeader.getExchange(), 0, Long.valueOf((String) cloudEvent.getExtension("publishingid")), metadataHeader.getRoutingKey(), "stream", 0, cloudEvent.getData().toBytes()));
             });
         });
     }

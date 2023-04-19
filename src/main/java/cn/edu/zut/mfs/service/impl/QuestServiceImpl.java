@@ -4,19 +4,15 @@ import cn.edu.zut.mfs.domain.ConsumeRecord;
 import cn.edu.zut.mfs.domain.PublishRecord;
 import cn.edu.zut.mfs.domain.PushMessage;
 import cn.edu.zut.mfs.service.QuestService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.questdb.client.Sender;
 import org.springframework.stereotype.Service;
 
 @Service
 public class QuestServiceImpl implements QuestService {
-    private static final ObjectMapper mapper = new ObjectMapper();
 
 
     public void publish(PublishRecord publishRecord) {
         try (Sender sender = Sender.builder().address("47.113.201.150:9009").build()) {
-            try {
                 sender.table("PublishRecord")
                         .symbol("queueType", publishRecord.getQueueType())
                         .stringColumn("ID", publishRecord.getMessageId())
@@ -30,11 +26,8 @@ public class QuestServiceImpl implements QuestService {
                         .longColumn("offset", publishRecord.getOffset())
                         .stringColumn("expiration", publishRecord.getExpiration())
                         .longColumn("delay", publishRecord.getDelay())
-                        .stringColumn("body", mapper.writeValueAsString(publishRecord.getBody()))
+                        .stringColumn("body", new String(publishRecord.getBody()))
                         .atNow();
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
 
         }
     }
@@ -53,15 +46,11 @@ public class QuestServiceImpl implements QuestService {
 
     public void push(PushMessage pushMessage) {
         try (Sender sender = Sender.builder().address("47.113.201.150:9009").build()) {
-            try {
-                sender.table("Push")
-                        .symbol("route", pushMessage.getRoute())
-                        .stringColumn("userId", pushMessage.getUserId())
-                        .stringColumn("body", mapper.writeValueAsString(pushMessage.getBody()))
+            sender.table("Push")
+                    .symbol("route", pushMessage.getRoute())
+                    .stringColumn("userId", pushMessage.getUserId())
+                    .stringColumn("body", new String(pushMessage.getBody()))
                         .atNow();
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
         }
     }
 }

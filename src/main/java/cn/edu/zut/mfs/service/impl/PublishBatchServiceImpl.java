@@ -1,7 +1,6 @@
 package cn.edu.zut.mfs.service.impl;
 
 import cn.edu.zut.mfs.domain.MetadataHeader;
-import cn.edu.zut.mfs.domain.PublishRecord;
 import cn.edu.zut.mfs.service.PublishBatchService;
 import cn.edu.zut.mfs.service.QuestService;
 import cn.edu.zut.mfs.utils.MessageConverter;
@@ -39,7 +38,7 @@ public class PublishBatchServiceImpl implements PublishBatchService {
 
     public void setup(int batchSize) {
         scheduler = new ThreadPoolTaskScheduler();
-        scheduler.setPoolSize(1);
+        scheduler.setPoolSize(50);
         scheduler.initialize();
         BatchingStrategy batchingStrategy = new SimpleBatchingStrategy(batchSize, Integer.MAX_VALUE, 30000);
         batchingRabbitTemplate = new BatchingRabbitTemplate(batchingStrategy, this.scheduler);
@@ -50,7 +49,7 @@ public class PublishBatchServiceImpl implements PublishBatchService {
         cloudEventFlux.limitRate(10).subscribe(cloudEvent -> {
             Message message = MessageConverter.toMessage((CloudEventV1) cloudEvent);
             batchingRabbitTemplate.send(metadataHeader.getExchange(), metadataHeader.getRoutingKey(), message);
-            questService.publish(new PublishRecord(cloudEvent.getId(), message.getMessageProperties().getAppId(), message.getMessageProperties().getUserId(), message.getMessageProperties().getPriority(), message.getMessageProperties().getCorrelationId(), message.getMessageProperties().getExpiration(), metadataHeader.getExchange(), message.getMessageProperties().getDelay(), 0, metadataHeader.getRoutingKey(), "classic", 0, cloudEvent.getData().toBytes()));
+            //  questService.publish(new PublishRecord(cloudEvent.getId(), message.getMessageProperties().getAppId(), message.getMessageProperties().getUserId(), message.getMessageProperties().getPriority(), message.getMessageProperties().getCorrelationId(), message.getMessageProperties().getExpiration(), metadataHeader.getExchange(), message.getMessageProperties().getDelay(), 0, metadataHeader.getRoutingKey(), "classic", 0, cloudEvent.getData().toBytes()));
         });
     }
 

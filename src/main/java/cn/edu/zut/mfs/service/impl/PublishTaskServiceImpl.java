@@ -1,7 +1,6 @@
 package cn.edu.zut.mfs.service.impl;
 
 import cn.edu.zut.mfs.domain.MetadataHeader;
-import cn.edu.zut.mfs.domain.PublishRecord;
 import cn.edu.zut.mfs.service.ConfirmCallbackService;
 import cn.edu.zut.mfs.service.PublishTaskService;
 import cn.edu.zut.mfs.service.QuestService;
@@ -16,8 +15,6 @@ import org.springframework.retry.backoff.ExponentialBackOffPolicy;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
-
-import java.util.Objects;
 
 @Service
 public class PublishTaskServiceImpl implements PublishTaskService {
@@ -58,10 +55,10 @@ public class PublishTaskServiceImpl implements PublishTaskService {
     }
 
     public void publish(Flux<CloudEvent> cloudEventFlux, MetadataHeader metadataHeader) {
-        cloudEventFlux.limitRate(10).subscribe(cloudEvent -> {
+        cloudEventFlux.subscribe(cloudEvent -> {//.limitRate(10)
             Message message = MessageConverter.toMessage((CloudEventV1) cloudEvent);
             rabbitTemplate.send(metadataHeader.getExchange(), metadataHeader.getRoutingKey(), MessageConverter.toMessage((CloudEventV1) cloudEvent));
-            questService.publish(new PublishRecord(cloudEvent.getId(), message.getMessageProperties().getAppId(), message.getMessageProperties().getUserId(), message.getMessageProperties().getPriority(), message.getMessageProperties().getCorrelationId(), message.getMessageProperties().getExpiration(), metadataHeader.getExchange(), message.getMessageProperties().getDelay(), 0, metadataHeader.getRoutingKey(), "classic", 0, Objects.requireNonNull(cloudEvent.getData()).toBytes()));
+            //questService.publish(new PublishRecord(cloudEvent.getId(), message.getMessageProperties().getAppId(), message.getMessageProperties().getUserId(), message.getMessageProperties().getPriority(), message.getMessageProperties().getCorrelationId(), message.getMessageProperties().getExpiration(), metadataHeader.getExchange(), message.getMessageProperties().getDelay(), 0, metadataHeader.getRoutingKey(), "classic", 0, Objects.requireNonNull(cloudEvent.getData()).toBytes()));
         });
     }
 }

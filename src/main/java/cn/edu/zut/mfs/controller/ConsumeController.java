@@ -57,7 +57,7 @@ public class ConsumeController {
         return consumeService.consume(consume);
     }
 
-    @MessageMapping("ConsumeBatch")
+    @MessageMapping("consumeBatch")
     public Flux<CloudEventV1> ConsumeBatch(RSocketRequester requester, Consume consume) {
         requestProcessor.processRequests(requester, consume.getUserId(), "consume");
         return consumeBatchService.consume(consume);
