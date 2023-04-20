@@ -12,9 +12,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Service
 public class RequestProcessor {
 
-    private RedisService redisService;
-
     public static AtomicInteger atomicInteger = new AtomicInteger(0);
+    private RedisService redisService;
 
     @Autowired
     public void setRedisService(RedisService redisService) {

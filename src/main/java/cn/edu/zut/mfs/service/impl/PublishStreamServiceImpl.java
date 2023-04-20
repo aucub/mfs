@@ -20,17 +20,16 @@ public class PublishStreamServiceImpl implements PublishStreamService {
             .build();
     private RabbitStreamTemplate rabbitStreamTemplate;
 
-    public void setRabbitStreamTemplate(String stream) {
-        rabbitStreamTemplate = new RabbitStreamTemplate(environment, stream);
-    }
-
-
     public static void stream(String stream) {
         environment.streamCreator()
                 .stream(stream)
                 .maxLengthBytes(ByteCapacity.GB(1))
                 .maxSegmentSizeBytes(ByteCapacity.MB(100))
                 .create();
+    }
+
+    public void setRabbitStreamTemplate(String stream) {
+        rabbitStreamTemplate = new RabbitStreamTemplate(environment, stream);
     }
 
     @Override

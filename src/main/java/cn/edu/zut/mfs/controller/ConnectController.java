@@ -19,6 +19,7 @@ import reactor.core.publisher.Mono;
 @RestController
 public class ConnectController {
     private RequestProcessor requestProcessor;
+
     @Autowired
     public void setRequestProcessor(RequestProcessor requestProcessor) {
         this.requestProcessor = requestProcessor;

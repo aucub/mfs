@@ -62,7 +62,7 @@ public class ConsumeStreamServiceImpl implements ConsumeStreamService {
                             .builder()
                             .messageHandler((context, message) -> {
                                         emitter.next(MessageConverter.fromStreamMessage(context, message));
-                                ConsumeRecord consumeRecord = new ConsumeRecord((String) message.getProperties().getMessageId(), message.getPublishingId(), context.offset(), consume.getQueue(), userId);
+                                        ConsumeRecord consumeRecord = new ConsumeRecord((String) message.getProperties().getMessageId(), message.getPublishingId(), context.offset(), consume.getQueue(), userId);
                                         influxDBService.consume(consumeRecord);
                                     }
                             )

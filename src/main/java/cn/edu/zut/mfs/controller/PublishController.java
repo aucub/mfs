@@ -57,7 +57,7 @@ public class PublishController {
     }
 
     @MessageMapping("publish")
-    //@PreAuthorize("hasRole('publish')")
+    @PreAuthorize("hasRole('publish')")
     public Flux<String> publish(RSocketRequester requester, @Headers Map<String, Object> metadata, @AuthenticationPrincipal String token, Flux<CloudEvent> cloudEventFlux) {
         MetadataHeader metadataHeader = (MetadataHeader) metadata.get("metadataHeader");
         String userId = JwtUtils.decode(token).getSubject();
