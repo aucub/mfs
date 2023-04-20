@@ -12,6 +12,7 @@ import org.springframework.amqp.rabbit.core.BatchingRabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 
 @Service
@@ -37,6 +38,7 @@ public class PublishBatchServiceImpl implements PublishBatchService {
         batchingRabbitTemplate.setConnectionFactory(this.cachingConnectionFactory);
     }
 
+    @Transactional
     public void sendMessage(Flux<CloudEvent> cloudEventFlux) {
         cloudEventFlux.limitRate(10).subscribe(cloudEvent -> {
             Message message = MessageConverter.toMessage((CloudEventV1) cloudEvent);

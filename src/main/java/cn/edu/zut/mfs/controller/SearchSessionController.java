@@ -1,6 +1,6 @@
 package cn.edu.zut.mfs.controller;
 
-import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.dev33.satoken.annotation.SaCheckRole;
 import cn.dev33.satoken.session.SaSession;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.edu.zut.mfs.domain.User;
@@ -36,7 +36,7 @@ public class SearchSessionController {
     }
 
     @Operation(summary = "会话查询接口----根据分页参数获取会话列表")
-    @SaCheckPermission("searchSession:list")
+    @SaCheckRole("searchSession")
     @PostMapping("list")
     public BaseResponse<List<SaSession>> list(@RequestBody SearchSessionDto searchSessionDto) {
         // 创建集合
@@ -51,13 +51,13 @@ public class SearchSessionController {
         return BaseResponse.success(sessionList);
     }
 
-    @SaCheckPermission("searchSession:onlineList")
+    @SaCheckRole("searchSession")
     @PostMapping("onlineList")
     public List<User> onlineList() {
         return userService.onlineList();
     }
 
-    @SaCheckPermission("searchSession:onlineUsers")
+    @SaCheckRole("searchSession")
     @PostMapping("onlineUsers")
     public int onlineUsers() {
         return userService.onlineUsers();

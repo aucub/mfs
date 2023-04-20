@@ -1,6 +1,6 @@
 package cn.edu.zut.mfs.controller;
 
-import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.dev33.satoken.annotation.SaCheckRole;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.edu.zut.mfs.dto.DisableAccountDto;
 import cn.edu.zut.mfs.pojo.BaseResponse;
@@ -20,7 +20,7 @@ public class DisableController {
 
 
     @Operation(summary = "封禁指定账号")
-    @SaCheckPermission("user:disable")
+    @SaCheckRole("disable")
     @PostMapping("disable")
     public BaseResponse<String> disable(@RequestBody DisableAccountDto disableAccountDto) {
         /*
@@ -33,7 +33,7 @@ public class DisableController {
     }
 
     @Operation(summary = "解封指定账号")
-    @SaCheckPermission("user:untieDisable")
+    @SaCheckRole("disable")
     @PostMapping("untieDisable")
     public BaseResponse<String> untieDisable(@RequestParam String userId) {
         StpUtil.untieDisable(userId);

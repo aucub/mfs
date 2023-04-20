@@ -1,6 +1,6 @@
 package cn.edu.zut.mfs.controller;
 
-import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.dev33.satoken.annotation.SaCheckRole;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.edu.zut.mfs.pojo.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "注销")
 public class KickoutController {
     @Operation(summary = "将指定账号强制注销")
-    @SaCheckPermission("user:logout")
+    @SaCheckRole("logout")
     @PostMapping("logout")
     public BaseResponse<String> logout(@RequestParam String userId) {
 

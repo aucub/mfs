@@ -1,6 +1,7 @@
 package cn.edu.zut.mfs.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.dev33.satoken.annotation.SaCheckRole;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.edu.zut.mfs.domain.Role;
 import cn.edu.zut.mfs.domain.User;
@@ -43,14 +44,14 @@ public class UserController {
     }
 
     @Operation(summary = "用户查询")
-    @SaCheckPermission("user:list")
+    @SaCheckRole("userMan")
     @PostMapping("/list")
     public BaseResponse<Page<User>> list(@RequestBody FindUserPageDto findUserPageDto) {
         return BaseResponse.success(userService.list(findUserPageDto));
     }
 
     @Operation(summary = "添加")
-    @SaCheckPermission("user:save")
+    @SaCheckRole("userMan")
     @PostMapping("/save")
     public BaseResponse<String> save(@RequestBody UserRegisterDto userRegisterDto) {
         UserLoginDto userLoginDto = new UserLoginDto();
@@ -64,7 +65,7 @@ public class UserController {
     }
 
     @Operation(summary = "修改")
-    @SaCheckPermission("user:update")
+    @SaCheckRole("userMan")
     @PostMapping(value = "/update")
     public BaseResponse<String> update(@RequestBody User user) {
         if (userService.update(user)) {
@@ -74,7 +75,7 @@ public class UserController {
     }
 
     @Operation(summary = "删除")
-    @SaCheckPermission("user:delete")
+    @SaCheckRole("userMan")
     @PostMapping(value = "/delete")
     public BaseResponse<String> delete(@NotBlank(message = "id不能为空") @RequestParam String id) {
         if (userService.delete(id)) {
@@ -84,14 +85,14 @@ public class UserController {
 
 
     @Operation(summary = "根据用户名获取用户信息")
-    @SaCheckPermission("user:getUserInfoByUsername")
+    @SaCheckRole("userMan")
     @PostMapping(value = "/getUserInfoByUsername")
     public BaseResponse<User> getUserInfoByUsername(@NotBlank(message = "用户名不能为空") @RequestParam String username) {
         return BaseResponse.success(userService.getUserByUsername(username));
     }
 
     @Operation(summary = "根据用户Id获取用户信息")
-    @SaCheckPermission("user:getUserInfoByUserId")
+    @SaCheckRole("userMan")
     @PostMapping(value = "/getUserInfoByUserId")
     public BaseResponse<User> getUserInfoByUserId(@NotBlank(message = "用户Id不能为空") @RequestParam String userId) {
         return BaseResponse.success(userService.getUserById(userId));
@@ -104,14 +105,14 @@ public class UserController {
     }
 
     @Operation(summary = "获取用户的角色列表")
-    @SaCheckPermission("user:getRoleListByUserId")
+    @SaCheckPermission("userMan")
     @PostMapping(value = "/getRoleListByUserId")
     public BaseResponse<List<Role>> getRoleListByUserId(@NotBlank(message = "用户id不能为空") @RequestParam String userId) {
         return BaseResponse.success(userService.getRoleList(userId));
     }
 
     @Operation(summary = "保存授权角色")
-    @SaCheckPermission("user:saveAuthRole")
+    @SaCheckPermission("userMan")
     @PostMapping(value = "/saveAuthRole")
     public BaseResponse<String> saveAuthRole(@RequestBody RoleRelationDto roleRelationDto) {
         if (userService.updateRole(roleRelationDto.getUserId(), roleRelationDto.getRoleIds())) {
@@ -121,14 +122,14 @@ public class UserController {
     }
 
     @Operation(summary = "得到Jwt")
-    @SaCheckPermission("user:getJwt")
+    @SaCheckRole("getJwt")
     @PostMapping(value = "/getJwt")
     public BaseResponse<String> getJwt(JwtDto jwtDto) {
         return BaseResponse.success(JwtUtils.generate(new JwtDto(UUID.randomUUID().toString(), StpUtil.getLoginIdAsString(), StpUtil.getLoginIdAsString(), jwtDto.getExpiresAt(), "mfs", userService.getRoleListAsString(StpUtil.getLoginIdAsString()))));
     }
 
     @Operation(summary = "生成Jwt")
-    @SaCheckPermission("user:generateJwt")
+    @SaCheckRole("generateJwt")
     @PostMapping(value = "/generateJwt")
     public BaseResponse<String> generateJwt(JwtDto jwtDto) {
         return BaseResponse.success(JwtUtils.generate(new JwtDto(UUID.randomUUID().toString(), StpUtil.getLoginIdAsString(), jwtDto.getSubject(), jwtDto.getExpiresAt(), "mfs", userService.getRoleListAsString(StpUtil.getLoginIdAsString()))));

@@ -1,14 +1,3 @@
-create table if not exists permission
-(
-    id      bigint auto_increment
-        primary key,
-    pid     bigint            null comment '父级权限id',
-    name    varchar(100)      null comment '名称',
-    value   varchar(200)      null comment '权限值',
-    deleted tinyint default 0 null comment '启用状态:0->启用;1->禁用'
-)
-    comment '权限表';
-
 create table if not exists role
 (
     id          bigint auto_increment
@@ -18,15 +7,6 @@ create table if not exists role
     deleted     tinyint default 0 null comment '启用状态：0->启用；1->禁用'
 )
     comment '角色表';
-
-create table if not exists role_permission_relation
-(
-    id            bigint auto_increment
-        primary key,
-    role_id       bigint null,
-    permission_id bigint null
-)
-    comment '用户角色和权限关系表';
 
 create table if not exists role_relation
 (
@@ -67,13 +47,3 @@ create table if not exists user_login_log
     ip          varchar(64) null
 )
     comment '登录记录';
-
-create table if not exists user_permission_relation
-(
-    id            bigint auto_increment
-        primary key,
-    user_id       varchar(32)       null,
-    permission_id bigint            null,
-    type          tinyint default 0 null comment '启用状态:0->启用;1->禁用'
-)
-    comment '用户和权限关系表';

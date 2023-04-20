@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.rsocket.RSocketRequester;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
@@ -50,6 +51,7 @@ public class ConsumeController {
         this.consumeBatchService = consumeBatchService;
     }
 
+    @PreAuthorize("hasRole('consume')")
     @MessageMapping("consume")
     public Flux<CloudEventV1> consume(RSocketRequester requester, @AuthenticationPrincipal String token, Consume consume) {
         requestProcessor.processRequests(requester, JwtUtils.decode(token).getSubject(), "consume");
@@ -59,6 +61,7 @@ public class ConsumeController {
         return consumeService.consume(consume);
     }
 
+    @PreAuthorize("hasRole('consumeBatch')")
     @MessageMapping("consumeBatch")
     public Flux<CloudEventV1> ConsumeBatch(RSocketRequester requester, @AuthenticationPrincipal String token, Consume consume) {
         requestProcessor.processRequests(requester, JwtUtils.decode(token).getSubject(), "consumeBatch");

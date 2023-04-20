@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.rsocket.RSocketRequester;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
@@ -53,6 +54,7 @@ public class PublishController {
     }
 
     @MessageMapping("publish")
+    @PreAuthorize("hasRole('publish')")
     public Flux<String> publish(RSocketRequester requester, @AuthenticationPrincipal String token, Flux<CloudEvent> cloudEventFlux) {
         requestProcessor.processRequests(requester, JwtUtils.decode(token).getSubject(), "publish");
         cloudEventFlux.subscribe(event -> {
@@ -61,6 +63,7 @@ public class PublishController {
         return Flux.interval(Duration.ofSeconds(5)).map(i -> "OK");
     }
 
+    @PreAuthorize("hasRole('publishClassic')")
     @MessageMapping("publishClassic")
     public Flux<String> publishClassic(RSocketRequester requester, @AuthenticationPrincipal String token, Flux<CloudEvent> cloudEventFlux) {
         requestProcessor.processRequests(requester, JwtUtils.decode(token).getSubject(), "publish");
@@ -68,6 +71,7 @@ public class PublishController {
         return Flux.interval(Duration.ofSeconds(5)).map(i -> "OK");
     }
 
+    @PreAuthorize("hasRole('publishTask')")
     @MessageMapping("publishTask")
     public Flux<String> publishTask(RSocketRequester requester, @AuthenticationPrincipal String token, Flux<CloudEvent> cloudEventFlux) {
         requestProcessor.processRequests(requester, JwtUtils.decode(token).getSubject(), "publish");
@@ -75,6 +79,7 @@ public class PublishController {
         return Flux.interval(Duration.ofSeconds(5)).map(i -> "OK");
     }
 
+    @PreAuthorize("hasRole('publishBatch')")
     @MessageMapping("publishBatch")
     public Flux<String> publishBatch(RSocketRequester requester, @AuthenticationPrincipal String token, Flux<CloudEvent> cloudEventFlux) {
         requestProcessor.processRequests(requester, JwtUtils.decode(token).getSubject(), "publish");

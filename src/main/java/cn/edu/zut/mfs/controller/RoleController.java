@@ -1,6 +1,6 @@
 package cn.edu.zut.mfs.controller;
 
-import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.dev33.satoken.annotation.SaCheckRole;
 import cn.edu.zut.mfs.domain.Role;
 import cn.edu.zut.mfs.pojo.BaseResponse;
 import cn.edu.zut.mfs.service.RoleService;
@@ -35,7 +35,7 @@ public class RoleController {
     }
 
     @Operation(summary = "添加")
-    @SaCheckPermission("role:save")
+    @SaCheckRole("role")
     @PostMapping(value = "/save")
     public BaseResponse<String> save(@RequestBody Role role) {
         if (Boolean.TRUE.equals(roleService.save(role))) {
@@ -45,7 +45,7 @@ public class RoleController {
     }
 
     @Operation(summary = "修改")
-    @SaCheckPermission("role:update")
+    @SaCheckRole("role")
     @PostMapping(value = "/update")
     public BaseResponse<String> update(@RequestBody Role role) {
         if (Boolean.TRUE.equals(roleService.update(role))) {
@@ -55,7 +55,7 @@ public class RoleController {
     }
 
     @Operation(summary = "删除")
-    @SaCheckPermission("role:delete")
+    @SaCheckRole("role")
     @PostMapping(value = "/delete")
     public BaseResponse<String> delete(@NotBlank(message = "角色id不能为空") @RequestParam String id) {
         if (Boolean.TRUE.equals(roleService.delete(id))) {

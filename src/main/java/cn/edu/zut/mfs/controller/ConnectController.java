@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.rsocket.RSocketRequester;
 import org.springframework.messaging.rsocket.annotation.ConnectMapping;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
@@ -23,6 +24,7 @@ public class ConnectController {
         this.requestProcessor = requestProcessor;
     }
 
+    @PreAuthorize("hasRole('connect')")
     @ConnectMapping("connect")
     public Mono<Void> connect(RSocketRequester requester, @AuthenticationPrincipal String token, CloudEventV1 cloudEventV1) {
         requestProcessor.processRequests(requester, JwtUtils.decode(token).getSubject(), "connect");
