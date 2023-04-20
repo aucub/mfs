@@ -1,7 +1,9 @@
 package cn.edu.zut.mfs.service.impl;
 
 import cn.edu.zut.mfs.domain.Consume;
+import cn.edu.zut.mfs.domain.ConsumeRecord;
 import cn.edu.zut.mfs.service.ConsumeService;
+import cn.edu.zut.mfs.service.InfluxDBService;
 import cn.edu.zut.mfs.utils.MessageConverter;
 import io.cloudevents.core.data.BytesCloudEventData;
 import io.cloudevents.core.v1.CloudEventV1;
@@ -32,11 +34,14 @@ public class ConsumeServiceImpl implements ConsumeService {
 
     @Override
     public Flux<CloudEventV1> consume(Consume consume) {
+        InfluxDBService influxDBService = new InfluxDBServiceImpl();
         SimpleMessageListenerContainer simpleMessageListenerContainer = new SimpleMessageListenerContainer(connectionFactory);
         simpleMessageListenerContainer.addQueueNames(consume.getQueue());
         Flux<CloudEventV1> f = Flux.create(emitter -> {
             simpleMessageListenerContainer.setupMessageListener(message -> {
                 emitter.next(MessageConverter.fromMessage(message));
+                ConsumeRecord consumeRecord = new ConsumeRecord((String) message.getMessageProperties().getMessageId(), 0, 0, consume.getQueue(), consume.getUserId());
+                influxDBService.consume(consumeRecord);
             });
             emitter.onRequest(v -> {
                 simpleMessageListenerContainer.start();

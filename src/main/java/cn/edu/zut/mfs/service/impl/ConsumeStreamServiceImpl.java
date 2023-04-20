@@ -1,7 +1,9 @@
 package cn.edu.zut.mfs.service.impl;
 
 import cn.edu.zut.mfs.domain.Consume;
+import cn.edu.zut.mfs.domain.ConsumeRecord;
 import cn.edu.zut.mfs.service.ConsumeStreamService;
+import cn.edu.zut.mfs.service.InfluxDBService;
 import cn.edu.zut.mfs.service.RSocketServer;
 import cn.edu.zut.mfs.utils.MessageConverter;
 import com.rabbitmq.stream.Consumer;
@@ -36,6 +38,7 @@ public class ConsumeStreamServiceImpl implements ConsumeStreamService {
 
     @Override
     public Flux<CloudEventV1> consume(Consume consume) {
+        InfluxDBService influxDBService = new InfluxDBServiceImpl();
         OffsetSpecification offsetSpecification = OffsetSpecification.none();
         if (consume.getManual()) {
             if (consume.getTimestamp() > 0) {
@@ -59,6 +62,8 @@ public class ConsumeStreamServiceImpl implements ConsumeStreamService {
                             .builder()
                             .messageHandler((context, message) -> {
                                         emitter.next(MessageConverter.fromStreamMessage(context, message));
+                                        ConsumeRecord consumeRecord = new ConsumeRecord((String) message.getProperties().getMessageId(), message.getPublishingId(), context.offset(), consume.getQueue(), consume.getUserId());
+                                        influxDBService.consume(consumeRecord);
                                     }
                             )
                             .build();

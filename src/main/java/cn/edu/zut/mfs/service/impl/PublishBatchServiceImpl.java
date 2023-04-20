@@ -1,5 +1,8 @@
 package cn.edu.zut.mfs.service.impl;
 
+import cn.edu.zut.mfs.domain.MetadataHeader;
+import cn.edu.zut.mfs.domain.PublishRecord;
+import cn.edu.zut.mfs.service.InfluxDBService;
 import cn.edu.zut.mfs.service.PublishBatchService;
 import cn.edu.zut.mfs.utils.MessageConverter;
 import io.cloudevents.CloudEvent;
@@ -39,10 +42,13 @@ public class PublishBatchServiceImpl implements PublishBatchService {
     }
 
     @Transactional
-    public void sendMessage(Flux<CloudEvent> cloudEventFlux) {
+    public void sendMessage(String userId, MetadataHeader metadataHeader, Flux<CloudEvent> cloudEventFlux) {
+        InfluxDBService influxDBService = new InfluxDBServiceImpl();
         cloudEventFlux.limitRate(10).subscribe(cloudEvent -> {
             Message message = MessageConverter.toMessage((CloudEventV1) cloudEvent);
-            batchingRabbitTemplate.send((String) cloudEvent.getExtension("exchange"), (String) cloudEvent.getExtension("routekey"), message);
+            batchingRabbitTemplate.send(metadataHeader.getExchange(), metadataHeader.getRoutingKey(), message);
+            PublishRecord publishRecord = new PublishRecord(cloudEvent.getId(), cloudEvent.getSource(), cloudEvent.getType(), (String) cloudEvent.getExtension("appid"), userId, Integer.valueOf((String) cloudEvent.getExtension("priority")), (String) cloudEvent.getExtension("expiration"), Integer.valueOf((String) cloudEvent.getExtension("delay")), (String) cloudEvent.getExtension("dataContentType"), (String) cloudEvent.getExtension("contentEncoding"), cloudEvent.getSubject(), new String(cloudEvent.getData().toBytes()), cloudEvent.getTime().toInstant());
+            influxDBService.publish(publishRecord);
         });
     }
 

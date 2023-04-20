@@ -10,8 +10,6 @@ import java.util.Set;
 
 @Component
 public final class EventExtension implements CloudEventExtension {
-    public static final String EXCHANGE = "exchange";
-    public static final String ROUTINGKEY = "routingkey";
     public static final String APPID = "appid";
     public static final String PRIORITY = "priority";
     public static final String CONTENTENCODING = "contentencoding";
@@ -19,9 +17,7 @@ public final class EventExtension implements CloudEventExtension {
     public static final String X_DELAY = "delay";
     public static final String PUBLISHINGID = "publishingid";
     public static final String OFFSET = "offset";
-    private static final Set<String> KEY_SET = Set.of(EXCHANGE, ROUTINGKEY, APPID, PRIORITY, CONTENTENCODING, EXPIRATION, X_DELAY, PUBLISHINGID, OFFSET);
-    private String exchange;
-    private String routingkey;
+    private static final Set<String> KEY_SET = Set.of(APPID, PRIORITY, CONTENTENCODING, EXPIRATION, X_DELAY, PUBLISHINGID, OFFSET);
     private String appid;
     private String contentencoding;
     private Long publishingid;
@@ -29,24 +25,6 @@ public final class EventExtension implements CloudEventExtension {
     private Integer delay;
     private Long expiration;
     private Long offset;
-
-
-
-    public String getExchange() {
-        return exchange;
-    }
-
-    public void setExchange(String exchange) {
-        this.exchange = exchange;
-    }
-
-    public String getRoutingkey() {
-        return routingkey;
-    }
-
-    public void setRoutingkey(String routingkey) {
-        this.routingkey = routingkey;
-    }
 
     public String getAppid() {
         return appid;
@@ -107,14 +85,6 @@ public final class EventExtension implements CloudEventExtension {
 
     @Override
     public void readFrom(CloudEventExtensions extensions) {
-        Object ec = extensions.getExtension(EXCHANGE);
-        if (ec != null) {
-            this.exchange = ec.toString();
-        }
-        Object rk = extensions.getExtension(ROUTINGKEY);
-        if (rk != null) {
-            this.routingkey = rk.toString();
-        }
         Object ap = extensions.getExtension(APPID);
         if (ap != null) {
             this.appid = ap.toString();
@@ -148,12 +118,6 @@ public final class EventExtension implements CloudEventExtension {
     @Override
     public Object getValue(String key) {
         switch (key) {
-            case EXCHANGE -> {
-                return this.exchange;
-            }
-            case ROUTINGKEY -> {
-                return this.routingkey;
-            }
             case APPID -> {
                 return this.appid;
             }
@@ -187,8 +151,6 @@ public final class EventExtension implements CloudEventExtension {
     @Override
     public String toString() {
         return "EventExtension{" +
-                ", exchange='" + exchange + '\'' +
-                ", routingkey='" + routingkey + '\'' +
                 ", appid='" + appid + '\'' +
                 ", contentencoding='" + contentencoding + '\'' +
                 ", publishingid=" + publishingid +
@@ -204,12 +166,12 @@ public final class EventExtension implements CloudEventExtension {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         EventExtension that = (EventExtension) o;
-        return Objects.equals(getExchange(), that.getExchange()) && Objects.equals(getRoutingkey(), that.getRoutingkey()) && Objects.equals(getAppid(), that.getAppid()) && Objects.equals(getContentencoding(), that.getContentencoding()) && Objects.equals(getPublishingid(), that.getPublishingid()) && Objects.equals(getPriority(), that.getPriority()) && Objects.equals(getDelay(), that.getDelay()) && Objects.equals(getExpiration(), that.getExpiration()) && Objects.equals(getOffset(), that.getOffset());
+        return Objects.equals(getAppid(), that.getAppid()) && Objects.equals(getContentencoding(), that.getContentencoding()) && Objects.equals(getPublishingid(), that.getPublishingid()) && Objects.equals(getPriority(), that.getPriority()) && Objects.equals(getDelay(), that.getDelay()) && Objects.equals(getExpiration(), that.getExpiration()) && Objects.equals(getOffset(), that.getOffset());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getExchange(), getRoutingkey(), getAppid(), getContentencoding(), getPublishingid(), getPriority(), getDelay(), getExpiration(), getOffset());
+        return Objects.hash(getAppid(), getContentencoding(), getPublishingid(), getPriority(), getDelay(), getExpiration(), getOffset());
     }
 }
 

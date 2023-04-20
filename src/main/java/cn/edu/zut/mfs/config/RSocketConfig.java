@@ -1,5 +1,6 @@
 package cn.edu.zut.mfs.config;
 
+import cn.edu.zut.mfs.domain.MetadataHeader;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.ParameterizedTypeReference;
@@ -87,6 +88,7 @@ public class RSocketConfig {
                             (jsonMap, outputMap) -> {
                                 outputMap.putAll(jsonMap);
                             });
+                    registry.metadataToExtract(MimeType.valueOf("application/x.metadataHeader+json"), MetadataHeader.class, "metadataHeader");
                 })
                 .encoders(encoders -> {
                     encoders.add(new io.cloudevents.spring.codec.CloudEventEncoder());

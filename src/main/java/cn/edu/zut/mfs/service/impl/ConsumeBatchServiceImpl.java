@@ -1,7 +1,9 @@
 package cn.edu.zut.mfs.service.impl;
 
 import cn.edu.zut.mfs.domain.Consume;
+import cn.edu.zut.mfs.domain.ConsumeRecord;
 import cn.edu.zut.mfs.service.ConsumeBatchService;
+import cn.edu.zut.mfs.service.InfluxDBService;
 import cn.edu.zut.mfs.utils.MessageConverter;
 import io.cloudevents.core.v1.CloudEventV1;
 import org.springframework.amqp.core.Message;
@@ -22,10 +24,13 @@ public class ConsumeBatchServiceImpl implements ConsumeBatchService {
 
 
     public Flux<CloudEventV1> consume(Consume consume) {
+        InfluxDBService influxDBService = new InfluxDBServiceImpl();
         return Flux.create(emitter -> {
             for (int i = 0; i < consume.getBatchSize(); i++) {
                 Message message = rabbitTemplate.receive(consume.getQueue());
                 emitter.next(MessageConverter.fromMessage(message));
+                ConsumeRecord consumeRecord = new ConsumeRecord((String) message.getMessageProperties().getMessageId(), 0, 0, consume.getQueue(), consume.getUserId());
+                influxDBService.consume(consumeRecord);
             }
             emitter.complete();
         });
