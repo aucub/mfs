@@ -37,7 +37,7 @@ public class ConsumeStreamServiceImpl implements ConsumeStreamService {
     }
 
     @Override
-    public Flux<CloudEventV1> consume(Consume consume) {
+    public Flux<CloudEventV1> consume(String userId, Consume consume) {
         InfluxDBService influxDBService = new InfluxDBServiceImpl();
         OffsetSpecification offsetSpecification = OffsetSpecification.none();
         if (consume.getManual()) {
@@ -54,7 +54,7 @@ public class ConsumeStreamServiceImpl implements ConsumeStreamService {
             consumer =
                     environment.consumerBuilder()
                             .stream(consume.getQueue())
-                            .name(consume.getUserId())
+                            .name(userId)
                             .offset(finalOffsetSpecification)
                             .autoTrackingStrategy()
                             .messageCountBeforeStorage(50_000)
@@ -62,7 +62,7 @@ public class ConsumeStreamServiceImpl implements ConsumeStreamService {
                             .builder()
                             .messageHandler((context, message) -> {
                                         emitter.next(MessageConverter.fromStreamMessage(context, message));
-                                        ConsumeRecord consumeRecord = new ConsumeRecord((String) message.getProperties().getMessageId(), message.getPublishingId(), context.offset(), consume.getQueue(), consume.getUserId());
+                                ConsumeRecord consumeRecord = new ConsumeRecord((String) message.getProperties().getMessageId(), message.getPublishingId(), context.offset(), consume.getQueue(), userId);
                                         influxDBService.consume(consumeRecord);
                                     }
                             )

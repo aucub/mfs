@@ -5,5 +5,5 @@ import io.cloudevents.core.v1.CloudEventV1;
 import reactor.core.publisher.Flux;
 
 public interface ConsumeService {
-    Flux<CloudEventV1> consume(Consume consume);
+    Flux<CloudEventV1> consume(String userId, Consume consume);
 }

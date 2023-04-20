@@ -33,14 +33,14 @@ public class ConsumeServiceImpl implements ConsumeService {
 
 
     @Override
-    public Flux<CloudEventV1> consume(Consume consume) {
+    public Flux<CloudEventV1> consume(String userId, Consume consume) {
         InfluxDBService influxDBService = new InfluxDBServiceImpl();
         SimpleMessageListenerContainer simpleMessageListenerContainer = new SimpleMessageListenerContainer(connectionFactory);
         simpleMessageListenerContainer.addQueueNames(consume.getQueue());
         Flux<CloudEventV1> f = Flux.create(emitter -> {
             simpleMessageListenerContainer.setupMessageListener(message -> {
                 emitter.next(MessageConverter.fromMessage(message));
-                ConsumeRecord consumeRecord = new ConsumeRecord((String) message.getMessageProperties().getMessageId(), 0, 0, consume.getQueue(), consume.getUserId());
+                ConsumeRecord consumeRecord = new ConsumeRecord((String) message.getMessageProperties().getMessageId(), 0, 0, consume.getQueue(), userId);
                 influxDBService.consume(consumeRecord);
             });
             emitter.onRequest(v -> {

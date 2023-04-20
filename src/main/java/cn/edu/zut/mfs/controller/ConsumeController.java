@@ -54,18 +54,20 @@ public class ConsumeController {
     @PreAuthorize("hasRole('consume')")
     @MessageMapping("consume")
     public Flux<CloudEventV1> consume(RSocketRequester requester, @AuthenticationPrincipal String token, Consume consume) {
-        requestProcessor.processRequests(requester, JwtUtils.decode(token).getSubject(), "consume");
+        String userId = JwtUtils.decode(token).getSubject();
+        requestProcessor.processRequests(requester, userId, "consume");
         if (consume.getQueueType().equals("stream")) {
-            return consumeStreamService.consume(consume);
+            return consumeStreamService.consume(userId, consume);
         }
-        return consumeService.consume(consume);
+        return consumeService.consume(userId, consume);
     }
 
     @PreAuthorize("hasRole('consumeBatch')")
     @MessageMapping("consumeBatch")
     public Flux<CloudEventV1> ConsumeBatch(RSocketRequester requester, @AuthenticationPrincipal String token, Consume consume) {
-        requestProcessor.processRequests(requester, JwtUtils.decode(token).getSubject(), "consumeBatch");
-        return consumeBatchService.consume(consume);
+        String userId = JwtUtils.decode(token).getSubject();
+        requestProcessor.processRequests(requester, userId, "consumeBatch");
+        return consumeBatchService.consume(userId, consume);
     }
 
 }

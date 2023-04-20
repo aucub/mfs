@@ -22,14 +22,14 @@ public class ConsumeBatchServiceImpl implements ConsumeBatchService {
         this.rabbitTemplate = rabbitTemplate;
     }
 
-
-    public Flux<CloudEventV1> consume(Consume consume) {
+    @Override
+    public Flux<CloudEventV1> consume(String userId, Consume consume) {
         InfluxDBService influxDBService = new InfluxDBServiceImpl();
         return Flux.create(emitter -> {
             for (int i = 0; i < consume.getBatchSize(); i++) {
                 Message message = rabbitTemplate.receive(consume.getQueue());
                 emitter.next(MessageConverter.fromMessage(message));
-                ConsumeRecord consumeRecord = new ConsumeRecord((String) message.getMessageProperties().getMessageId(), 0, 0, consume.getQueue(), consume.getUserId());
+                ConsumeRecord consumeRecord = new ConsumeRecord((String) message.getMessageProperties().getMessageId(), 0, 0, consume.getQueue(), userId);
                 influxDBService.consume(consumeRecord);
             }
             emitter.complete();

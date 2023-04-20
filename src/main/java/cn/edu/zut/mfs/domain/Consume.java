@@ -13,6 +13,5 @@ public class Consume {
     private long offset;
     private long timestamp;
     private Boolean manual;
-    private String userId;
     private int batchSize;
 }
