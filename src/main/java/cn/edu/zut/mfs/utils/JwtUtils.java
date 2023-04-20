@@ -23,8 +23,6 @@ public class JwtUtils {
                 .withSubject(jwtDto.getSubject())
                 .withExpiresAt(jwtDto.getExpiresAt())
                 .withAudience(jwtDto.getAudience())
-                .withNotBefore(jwtDto.getNotBefore())
-                .withIssuedAt(jwtDto.getIssuedAt())
                 .withClaim("scope", jwtDto.getAuthorities())
                 .sign(algorithm);
     }

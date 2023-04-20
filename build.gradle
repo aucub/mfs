@@ -38,7 +38,6 @@ ext {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-amqp'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-    implementation 'org.springframework.data:spring-data-r2dbc:3.0.5'
     implementation 'org.springframework.boot:spring-boot-starter-cache'
     implementation 'org.springframework.boot:spring-boot-starter-json'
     implementation 'org.springframework.boot:spring-boot-starter-aop'
@@ -48,8 +47,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-logging'
     implementation 'org.springframework.amqp:spring-rabbit:3.0.4'
     implementation 'org.springframework.boot:spring-boot-starter-integration'
-    implementation 'org.springframework.integration:spring-integration-amqp'
-    implementation 'org.springframework.integration:spring-integration-redis'
+    implementation 'org.springframework.integration:spring-integration-amqp:6.0.5'
+    implementation 'org.springframework.integration:spring-integration-redis:6.0.5'
     implementation 'org.junit.jupiter:junit-jupiter:5.9.2'
     implementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'com.baomidou:mybatis-plus-boot-starter:3.5.3.1'
@@ -72,11 +71,9 @@ dependencies {
     implementation 'cn.dev33:sa-token-spring-aop:1.34.0'
     implementation 'com.google.crypto.tink:tink:1.8.0'
     implementation 'org.bouncycastle:bcprov-jdk15to18:1.73'
-    implementation 'org.questdb:questdb:7.1.1'
     implementation 'cn.hutool:hutool-all:5.8.18'
     implementation 'org.mockito:mockito-core:5.3.0'
     implementation 'com.google.errorprone:error_prone_annotations:2.18.0'
-    //implementation 'com.redis.om:redis-om-spring:0.8.0'
     implementation 'org.bouncycastle:bcpkix-jdk15on:1.70'
     implementation 'org.springframework.security:spring-security-rsocket:6.0.3'
     implementation 'org.springframework.boot:spring-boot-starter-security:3.0.5'
@@ -96,7 +93,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.projectreactor:reactor-test:3.5.5'
     testImplementation 'org.springframework.amqp:spring-rabbit-test'
-    testImplementation 'org.springframework.integration:spring-integration-test'
+    testImplementation 'org.springframework.integration:spring-integration-test:6.0.5'
 }
 
 tasks.named('test') {
@@ -106,8 +103,6 @@ tasks.named('test') {
 
 smartdoc {
     configFile = file("src/main/resources/smart-doc.json")
-    /*exclude 'org.springframework.boot:spring-boot-starter-tomcat'
-    exclude 'org.springframework.boot.*'*/
     include 'io.micrometer:micrometer-tracing:1.0.4'
 }
 

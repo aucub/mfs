@@ -14,7 +14,6 @@ import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 public class MessageConverter {
     public static Message toMessage(CloudEventV1 payload) {
@@ -62,14 +61,12 @@ public class MessageConverter {
         eventExtension.setPublishingid(payload.getPublishingId());
         eventExtension.setOffset(context.offset());
         return (CloudEventV1) CloudEventBuilder.v1()
-                .withDataContentType("text/plain")
-                .withId(UUID.randomUUID().toString())
-                .withSource(URI.create("http://example.com/mfs"))
-                .withType("com.example.mfs")
-                .withTime(Instant.ofEpochSecond(context.offset()).atOffset(ZoneOffset.UTC))
+                .withId((String) payload.getProperties().getMessageId())
+                .withSource(URI.create(""))
+                .withType("generic")
+                .withTime(Instant.ofEpochMilli(payload.getProperties().getCreationTime()).atOffset(ZoneOffset.UTC))
                 .withData(BytesCloudEventData.wrap(payload.getBodyAsBinary()))
                 .withExtension(eventExtension)
                 .build();
-        //return new CloudEventV1(UUID.randomUUID().toString(), URI.create("http://example.com/mfs"), "com.example.mfs", "text/plain", URI.create("mfs"), "mfs", Instant.now().atOffset(ZoneOffset.UTC), BytesCloudEventData.wrap(payload.getBodyAsBinary()), null);
     }
 }

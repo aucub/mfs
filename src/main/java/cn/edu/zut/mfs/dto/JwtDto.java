@@ -16,7 +16,5 @@ public class JwtDto {
     private String subject;//主题，用户
     private Instant expiresAt;//过期时间
     private String audience;//接收人
-    private Instant notBefore;//生效时间
-    private Instant issuedAt;//签发时间
     private List<String> authorities;//授权
 }

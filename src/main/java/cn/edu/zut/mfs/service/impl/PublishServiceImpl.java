@@ -11,6 +11,7 @@ import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 
 @Slf4j
 @Service
@@ -30,9 +31,12 @@ public class PublishServiceImpl implements PublishService {
 
     @Override
     @SneakyThrows
-    public void publish(CloudEvent cloudEvent) {
-        Message message = MessageConverter.toMessage((CloudEventV1) cloudEvent);
-        rabbitTemplate.send((String) cloudEvent.getExtension("exchange"), (String) cloudEvent.getExtension("routekey"), message);
+    public void publish(Flux<CloudEvent> cloudEventFlux) {
+        cloudEventFlux.limitRate(10).subscribe(cloudEvent -> {
+            Message message = MessageConverter.toMessage((CloudEventV1) cloudEvent);
+            rabbitTemplate.send((String) cloudEvent.getExtension("exchange"), (String) cloudEvent.getExtension("routekey"), message);
+
+        });
     }
 
 }

@@ -1,7 +1,6 @@
 package cn.edu.zut.mfs.service.impl;
 
 import cn.edu.zut.mfs.service.PublishBatchService;
-import cn.edu.zut.mfs.service.QuestService;
 import cn.edu.zut.mfs.utils.MessageConverter;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.core.v1.CloudEventV1;
@@ -23,16 +22,10 @@ public class PublishBatchServiceImpl implements PublishBatchService {
 
 
     private CachingConnectionFactory cachingConnectionFactory;
-    private QuestService questService;
 
     @Autowired
     public void setCachingConnectionFactory(CachingConnectionFactory cachingConnectionFactory) {
         this.cachingConnectionFactory = cachingConnectionFactory;
-    }
-
-    @Autowired
-    public void setQuestService(QuestService questService) {
-        this.questService = questService;
     }
 
     public void setup(int batchSize) {

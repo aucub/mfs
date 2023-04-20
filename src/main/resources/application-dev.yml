@@ -68,15 +68,6 @@ spring:
           max-idle: 10
           # 连接池中的最小空闲连接
           min-idle: 0
-  r2dbc:
-    url: r2dbc:mysql://localhost:3306/mfs?useUnicode=true&characterEncoding=UTF-8
-    username: root
-    password: root
-    pool:
-      enabled: true
-      max-size: 10
-      initial-size: 10
-      validation-query: select 1
 
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
@@ -85,8 +76,6 @@ spring:
     rsocket:
       server:
         message-mapping-enabled: false
-    # webflux:
-    # base-path: /admin/
 
 mybatis-plus:
   configuration:

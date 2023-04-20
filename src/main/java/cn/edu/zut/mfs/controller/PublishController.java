@@ -56,12 +56,15 @@ public class PublishController {
     public Flux<String> publish(RSocketRequester requester, @AuthenticationPrincipal String token, Flux<CloudEvent> cloudEventFlux) {
         requestProcessor.processRequests(requester, JwtUtils.decode(token).getSubject(), "publish");
         cloudEventFlux.subscribe(event -> {
-            if (event.getExtension("messagetype").equals("generic")) {
-                publishStreamService.publish(event);
-            } else {
-                publishService.publish(event);
-            }
+            publishStreamService.publish(event);
         });
+        return Flux.interval(Duration.ofSeconds(5)).map(i -> "OK");
+    }
+
+    @MessageMapping("publishClassic")
+    public Flux<String> publishClassic(RSocketRequester requester, @AuthenticationPrincipal String token, Flux<CloudEvent> cloudEventFlux) {
+        requestProcessor.processRequests(requester, JwtUtils.decode(token).getSubject(), "publish");
+        publishService.publish(cloudEventFlux);
         return Flux.interval(Duration.ofSeconds(5)).map(i -> "OK");
     }
 

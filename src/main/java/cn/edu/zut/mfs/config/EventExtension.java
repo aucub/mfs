@@ -10,7 +10,6 @@ import java.util.Set;
 
 @Component
 public final class EventExtension implements CloudEventExtension {
-    public static final String MESSAGETYPE = "messagetype";
     public static final String EXCHANGE = "exchange";
     public static final String ROUTINGKEY = "routingkey";
     public static final String APPID = "appid";
@@ -20,8 +19,7 @@ public final class EventExtension implements CloudEventExtension {
     public static final String X_DELAY = "delay";
     public static final String PUBLISHINGID = "publishingid";
     public static final String OFFSET = "offset";
-    private static final Set<String> KEY_SET = Set.of(MESSAGETYPE, EXCHANGE, ROUTINGKEY, APPID, PRIORITY, CONTENTENCODING, EXPIRATION, X_DELAY, PUBLISHINGID, OFFSET);
-    private String messagetype;
+    private static final Set<String> KEY_SET = Set.of(EXCHANGE, ROUTINGKEY, APPID, PRIORITY, CONTENTENCODING, EXPIRATION, X_DELAY, PUBLISHINGID, OFFSET);
     private String exchange;
     private String routingkey;
     private String appid;
@@ -33,13 +31,6 @@ public final class EventExtension implements CloudEventExtension {
     private Long offset;
 
 
-    public String getMessagetype() {
-        return messagetype;
-    }
-
-    public void setMessagetype(String messagetype) {
-        this.messagetype = messagetype;
-    }
 
     public String getExchange() {
         return exchange;
@@ -116,10 +107,6 @@ public final class EventExtension implements CloudEventExtension {
 
     @Override
     public void readFrom(CloudEventExtensions extensions) {
-        Object mt = extensions.getExtension(MESSAGETYPE);
-        if (mt != null) {
-            this.messagetype = mt.toString();
-        }
         Object ec = extensions.getExtension(EXCHANGE);
         if (ec != null) {
             this.exchange = ec.toString();
@@ -161,9 +148,6 @@ public final class EventExtension implements CloudEventExtension {
     @Override
     public Object getValue(String key) {
         switch (key) {
-            case MESSAGETYPE -> {
-                return this.messagetype;
-            }
             case EXCHANGE -> {
                 return this.exchange;
             }
@@ -203,7 +187,6 @@ public final class EventExtension implements CloudEventExtension {
     @Override
     public String toString() {
         return "EventExtension{" +
-                "messagetype='" + messagetype + '\'' +
                 ", exchange='" + exchange + '\'' +
                 ", routingkey='" + routingkey + '\'' +
                 ", appid='" + appid + '\'' +
@@ -221,12 +204,12 @@ public final class EventExtension implements CloudEventExtension {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         EventExtension that = (EventExtension) o;
-        return Objects.equals(getMessagetype(), that.getMessagetype()) && Objects.equals(getExchange(), that.getExchange()) && Objects.equals(getRoutingkey(), that.getRoutingkey()) && Objects.equals(getAppid(), that.getAppid()) && Objects.equals(getContentencoding(), that.getContentencoding()) && Objects.equals(getPublishingid(), that.getPublishingid()) && Objects.equals(getPriority(), that.getPriority()) && Objects.equals(getDelay(), that.getDelay()) && Objects.equals(getExpiration(), that.getExpiration()) && Objects.equals(getOffset(), that.getOffset());
+        return Objects.equals(getExchange(), that.getExchange()) && Objects.equals(getRoutingkey(), that.getRoutingkey()) && Objects.equals(getAppid(), that.getAppid()) && Objects.equals(getContentencoding(), that.getContentencoding()) && Objects.equals(getPublishingid(), that.getPublishingid()) && Objects.equals(getPriority(), that.getPriority()) && Objects.equals(getDelay(), that.getDelay()) && Objects.equals(getExpiration(), that.getExpiration()) && Objects.equals(getOffset(), that.getOffset());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getMessagetype(), getExchange(), getRoutingkey(), getAppid(), getContentencoding(), getPublishingid(), getPriority(), getDelay(), getExpiration(), getOffset());
+        return Objects.hash(getExchange(), getRoutingkey(), getAppid(), getContentencoding(), getPublishingid(), getPriority(), getDelay(), getExpiration(), getOffset());
     }
 }
 

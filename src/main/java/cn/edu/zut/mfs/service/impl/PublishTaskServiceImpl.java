@@ -47,7 +47,7 @@ public class PublishTaskServiceImpl implements PublishTaskService {
     }
 
     public void publish(Flux<CloudEvent> cloudEventFlux) {
-        cloudEventFlux.subscribe(cloudEvent -> {//.limitRate(10)
+        cloudEventFlux.subscribe(cloudEvent -> {
             Message message = MessageConverter.toMessage((CloudEventV1) cloudEvent);
             rabbitTemplate.send((String) cloudEvent.getExtension("exchange"), (String) cloudEvent.getExtension("routekey"), message);
         });
