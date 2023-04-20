@@ -3,6 +3,7 @@ package cn.edu.zut.mfs.utils;
 import cn.edu.zut.mfs.dto.JwtDto;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
 
 
 public class JwtUtils {
@@ -26,5 +27,9 @@ public class JwtUtils {
                 .withIssuedAt(jwtDto.getIssuedAt())
                 .withClaim("scope", jwtDto.getAuthorities())
                 .sign(algorithm);
+    }
+
+    public static DecodedJWT decode(String token) {
+        return JWT.decode(token);
     }
 }

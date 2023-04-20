@@ -1,9 +1,9 @@
 package cn.edu.zut.mfs.config;
 
-import cn.edu.zut.mfs.domain.MetadataHeader;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.io.buffer.DefaultDataBufferFactory;
 import org.springframework.http.codec.cbor.Jackson2CborDecoder;
 import org.springframework.http.codec.cbor.Jackson2CborEncoder;
@@ -13,7 +13,6 @@ import org.springframework.messaging.rsocket.RSocketStrategies;
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 import org.springframework.security.config.annotation.rsocket.EnableRSocketSecurity;
 import org.springframework.security.config.annotation.rsocket.RSocketSecurity;
-import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.NimbusReactiveJwtDecoder;
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
@@ -23,7 +22,6 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtRea
 import org.springframework.security.oauth2.server.resource.authentication.ReactiveJwtAuthenticationConverterAdapter;
 import org.springframework.security.rsocket.core.PayloadSocketAcceptorInterceptor;
 import org.springframework.security.rsocket.metadata.SimpleAuthenticationEncoder;
-import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.util.MimeType;
 import org.springframework.web.util.pattern.PathPatternRouteMatcher;
 
@@ -39,18 +37,6 @@ import java.util.Map;
 @EnableRSocketSecurity
 @EnableReactiveMethodSecurity
 public class RSocketConfig {
-
-    @Bean
-    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
-        http.csrf().disable();
-        http.httpBasic().disable();
-        http.cors().disable();
-        http.formLogin().disable();
-        http.logout().disable();
-        http.anonymous().disable();
-        http.headers().disable();
-        return http.build();
-    }
 
     @Bean
     PayloadSocketAcceptorInterceptor authorization(RSocketSecurity security) {
@@ -90,7 +76,7 @@ public class RSocketConfig {
     }
 
     @Bean
-    // @Order(-1)
+    @Order(-1)
     public RSocketStrategies rsocketStrategies() {
         return RSocketStrategies.builder()
                 .metadataExtractorRegistry(registry -> {
@@ -101,7 +87,6 @@ public class RSocketConfig {
                             (jsonMap, outputMap) -> {
                                 outputMap.putAll(jsonMap);
                             });
-                    registry.metadataToExtract(MimeType.valueOf("application/x.metadataHeader+json"), MetadataHeader.class, "metadataHeader");
                 })
                 .encoders(encoders -> {
                     encoders.add(new io.cloudevents.spring.codec.CloudEventEncoder());

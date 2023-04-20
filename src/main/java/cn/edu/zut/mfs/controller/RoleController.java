@@ -1,9 +1,7 @@
 package cn.edu.zut.mfs.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
-import cn.edu.zut.mfs.domain.Permission;
 import cn.edu.zut.mfs.domain.Role;
-import cn.edu.zut.mfs.dto.RolePermissionDto;
 import cn.edu.zut.mfs.pojo.BaseResponse;
 import cn.edu.zut.mfs.service.RoleService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -64,22 +62,6 @@ public class RoleController {
             return BaseResponse.success("删除成功");
         }
         return BaseResponse.fail("删除失败");
-    }
-
-    @Operation(summary = "给角色分配权限")
-    @SaCheckPermission("role:allocPermission")
-    @PostMapping(value = "/allocPermission")
-    public BaseResponse<String> allocPermission(@RequestBody RolePermissionDto rolePermissionDto) {
-        if (roleService.allocPermission(rolePermissionDto.getRoleId(), rolePermissionDto.getPermissionIds())) {
-            return BaseResponse.success("分配权限成功");
-        }
-        return BaseResponse.fail("分配权限失败");
-    }
-
-    @Operation(summary = "获取角色相关权限")
-    @GetMapping(value = "/listPermission")
-    public BaseResponse<List<Permission>> listPermission(@RequestParam String roleId) {
-        return BaseResponse.success(roleService.listPermission(roleId));
     }
 
 }

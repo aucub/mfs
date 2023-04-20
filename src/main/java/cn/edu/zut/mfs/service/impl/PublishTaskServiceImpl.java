@@ -1,9 +1,7 @@
 package cn.edu.zut.mfs.service.impl;
 
-import cn.edu.zut.mfs.domain.MetadataHeader;
 import cn.edu.zut.mfs.service.ConfirmCallbackService;
 import cn.edu.zut.mfs.service.PublishTaskService;
-import cn.edu.zut.mfs.service.QuestService;
 import cn.edu.zut.mfs.service.ReturnCallbackService;
 import cn.edu.zut.mfs.utils.MessageConverter;
 import io.cloudevents.CloudEvent;
@@ -22,7 +20,6 @@ public class PublishTaskServiceImpl implements PublishTaskService {
     private ConfirmCallbackService confirmCallbackService;
     private ReturnCallbackService returnCallbackService;
 
-    private QuestService questService;
 
     @Autowired
     public PublishTaskServiceImpl(RabbitTemplate rabbitTemplate) {
@@ -40,11 +37,6 @@ public class PublishTaskServiceImpl implements PublishTaskService {
     }
 
     @Autowired
-    public void setQuestService(QuestService questService) {
-        this.questService = questService;
-    }
-
-    @Autowired
     public void setConfirmCallbackService(ConfirmCallbackService confirmCallbackService) {
         this.confirmCallbackService = confirmCallbackService;
     }
@@ -54,11 +46,10 @@ public class PublishTaskServiceImpl implements PublishTaskService {
         this.returnCallbackService = returnCallbackService;
     }
 
-    public void publish(Flux<CloudEvent> cloudEventFlux, MetadataHeader metadataHeader) {
+    public void publish(Flux<CloudEvent> cloudEventFlux) {
         cloudEventFlux.subscribe(cloudEvent -> {//.limitRate(10)
             Message message = MessageConverter.toMessage((CloudEventV1) cloudEvent);
-            rabbitTemplate.send(metadataHeader.getExchange(), metadataHeader.getRoutingKey(), MessageConverter.toMessage((CloudEventV1) cloudEvent));
-            //questService.publish(new PublishRecord(cloudEvent.getId(), message.getMessageProperties().getAppId(), message.getMessageProperties().getUserId(), message.getMessageProperties().getPriority(), message.getMessageProperties().getCorrelationId(), message.getMessageProperties().getExpiration(), metadataHeader.getExchange(), message.getMessageProperties().getDelay(), 0, metadataHeader.getRoutingKey(), "classic", 0, Objects.requireNonNull(cloudEvent.getData()).toBytes()));
+            rabbitTemplate.send((String) cloudEvent.getExtension("exchange"), (String) cloudEvent.getExtension("routekey"), message);
         });
     }
 }

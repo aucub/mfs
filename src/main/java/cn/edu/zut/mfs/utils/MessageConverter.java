@@ -7,7 +7,6 @@ import io.cloudevents.core.data.BytesCloudEventData;
 import io.cloudevents.core.v1.CloudEventV1;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageProperties;
-import org.springframework.rabbit.stream.support.StreamMessageProperties;
 
 import java.net.URI;
 import java.time.Instant;
@@ -28,42 +27,34 @@ public class MessageConverter {
             messageProperties.setTimestamp(Date.from(payload.getTime().toInstant()));
             payload.getExtensionNames().forEach(item -> {
                 switch (item) {
-                    case "userid" -> messageProperties.setUserId((String) payload.getExtension("userid"));
                     case "appid" -> messageProperties.setAppId((String) payload.getExtension("appid"));
                     case "priority" -> messageProperties.setPriority((Integer) payload.getExtension("priority"));
-                    case "correlationid" ->
-                            messageProperties.setCorrelationId((String) payload.getExtension("correlationid"));
-                    case "replyto" -> messageProperties.setReplyTo((String) payload.getExtension("replyto"));
                     case "contentencoding" ->
                             messageProperties.setContentEncoding((String) payload.getExtension("contentencoding"));
-                    case "expiration" -> messageProperties.setExpiration((String) payload.getExtension("expiration"));
+                    case "expiration" ->
+                            messageProperties.setExpiration(String.valueOf(payload.getExtension("expiration")));
                     case "delay" -> messageProperties.setDelay((Integer) payload.getExtension("delay"));
                     default -> headers.put(item, payload.getExtension(item));
                 }
             });
-            messageProperties.setHeaders(headers);
             return new Message(payload.getData().toBytes(), messageProperties);
         }
         return null;
     }
 
-    public static Message toStreamMessage(CloudEventV1 payload) {
-        if (payload != null) {
-            Map<String, Object> headers = new HashMap<>();
-            StreamMessageProperties streamMessageProperties = new StreamMessageProperties();
-            return new Message(payload.getData().toBytes(), streamMessageProperties);
-        }
-        return null;
-    }
 
     public static CloudEventV1 fromMessage(Message payload) {
-        URI source = payload.getMessageProperties().getHeader("source");
-        URI dataschema = payload.getMessageProperties().getHeader("dataschema");
-        String subject = payload.getMessageProperties().getHeader("subject");
-        payload.getMessageProperties().getHeaders().remove("source");
-        payload.getMessageProperties().getHeaders().remove("dataschema");
-        payload.getMessageProperties().getHeaders().remove("subject");
-        return new CloudEventV1(payload.getMessageProperties().getMessageId(), source, payload.getMessageProperties().getType(), payload.getMessageProperties().getContentType(), dataschema, subject, payload.getMessageProperties().getTimestamp().toInstant().atOffset(ZoneOffset.UTC), BytesCloudEventData.wrap(payload.getBody()), payload.getMessageProperties().getHeaders());
+        URI source = URI.create("");
+        if (payload.getMessageProperties().getHeader("source") != null) {
+            source = URI.create(payload.getMessageProperties().getHeader("source"));
+            payload.getMessageProperties().getHeaders().remove("source");
+        }
+        String subject = payload.getMessageProperties().getMessageId();
+        if (payload.getMessageProperties().getHeader("subject") != null) {
+            subject = payload.getMessageProperties().getHeader("subject");
+            payload.getMessageProperties().getHeaders().remove("subject");
+        }
+        return new CloudEventV1(payload.getMessageProperties().getMessageId(), source, payload.getMessageProperties().getType(), payload.getMessageProperties().getContentType(), URI.create("data"), subject, payload.getMessageProperties().getTimestamp().toInstant().atOffset(ZoneOffset.UTC), BytesCloudEventData.wrap(payload.getBody()), payload.getMessageProperties().getHeaders());
     }
 
     public static CloudEventV1 fromStreamMessage(MessageHandler.Context context, com.rabbitmq.stream.Message payload) {

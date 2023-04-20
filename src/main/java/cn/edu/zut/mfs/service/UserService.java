@@ -1,6 +1,5 @@
 package cn.edu.zut.mfs.service;
 
-import cn.edu.zut.mfs.domain.Permission;
 import cn.edu.zut.mfs.domain.Role;
 import cn.edu.zut.mfs.domain.User;
 import cn.edu.zut.mfs.dto.FindUserPageDto;
@@ -48,15 +47,6 @@ public interface UserService {
      */
     List<String> getRoleListAsString(String userId);
 
-    /**
-     * 获取指定用户的权限
-     */
-    List<Permission> getPermissionList(String userId);
-
-    /**
-     * 获取指定用户的权限
-     */
-    List<String> getPermissionListAsString(String userId);
 
     /**
      * 根据用户名获取用户

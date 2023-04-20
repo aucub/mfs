@@ -1,9 +1,7 @@
 package cn.edu.zut.mfs.service.impl;
 
 import cn.edu.zut.mfs.domain.Consume;
-import cn.edu.zut.mfs.domain.ConsumeRecord;
 import cn.edu.zut.mfs.service.ConsumeStreamService;
-import cn.edu.zut.mfs.service.QuestService;
 import cn.edu.zut.mfs.service.RSocketServer;
 import cn.edu.zut.mfs.utils.MessageConverter;
 import com.rabbitmq.stream.Consumer;
@@ -28,14 +26,8 @@ public class ConsumeStreamServiceImpl implements ConsumeStreamService {
     private final static Environment environment = Environment.builder()
             .uri("rabbitmq-stream://root:root@47.113.201.150:5552/%2fmfs")
             .build();
-    QuestService questService;
     RSocketServer rSocketServer;
     private Consumer consumer;
-
-    @Autowired
-    public void setQuestService(QuestService questService) {
-        this.questService = questService;
-    }
 
     @Autowired
     public void setSocketServer(RSocketServer rSocketServer) {
@@ -67,10 +59,6 @@ public class ConsumeStreamServiceImpl implements ConsumeStreamService {
                             .builder()
                             .messageHandler((context, message) -> {
                                         emitter.next(MessageConverter.fromStreamMessage(context, message));
-                                        Thread.startVirtualThread(() -> {
-                                            questService.consume(new ConsumeRecord(null, message.getPublishingId(), context.offset(), consume.getQueue(), consume.getUserId()));
-
-                                        });
                                     }
                             )
                             .build();

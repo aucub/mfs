@@ -11,16 +11,17 @@ import org.springframework.stereotype.Service;
 public class QuestServiceImpl implements QuestService {
 
 
+    private final static Sender sender = Sender.builder().address("47.113.201.150:9009").build();
+
     public void publish(PublishRecord publishRecord) {
-        try (Sender sender = Sender.builder().address("47.113.201.150:9009").build()) {
-                sender.table("PublishRecord")
-                        .symbol("queueType", publishRecord.getQueueType())
-                        .stringColumn("ID", publishRecord.getMessageId())
-                        .longColumn("publishingId", publishRecord.getPublishingId())
-                        .stringColumn("exchange", publishRecord.getExchange())
-                        .stringColumn("appId", publishRecord.getAppId())
-                        .stringColumn("userId", publishRecord.getUserId())
-                        .stringColumn("routingKey", publishRecord.getRoutingKey())
+        sender.table("PublishRecord")
+                .symbol("queueType", publishRecord.getQueueType())
+                .stringColumn("ID", publishRecord.getMessageId())
+                .longColumn("publishingId", publishRecord.getPublishingId())
+                .stringColumn("exchange", publishRecord.getExchange())
+                .stringColumn("appId", publishRecord.getAppId())
+                .stringColumn("userId", publishRecord.getUserId())
+                .stringColumn("routingKey", publishRecord.getRoutingKey())
                         .longColumn("priority", publishRecord.getPriority())
                         .stringColumn("correlationId", publishRecord.getCorrelationId())
                         .longColumn("offset", publishRecord.getOffset())
@@ -28,8 +29,6 @@ public class QuestServiceImpl implements QuestService {
                         .longColumn("delay", publishRecord.getDelay())
                         .stringColumn("body", new String(publishRecord.getBody()))
                         .atNow();
-
-        }
     }
 
 

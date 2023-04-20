@@ -30,16 +30,4 @@ public class KickoutController {
         // 返回
         return BaseResponse.success("账号 " + userId + "强制注销成功");
     }
-
-    @Operation(summary = "将指定账号踢下线")
-    @SaCheckPermission("user:kickout")
-    @PostMapping("kickout")
-    public BaseResponse<String> kickout(@RequestParam String userId) {
-
-        // 踢人下线不会清除Token信息，而是将其打上特定标记，再次访问会提示：Token已被踢下线。
-        StpUtil.kickout(userId);
-
-        // 返回
-        return BaseResponse.success("账号 " + userId + "下线成功");
-    }
 }

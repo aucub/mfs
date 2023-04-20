@@ -2,8 +2,6 @@ package cn.edu.zut.mfs.service.impl;
 
 import cn.edu.zut.mfs.dao.RoleRelationDao;
 import cn.edu.zut.mfs.dao.UserDao;
-import cn.edu.zut.mfs.dao.UserPermissionRelationDao;
-import cn.edu.zut.mfs.domain.Permission;
 import cn.edu.zut.mfs.domain.Role;
 import cn.edu.zut.mfs.domain.RoleRelation;
 import cn.edu.zut.mfs.domain.User;
@@ -26,7 +24,6 @@ import java.util.Map;
 public class UserServiceImpl implements UserService {
     private UserDao userDao;
     private RoleRelationDao roleRelationDao;
-    private UserPermissionRelationDao userPermissionRelationDao;
 
     private RedisService redisService;
 
@@ -43,11 +40,6 @@ public class UserServiceImpl implements UserService {
     @Autowired
     public void setRoleRelationDao(RoleRelationDao roleRelationDao) {
         this.roleRelationDao = roleRelationDao;
-    }
-
-    @Autowired
-    public void setUserPermissionRelationDao(UserPermissionRelationDao userPermissionRelationDao) {
-        this.userPermissionRelationDao = userPermissionRelationDao;
     }
 
     @Override
@@ -118,21 +110,6 @@ public class UserServiceImpl implements UserService {
         return roles;
     }
 
-    @Override
-    public List<Permission> getPermissionList(String userId) {
-        List<Permission> permissions = new ArrayList<>();
-        permissions.addAll(roleRelationDao.getPermissionList(userId));
-        permissions.addAll(userPermissionRelationDao.getPermissionList(userId));
-        return permissions;
-    }
-
-    @Override
-    public List<String> getPermissionListAsString(String userId) {
-        List<String> permissions = new ArrayList<>();
-        roleRelationDao.getPermissionList(userId).forEach(item -> permissions.add(item.getValue()));
-        userPermissionRelationDao.getPermissionList(userId).forEach(item -> permissions.add(item.getValue()));
-        return permissions;
-    }
 
     @Override
     public User getUserByUsername(String username) {

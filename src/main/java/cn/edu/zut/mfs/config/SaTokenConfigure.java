@@ -12,6 +12,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.web.server.SecurityWebFilterChain;
 
 /**
  * [Sa-Token 权限认证] 配置类
@@ -20,11 +22,23 @@ import org.springframework.core.annotation.Order;
 @Slf4j
 public class SaTokenConfigure {
 
+    @Bean
+    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
+        http.csrf().disable();
+        http.httpBasic().disable();
+        http.cors().disable();
+        http.formLogin().disable();
+        http.logout().disable();
+        http.anonymous().disable();
+        http.headers().disable();
+        return http.build();
+    }
+
     /**
      * sa-token全局过滤器
      */
     @Bean
-    @Order(-1000)
+    @Order(-1)
     public SaReactorFilter getSaReactorFilter() {
         return new SaReactorFilter()
                 // 指定 [拦截路由]
