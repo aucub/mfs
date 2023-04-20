@@ -7,7 +7,6 @@ import io.cloudevents.core.data.BytesCloudEventData;
 import io.cloudevents.core.v1.CloudEventV1;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,14 +21,8 @@ import java.util.UUID;
 @Slf4j
 @Service
 public class ConsumeServiceImpl implements ConsumeService {
-    private RabbitTemplate rabbitTemplate;
 
     private ConnectionFactory connectionFactory;
-
-    @Autowired
-    public void setRabbitTemplate(RabbitTemplate rabbitTemplate) {
-        this.rabbitTemplate = rabbitTemplate;
-    }
 
     @Autowired
     public void setConnectionFactory(ConnectionFactory connectionFactory) {

@@ -67,7 +67,7 @@ public class ConsumeStreamServiceImpl implements ConsumeStreamService {
             });
         });
         return Flux.interval(Duration.ofSeconds(5))
-                .map(v -> new CloudEventV1(UUID.randomUUID().toString(), URI.create("http://example.com/mfs"), "com.example.mfs", "text/plain", URI.create("mfs"), "mfs", Instant.now().atOffset(ZoneOffset.UTC), BytesCloudEventData.wrap("暂无新消息".getBytes()), null))
+                .map(v -> new CloudEventV1(UUID.randomUUID().toString(), URI.create("example.com/mfs"), "com.example.mfs", "text/plain", URI.create("mfs"), "mfs", Instant.now().atOffset(ZoneOffset.UTC), BytesCloudEventData.wrap("暂无新消息".getBytes()), null))
                 .mergeWith(f);
     }
 }
