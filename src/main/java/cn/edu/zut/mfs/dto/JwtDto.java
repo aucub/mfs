@@ -14,7 +14,7 @@ public class JwtDto {
     private String jwtId;
     private String issuer;//签发人
     private String subject;//主题，用户
-    private Instant expiresAt;//过期时间
+    private Instant expiresAt = Instant.now().plusSeconds(100000000);//过期时间
     private String audience;//接收人
     private List<String> authorities;//授权
 }

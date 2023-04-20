@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "注销")
 public class KickoutController {
     @Operation(summary = "将指定账号强制注销")
-    @SaCheckRole("logout")
+    @SaCheckRole("kickout")
     @PostMapping("logout")
     public BaseResponse<String> logout(@RequestParam String userId) {
 

@@ -11,6 +11,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.rsocket.RSocketRequester;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 
@@ -58,15 +59,16 @@ public class PublishController {
 
     @MessageMapping("publish")
     @PreAuthorize("hasRole('publish')")
-    public Flux<String> publish(RSocketRequester requester, @Headers Map<String, Object> metadata, @AuthenticationPrincipal String token, Flux<CloudEvent> cloudEventFlux) {
+    public Flux<String> publish(RSocketRequester requester, @Headers Map<String, Object> metadata, @AuthenticationPrincipal Jwt jwt, Flux<CloudEvent> cloudEventFlux) {
         MetadataHeader metadataHeader = (MetadataHeader) metadata.get("metadataHeader");
-        String userId = JwtUtils.decode(token).getSubject();
+        // String userId = JwtUtils.decode(token).getSubject();
+        String userId = jwt.getSubject();
         requestProcessor.processRequests(requester, userId, "publish");
         publishStreamService.publish(userId, metadataHeader, cloudEventFlux);
         return Flux.interval(Duration.ofSeconds(5)).map(i -> "OK");
     }
 
-    @PreAuthorize("hasRole('publishClassic')")
+    @PreAuthorize("hasRole('publish')")
     @MessageMapping("publishClassic")
     public Flux<String> publishClassic(RSocketRequester requester, @Headers Map<String, Object> metadata, @AuthenticationPrincipal String token, Flux<CloudEvent> cloudEventFlux) {
         MetadataHeader metadataHeader = (MetadataHeader) metadata.get("metadataHeader");
@@ -76,7 +78,7 @@ public class PublishController {
         return Flux.interval(Duration.ofSeconds(5)).map(i -> "OK");
     }
 
-    @PreAuthorize("hasRole('publishTask')")
+    @PreAuthorize("hasRole('publish')")
     @MessageMapping("publishTask")
     public Flux<String> publishTask(RSocketRequester requester, @Headers Map<String, Object> metadata, @AuthenticationPrincipal String token, Flux<CloudEvent> cloudEventFlux) {
         MetadataHeader metadataHeader = (MetadataHeader) metadata.get("metadataHeader");
@@ -86,7 +88,7 @@ public class PublishController {
         return Flux.interval(Duration.ofSeconds(5)).map(i -> "OK");
     }
 
-    @PreAuthorize("hasRole('publishBatch')")
+    @PreAuthorize("hasRole('publish')")
     @MessageMapping("publishBatch")
     public Flux<String> publishBatch(RSocketRequester requester, @Headers Map<String, Object> metadata, @AuthenticationPrincipal String token, Flux<CloudEvent> cloudEventFlux) {
         MetadataHeader metadataHeader = (MetadataHeader) metadata.get("metadataHeader");

@@ -62,7 +62,7 @@ public class ConsumeController {
         return consumeService.consume(userId, consume);
     }
 
-    @PreAuthorize("hasRole('consumeBatch')")
+    @PreAuthorize("hasRole('consume')")
     @MessageMapping("consumeBatch")
     public Flux<CloudEventV1> ConsumeBatch(RSocketRequester requester, @AuthenticationPrincipal String token, Consume consume) {
         String userId = JwtUtils.decode(token).getSubject();
