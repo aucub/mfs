@@ -2,7 +2,7 @@ server:
   port: 8080
 logging:
   level:
-    root: error
+    root: info
 
 spring:
   main:

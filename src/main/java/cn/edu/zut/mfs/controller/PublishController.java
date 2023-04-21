@@ -5,6 +5,7 @@ import cn.edu.zut.mfs.service.*;
 import cn.edu.zut.mfs.utils.JwtUtils;
 import io.cloudevents.CloudEvent;
 import lombok.extern.slf4j.Slf4j;
+import org.jctools.queues.MpmcArrayQueue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -61,11 +62,19 @@ public class PublishController {
     @PreAuthorize("hasRole('publish')")
     public Flux<String> publish(RSocketRequester requester, @Headers Map<String, Object> metadata, @AuthenticationPrincipal Jwt jwt, Flux<CloudEvent> cloudEventFlux) {
         MetadataHeader metadataHeader = (MetadataHeader) metadata.get("metadataHeader");
-        // String userId = JwtUtils.decode(token).getSubject();
         String userId = jwt.getSubject();
         requestProcessor.processRequests(requester, userId, "publish");
-        publishStreamService.publish(userId, metadataHeader, cloudEventFlux);
-        return Flux.interval(Duration.ofSeconds(5)).map(i -> "OK");
+        MpmcArrayQueue mpmcArrayQueue = new MpmcArrayQueue(2000);
+        publishStreamService.publish(mpmcArrayQueue, userId, metadataHeader, cloudEventFlux);
+        return Flux.interval(Duration.ofSeconds(5)).map(
+                i -> {
+                    String s = "";
+                    int size = mpmcArrayQueue.size();
+                    for (int i1 = 0; i1 < size; i1++) {
+                        s += mpmcArrayQueue.poll() + "已发送";
+                    }
+                    return s + size;
+                });
     }
 
     @PreAuthorize("hasRole('publish')")

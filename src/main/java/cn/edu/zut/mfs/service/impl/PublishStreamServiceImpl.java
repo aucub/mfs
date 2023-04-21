@@ -8,6 +8,7 @@ import com.rabbitmq.stream.ByteCapacity;
 import com.rabbitmq.stream.Environment;
 import io.cloudevents.CloudEvent;
 import lombok.extern.slf4j.Slf4j;
+import org.jctools.queues.MpmcArrayQueue;
 import org.springframework.rabbit.stream.producer.RabbitStreamTemplate;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -33,7 +34,7 @@ public class PublishStreamServiceImpl implements PublishStreamService {
     }
 
     @Override
-    public void publish(String userId, MetadataHeader metadataHeader, Flux<CloudEvent> cloudEventFlux) {
+    public void publish(MpmcArrayQueue mpmcArrayQueue, String userId, MetadataHeader metadataHeader, Flux<CloudEvent> cloudEventFlux) {
         InfluxDBService influxDBService = new InfluxDBServiceImpl();
         if (environment.queryStreamStats(metadataHeader.getRoutingKey()) == null) {
             stream(metadataHeader.getRoutingKey());
@@ -57,8 +58,11 @@ public class PublishStreamServiceImpl implements PublishStreamService {
                 creationTime = cloudEvent.getTime().toInstant().toEpochMilli();
             }
             rabbitStreamTemplate.send(rabbitStreamTemplate.messageBuilder().properties().messageId(cloudEvent.getId()).contentType(contentType).contentEncoding(contentEncoding).subject(subject).creationTime(creationTime).messageBuilder().publishingId(Long.valueOf((String) cloudEvent.getExtension("publishingid"))).addData(cloudEvent.getData().toBytes()).build()).thenAccept(result -> {
+                log.error("result:{}", result);
                 PublishRecord publishRecord = new PublishRecord(cloudEvent.getId(), cloudEvent.getSource(), cloudEvent.getType(), (String) cloudEvent.getExtension("appid"), userId, Long.valueOf((String) cloudEvent.getExtension("publishingid")), cloudEvent.getDataContentType(), (String) cloudEvent.getExtension("contentEncoding"), cloudEvent.getSubject(), new String(cloudEvent.getData().toBytes()), result, cloudEvent.getTime().toInstant());
-                influxDBService.publish(publishRecord);
+                // influxDBService.publish(publishRecord);
+                System.out.println(cloudEvent.getId());
+                mpmcArrayQueue.add(cloudEvent.getId());
             });
         });
     }
