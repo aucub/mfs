@@ -64,16 +64,16 @@ public class PublishController {
         MetadataHeader metadataHeader = (MetadataHeader) metadata.get("metadataHeader");
         String userId = jwt.getSubject();
         requestProcessor.processRequests(requester, userId, "publish");
-        MpmcArrayQueue mpmcArrayQueue = new MpmcArrayQueue(2000);
+        MpmcArrayQueue mpmcArrayQueue = new MpmcArrayQueue(200);
         publishStreamService.publish(mpmcArrayQueue, userId, metadataHeader, cloudEventFlux);
         return Flux.interval(Duration.ofSeconds(5)).map(
                 i -> {
                     String s = "";
                     int size = mpmcArrayQueue.size();
                     for (int i1 = 0; i1 < size; i1++) {
-                        s += mpmcArrayQueue.poll() + "已发送";
+                        s += mpmcArrayQueue.poll() + ",";
                     }
-                    return s + size;
+                    return s;
                 });
     }
 

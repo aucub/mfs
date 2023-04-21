@@ -27,17 +27,17 @@ public class PublishRecord {
     @Column(name = "priority")
     private int priority;
     @Column(name = "expiration")
-    private String expiration;
+    private String expiration = "0";
     @Column(name = "delay")
     private int delay;
     @Column(name = "publishingId")
     private long publishingId;
     @Column(name = "dataContentType")
-    private String dataContentType;
+    private String dataContentType = "application/octet-stream";
     @Column(name = "contentEncoding")
-    private String contentEncoding;
+    private String contentEncoding = "text/plain";
     @Column(name = "subject")
-    private String subject;
+    private String subject = "message";
     @Column(name = "body")
     private String body;
     @Column(name = "submit")

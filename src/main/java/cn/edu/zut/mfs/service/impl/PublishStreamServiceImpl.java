@@ -58,12 +58,11 @@ public class PublishStreamServiceImpl implements PublishStreamService {
                 creationTime = cloudEvent.getTime().toInstant().toEpochMilli();
             }
             rabbitStreamTemplate.send(rabbitStreamTemplate.messageBuilder().properties().messageId(cloudEvent.getId()).contentType(contentType).contentEncoding(contentEncoding).subject(subject).creationTime(creationTime).messageBuilder().publishingId(Long.valueOf((String) cloudEvent.getExtension("publishingid"))).addData(cloudEvent.getData().toBytes()).build()).thenAccept(result -> {
-                log.error("result:{}", result);
-                PublishRecord publishRecord = new PublishRecord(cloudEvent.getId(), cloudEvent.getSource(), cloudEvent.getType(), (String) cloudEvent.getExtension("appid"), userId, Long.valueOf((String) cloudEvent.getExtension("publishingid")), cloudEvent.getDataContentType(), (String) cloudEvent.getExtension("contentEncoding"), cloudEvent.getSubject(), new String(cloudEvent.getData().toBytes()), result, cloudEvent.getTime().toInstant());
-                // influxDBService.publish(publishRecord);
-                System.out.println(cloudEvent.getId());
+                influxDBService.publishPoint(cloudEvent.getId(), result);
                 mpmcArrayQueue.add(cloudEvent.getId());
             });
+            PublishRecord publishRecord = new PublishRecord(cloudEvent.getId(), cloudEvent.getSource(), cloudEvent.getType(), (String) cloudEvent.getExtension("appid"), userId, Long.valueOf((String) cloudEvent.getExtension("publishingid")), cloudEvent.getDataContentType(), (String) cloudEvent.getExtension("contentEncoding"), cloudEvent.getSubject(), new String(cloudEvent.getData().toBytes()), null, cloudEvent.getTime().toInstant());
+            influxDBService.publish(publishRecord);
         });
     }
 }
