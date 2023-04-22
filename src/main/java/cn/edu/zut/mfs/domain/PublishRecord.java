@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.net.URI;
 import java.time.Instant;
 
 @Data
@@ -14,38 +13,38 @@ import java.time.Instant;
 @NoArgsConstructor
 @Measurement(name = "PublishRecord")
 public class PublishRecord {
-    @Column(name = "messageId")
+    @Column
     private String messageId;
-    @Column(name = "source")
-    private URI source;
-    @Column(name = "type")
+    @Column
+    private String source;
+    @Column
     private String type;
-    @Column(name = "appId")
+    @Column
     private String appId;
-    @Column(name = "userId")
+    @Column
     private String userId;
-    @Column(name = "priority")
+    @Column
     private int priority;
-    @Column(name = "expiration")
-    private String expiration = "0";
-    @Column(name = "delay")
+    @Column
+    private String expiration;
+    @Column
     private int delay;
-    @Column(name = "publishingId")
+    @Column
     private long publishingId;
-    @Column(name = "dataContentType")
+    @Column
     private String dataContentType = "application/octet-stream";
-    @Column(name = "contentEncoding")
+    @Column
     private String contentEncoding = "text/plain";
-    @Column(name = "subject")
+    @Column
     private String subject = "message";
-    @Column(name = "body")
+    @Column
     private String body;
-    @Column(name = "submit")
+    @Column
     private Boolean submit;
     @Column(timestamp = true)
     private Instant time;
 
-    public PublishRecord(String messageId, URI source, String type, String appId, String userId, long publishingId, String dataContentType, String contentEncoding, String subject, String body, Boolean submit, Instant time) {
+    public PublishRecord(String messageId, String source, String type, String appId, String userId, long publishingId, String dataContentType, String contentEncoding, String subject, String body, Boolean submit, Instant time) {
         this.messageId = messageId;
         this.source = source;
         this.type = type;
@@ -60,7 +59,7 @@ public class PublishRecord {
         this.time = time;
     }
 
-    public PublishRecord(String messageId, URI source, String type, String appId, String userId, int priority, String expiration, int delay, String dataContentType, String contentEncoding, String subject, String body, Instant time) {
+    public PublishRecord(String messageId, String source, String type, String appId, String userId, int priority, String expiration, int delay, String dataContentType, String contentEncoding, String subject, String body, Instant time) {
         this.messageId = messageId;
         this.source = source;
         this.type = type;

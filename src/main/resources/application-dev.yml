@@ -2,7 +2,7 @@ server:
   port: 8080
 logging:
   level:
-    root: info
+    root: debug
 
 spring:
   main:
@@ -76,6 +76,17 @@ spring:
     rsocket:
       server:
         message-mapping-enabled: false
+
+influx:
+  url: http://localhost:8086/
+  username: root
+  token: _toD4aYpTxcfkA4TtE3FwQdprrh0A5203bvZsyX63dIjnMmv-j6PJfrOHRDH-mZKDGiLU1SsAaenWumVx3FrOw==
+  org: example
+  bucket: mfs
+  logLevel: BODY
+  readTimeout: 5s
+  writeTimeout: 5s
+  connectTimeout: 5s
 
 mybatis-plus:
   configuration:

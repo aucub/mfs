@@ -5,7 +5,7 @@ import cn.edu.zut.mfs.service.*;
 import cn.edu.zut.mfs.utils.JwtUtils;
 import io.cloudevents.CloudEvent;
 import lombok.extern.slf4j.Slf4j;
-import org.jctools.queues.MpmcArrayQueue;
+import org.jctools.queues.atomic.MpmcAtomicArrayQueue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -64,14 +64,14 @@ public class PublishController {
         MetadataHeader metadataHeader = (MetadataHeader) metadata.get("metadataHeader");
         String userId = jwt.getSubject();
         requestProcessor.processRequests(requester, userId, "publish");
-        MpmcArrayQueue mpmcArrayQueue = new MpmcArrayQueue(200);
-        publishStreamService.publish(mpmcArrayQueue, userId, metadataHeader, cloudEventFlux);
+        MpmcAtomicArrayQueue mpmcAtomicArrayQueue = new MpmcAtomicArrayQueue(200);
+        publishStreamService.publish(mpmcAtomicArrayQueue, userId, metadataHeader, cloudEventFlux);
         return Flux.interval(Duration.ofSeconds(5)).map(
                 i -> {
                     String s = "";
-                    int size = mpmcArrayQueue.size();
+                    int size = mpmcAtomicArrayQueue.size();
                     for (int i1 = 0; i1 < size; i1++) {
-                        s += mpmcArrayQueue.poll() + ",";
+                        s += mpmcAtomicArrayQueue.poll() + ",";
                     }
                     return s;
                 });

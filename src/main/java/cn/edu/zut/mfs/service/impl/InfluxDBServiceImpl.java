@@ -46,11 +46,18 @@ public class InfluxDBServiceImpl implements InfluxDBService {
 
     @Override
     public void queryPublish() {
-        String flux = "from(bucket:\"mfs\") |> range(start: 50) |> filter(fn: (r) => r._measurement == \"PublishRecord\")";
+        String start = Instant.now().minusSeconds(6000).toString();
+        String stop = Instant.now().toString();
+        String template = "from(bucket:\"mfs\") " +
+                " |> range(start: %s, stop: %s)" +
+                " |> filter(fn: (r) => r._measurement == \"PublishRecord\")" +
+                " |> pivot(rowKey:[\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")" +
+                " |> limit(n:120)";
+        String flux = String.format(template, start, stop);
         QueryApi queryApi = influxDBClient.getQueryApi();
         List<PublishRecord> publishRecords = queryApi.query(flux, PublishRecord.class);
         for (PublishRecord publishRecord : publishRecords) {
-            System.out.println("------------------------------------------" + publishRecord.getPublishingId());
+            System.out.println("------------------------------------------" + publishRecord.toString());
         }
     }
 

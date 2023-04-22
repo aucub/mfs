@@ -8,10 +8,12 @@ import com.rabbitmq.stream.ByteCapacity;
 import com.rabbitmq.stream.Environment;
 import io.cloudevents.CloudEvent;
 import lombok.extern.slf4j.Slf4j;
-import org.jctools.queues.MpmcArrayQueue;
+import org.jctools.queues.atomic.MpmcAtomicArrayQueue;
 import org.springframework.rabbit.stream.producer.RabbitStreamTemplate;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
+
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -34,14 +36,14 @@ public class PublishStreamServiceImpl implements PublishStreamService {
     }
 
     @Override
-    public void publish(MpmcArrayQueue mpmcArrayQueue, String userId, MetadataHeader metadataHeader, Flux<CloudEvent> cloudEventFlux) {
+    public void publish(MpmcAtomicArrayQueue mpmcAtomicArrayQueue, String userId, MetadataHeader metadataHeader, Flux<CloudEvent> cloudEventFlux) {
         InfluxDBService influxDBService = new InfluxDBServiceImpl();
         if (environment.queryStreamStats(metadataHeader.getRoutingKey()) == null) {
             stream(metadataHeader.getRoutingKey());
         }
         setRabbitStreamTemplate(metadataHeader.getRoutingKey());
         cloudEventFlux.subscribe(cloudEvent -> {
-            String subject = "data";
+            String subject = "message";
             if (cloudEvent.getSubject() != null) {
                 subject = cloudEvent.getSubject();
             }
@@ -49,7 +51,7 @@ public class PublishStreamServiceImpl implements PublishStreamService {
             if (cloudEvent.getDataContentType() != null) {
                 contentType = cloudEvent.getDataContentType();
             }
-            String contentEncoding = "";
+            String contentEncoding = "text/plain";
             if (cloudEvent.getExtension("contentencoding") != null) {
                 contentEncoding = (String) cloudEvent.getExtension("contentencoding");
             }
@@ -57,11 +59,11 @@ public class PublishStreamServiceImpl implements PublishStreamService {
             if (cloudEvent.getTime() != null) {
                 creationTime = cloudEvent.getTime().toInstant().toEpochMilli();
             }
-            rabbitStreamTemplate.send(rabbitStreamTemplate.messageBuilder().properties().messageId(cloudEvent.getId()).contentType(contentType).contentEncoding(contentEncoding).subject(subject).creationTime(creationTime).messageBuilder().publishingId(Long.valueOf((String) cloudEvent.getExtension("publishingid"))).addData(cloudEvent.getData().toBytes()).build()).thenAccept(result -> {
+            rabbitStreamTemplate.send(rabbitStreamTemplate.messageBuilder().properties().messageId(cloudEvent.getId()).contentType(contentType).contentEncoding(contentEncoding).subject(subject).creationTime(creationTime).messageBuilder().publishingId(Long.parseLong((String) Objects.requireNonNull(cloudEvent.getExtension("publishingid")))).addData(Objects.requireNonNull(cloudEvent.getData()).toBytes()).build()).thenAccept(result -> {
                 influxDBService.publishPoint(cloudEvent.getId(), result);
-                mpmcArrayQueue.add(cloudEvent.getId());
+                mpmcAtomicArrayQueue.add(cloudEvent.getId());
             });
-            PublishRecord publishRecord = new PublishRecord(cloudEvent.getId(), cloudEvent.getSource(), cloudEvent.getType(), (String) cloudEvent.getExtension("appid"), userId, Long.valueOf((String) cloudEvent.getExtension("publishingid")), cloudEvent.getDataContentType(), (String) cloudEvent.getExtension("contentEncoding"), cloudEvent.getSubject(), new String(cloudEvent.getData().toBytes()), null, cloudEvent.getTime().toInstant());
+            PublishRecord publishRecord = new PublishRecord(cloudEvent.getId(), cloudEvent.getSource().toString(), cloudEvent.getType(), (String) cloudEvent.getExtension("appid"), userId, Long.valueOf((String) cloudEvent.getExtension("publishingid")), cloudEvent.getDataContentType(), (String) cloudEvent.getExtension("contentEncoding"), cloudEvent.getSubject(), new String(cloudEvent.getData().toBytes()), null, cloudEvent.getTime().toInstant());
             influxDBService.publish(publishRecord);
         });
     }
