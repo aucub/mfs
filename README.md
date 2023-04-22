@@ -89,9 +89,9 @@
 
 **Response-fields:**
 
-| Field     | Type           | Required | Description |
-| --------- | -------------- | -------- | ----------- |
-| messageId | Flux\<String\> | 可以     | 定时返回    |
+| Field | Type           | Required | Description |
+| ----- | -------------- | -------- | ----------- |
+| OK    | Flux\<String\> | 可以     | 定时返回    |
 
 ## 使用
 
