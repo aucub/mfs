@@ -27,7 +27,7 @@
 
 | 属性     | 符号约定 | RabbitMQ        | CloudEvents           | 样例                                 |
 | -------- | -------- | --------------- | --------------------- | ------------------------------------ |
-| 消息ID   | 必须     | messageId       | ID(必需)              | c9d1e5b2-35fb-4bb4-b2f8-41824f2011eb |
+| 消息ID   | 必须     | messageId       | id(必需)              | c9d1e5b2-35fb-4bb4-b2f8-41824f2011eb |
 | 内容类型 | 推荐     | contentType     | datacontenttype(可选) | application/octet-stream             |
 | 内容编码 | 推荐     | contentEncoding | contentencoding(扩展) | gzip                                 |
 | 主题     | 推荐     | subject         | subject(可选)         | mynewfile.jpg                        |
