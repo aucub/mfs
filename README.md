@@ -90,6 +90,8 @@
 
 ### MetadataHeader-元数据
 
+> MimeType:application/x.metadataHeader+json
+
 | 属性   | 符号约定 | MetadataHeader | RabbitMQ           | 样例       |
 | ------ | -------- | -------------- | ------------------ | ---------- |
 | 交换机 | 可选     | exchange       | receivedExchange   | amq.direct |
