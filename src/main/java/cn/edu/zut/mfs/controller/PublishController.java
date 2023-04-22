@@ -2,7 +2,6 @@ package cn.edu.zut.mfs.controller;
 
 import cn.edu.zut.mfs.domain.MetadataHeader;
 import cn.edu.zut.mfs.service.*;
-import cn.edu.zut.mfs.utils.JwtUtils;
 import io.cloudevents.CloudEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.jctools.queues.atomic.MpmcAtomicArrayQueue;
@@ -79,9 +78,9 @@ public class PublishController {
 
     @PreAuthorize("hasRole('publish')")
     @MessageMapping("publishClassic")
-    public Flux<String> publishClassic(RSocketRequester requester, @Headers Map<String, Object> metadata, @AuthenticationPrincipal String token, Flux<CloudEvent> cloudEventFlux) {
+    public Flux<String> publishClassic(RSocketRequester requester, @Headers Map<String, Object> metadata, @AuthenticationPrincipal Jwt jwt, Flux<CloudEvent> cloudEventFlux) {
         MetadataHeader metadataHeader = (MetadataHeader) metadata.get("metadataHeader");
-        String userId = JwtUtils.decode(token).getSubject();
+        String userId = jwt.getSubject();
         requestProcessor.processRequests(requester, userId, "publishClassic");
         publishService.publish(userId, metadataHeader, cloudEventFlux);
         return Flux.interval(Duration.ofSeconds(5)).map(i -> "OK");
@@ -89,9 +88,9 @@ public class PublishController {
 
     @PreAuthorize("hasRole('publish')")
     @MessageMapping("publishTask")
-    public Flux<String> publishTask(RSocketRequester requester, @Headers Map<String, Object> metadata, @AuthenticationPrincipal String token, Flux<CloudEvent> cloudEventFlux) {
+    public Flux<String> publishTask(RSocketRequester requester, @Headers Map<String, Object> metadata, @AuthenticationPrincipal Jwt jwt, Flux<CloudEvent> cloudEventFlux) {
         MetadataHeader metadataHeader = (MetadataHeader) metadata.get("metadataHeader");
-        String userId = JwtUtils.decode(token).getSubject();
+        String userId = jwt.getSubject();
         requestProcessor.processRequests(requester, userId, "publishTask");
         publishTaskService.publish(userId, metadataHeader, cloudEventFlux);
         return Flux.interval(Duration.ofSeconds(5)).map(i -> "OK");
@@ -99,9 +98,9 @@ public class PublishController {
 
     @PreAuthorize("hasRole('publish')")
     @MessageMapping("publishBatch")
-    public Flux<String> publishBatch(RSocketRequester requester, @Headers Map<String, Object> metadata, @AuthenticationPrincipal String token, Flux<CloudEvent> cloudEventFlux) {
+    public Flux<String> publishBatch(RSocketRequester requester, @Headers Map<String, Object> metadata, @AuthenticationPrincipal Jwt jwt, Flux<CloudEvent> cloudEventFlux) {
         MetadataHeader metadataHeader = (MetadataHeader) metadata.get("metadataHeader");
-        String userId = JwtUtils.decode(token).getSubject();
+        String userId = jwt.getSubject();
         requestProcessor.processRequests(requester, userId, "publishTask");
         publishBatchService.setup(metadataHeader.getBatchSize());
         publishBatchService.sendMessage(userId, metadataHeader, cloudEventFlux);
