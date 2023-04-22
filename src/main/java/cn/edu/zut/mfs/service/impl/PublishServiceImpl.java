@@ -2,6 +2,7 @@ package cn.edu.zut.mfs.service.impl;
 
 import cn.edu.zut.mfs.domain.MetadataHeader;
 import cn.edu.zut.mfs.domain.PublishRecord;
+import cn.edu.zut.mfs.exception.BaseException;
 import cn.edu.zut.mfs.service.InfluxDBService;
 import cn.edu.zut.mfs.service.PublishService;
 import cn.edu.zut.mfs.utils.MessageConverter;
@@ -36,11 +37,19 @@ public class PublishServiceImpl implements PublishService {
     @SneakyThrows
     public void publish(String userId, MetadataHeader metadataHeader, Flux<CloudEvent> cloudEventFlux) {
         InfluxDBService influxDBService = new InfluxDBServiceImpl();
-        cloudEventFlux.limitRate(10).subscribe(cloudEvent -> {
+        if (metadataHeader.getExchange() == null || metadataHeader.getExchange() == "") {
+            if (metadataHeader.getRoutingKey() != null) {
+                if (amqpAdmin.getQueueInfo(metadataHeader.getRoutingKey()) == null)
+                    throw new BaseException("队列不存在");
+            } else throw new BaseException("未指定投递对象");
+        }
+        cloudEventFlux.limitRate(100).subscribe(cloudEvent -> {
             Message message = MessageConverter.toMessage((CloudEventV1) cloudEvent);
             rabbitTemplate.send(metadataHeader.getExchange(), metadataHeader.getRoutingKey(), message);
-            PublishRecord publishRecord = new PublishRecord(cloudEvent.getId(), cloudEvent.getSource().toString(), cloudEvent.getType(), (String) cloudEvent.getExtension("appid"), userId, Integer.valueOf((String) cloudEvent.getExtension("priority")), (String) cloudEvent.getExtension("expiration"), Integer.valueOf((String) cloudEvent.getExtension("delay")), (String) cloudEvent.getExtension("dataContentType"), (String) cloudEvent.getExtension("contentEncoding"), cloudEvent.getSubject(), new String(cloudEvent.getData().toBytes()), cloudEvent.getTime().toInstant());
-            influxDBService.publish(publishRecord);
+            Thread.startVirtualThread(() -> {
+                PublishRecord publishRecord = new PublishRecord(cloudEvent.getId(), cloudEvent.getSource().toString(), cloudEvent.getType(), (String) cloudEvent.getExtension("appid"), userId, Integer.valueOf((String) cloudEvent.getExtension("priority")), (String) cloudEvent.getExtension("expiration"), Integer.valueOf((String) cloudEvent.getExtension("delay")), (String) cloudEvent.getExtension("dataContentType"), (String) cloudEvent.getExtension("contentEncoding"), cloudEvent.getSubject(), new String(cloudEvent.getData().toBytes()), cloudEvent.getTime().toInstant());
+                influxDBService.publish(publishRecord);
+            });
         });
     }
 

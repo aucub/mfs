@@ -43,7 +43,7 @@ public class MessageConverter {
 
 
     public static CloudEventV1 fromMessage(Message payload) {
-        URI source = URI.create("");
+        URI source = URI.create("com.example.mfs");
         if (payload.getMessageProperties().getHeader("source") != null) {
             source = URI.create(payload.getMessageProperties().getHeader("source"));
             payload.getMessageProperties().getHeaders().remove("source");
@@ -62,7 +62,7 @@ public class MessageConverter {
         eventExtension.setOffset(context.offset());
         return (CloudEventV1) CloudEventBuilder.v1()
                 .withId((String) payload.getProperties().getMessageId())
-                .withSource(URI.create(""))
+                .withSource(URI.create("com.example.mfs"))
                 .withType("generic")
                 .withTime(Instant.ofEpochMilli(payload.getProperties().getCreationTime()).atOffset(ZoneOffset.UTC))
                 .withData(BytesCloudEventData.wrap(payload.getBodyAsBinary()))

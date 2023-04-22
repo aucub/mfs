@@ -40,7 +40,7 @@ public class SaTokenConfigure {
                 // 指定 [拦截路由]
                 .addInclude("/**")
                 // 指定 [放行路由]
-                .addExclude("/favicon.ico", "favicon.ico", "/v3/**", "/rsocket/**")
+                .addExclude("/favicon.ico", "/v3/**", "/rsocket/**")
                 // 指定[认证函数]: 每次请求执行
                 .setAuth(r -> {
                     log.info("---------- sa全局认证 ----------");

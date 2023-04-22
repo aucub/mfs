@@ -8,6 +8,7 @@ import cn.edu.zut.mfs.utils.MessageConverter;
 import io.cloudevents.core.data.BytesCloudEventData;
 import io.cloudevents.core.v1.CloudEventV1;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,24 +25,32 @@ import java.util.UUID;
 @Service
 public class ConsumeServiceImpl implements ConsumeService {
 
+    private static AmqpAdmin amqpAdmin;
     private ConnectionFactory connectionFactory;
+
+    @Autowired
+    public static void setAmqpAdmin(AmqpAdmin amqpAdmin) {
+        ConsumeServiceImpl.amqpAdmin = amqpAdmin;
+    }
 
     @Autowired
     public void setConnectionFactory(ConnectionFactory connectionFactory) {
         this.connectionFactory = connectionFactory;
     }
 
-
     @Override
     public Flux<CloudEventV1> consume(String userId, Consume consume) {
+        if (amqpAdmin.getQueueInfo(consume.getQueue()) == null) amqpAdmin.deleteQueue(consume.getQueue());
         InfluxDBService influxDBService = new InfluxDBServiceImpl();
         SimpleMessageListenerContainer simpleMessageListenerContainer = new SimpleMessageListenerContainer(connectionFactory);
         simpleMessageListenerContainer.addQueueNames(consume.getQueue());
         Flux<CloudEventV1> f = Flux.create(emitter -> {
             simpleMessageListenerContainer.setupMessageListener(message -> {
                 emitter.next(MessageConverter.fromMessage(message));
-                ConsumeRecord consumeRecord = new ConsumeRecord((String) message.getMessageProperties().getMessageId(), 0, 0, consume.getQueue(), userId);
-                influxDBService.consume(consumeRecord);
+                Thread.startVirtualThread(() -> {
+                    ConsumeRecord consumeRecord = new ConsumeRecord((String) message.getMessageProperties().getMessageId(), consume.getQueue(), userId, Instant.now());
+                    influxDBService.consume(consumeRecord);
+                });
             });
             emitter.onRequest(v -> {
                 simpleMessageListenerContainer.start();

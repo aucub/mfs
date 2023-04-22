@@ -6,6 +6,7 @@ import cn.edu.zut.mfs.service.ConsumeStreamService;
 import cn.edu.zut.mfs.service.InfluxDBService;
 import cn.edu.zut.mfs.service.RSocketServer;
 import cn.edu.zut.mfs.utils.MessageConverter;
+import com.rabbitmq.stream.ByteCapacity;
 import com.rabbitmq.stream.Consumer;
 import com.rabbitmq.stream.Environment;
 import com.rabbitmq.stream.OffsetSpecification;
@@ -38,6 +39,13 @@ public class ConsumeStreamServiceImpl implements ConsumeStreamService {
 
     @Override
     public Flux<CloudEventV1> consume(String userId, Consume consume) {
+        if (environment.queryStreamStats(consume.getQueue()) == null) {
+            environment.streamCreator()
+                    .stream(consume.getQueue())
+                    .maxLengthBytes(ByteCapacity.GB(1))
+                    .maxSegmentSizeBytes(ByteCapacity.MB(100))
+                    .create();
+        }
         InfluxDBService influxDBService = new InfluxDBServiceImpl();
         OffsetSpecification offsetSpecification = OffsetSpecification.none();
         if (consume.getManual()) {
@@ -62,8 +70,10 @@ public class ConsumeStreamServiceImpl implements ConsumeStreamService {
                             .builder()
                             .messageHandler((context, message) -> {
                                         emitter.next(MessageConverter.fromStreamMessage(context, message));
-                                        ConsumeRecord consumeRecord = new ConsumeRecord((String) message.getProperties().getMessageId(), message.getPublishingId(), context.offset(), consume.getQueue(), userId);
-                                        influxDBService.consume(consumeRecord);
+                                        Thread.startVirtualThread(() -> {
+                                            ConsumeRecord consumeRecord = new ConsumeRecord((String) message.getProperties().getMessageId(), message.getPublishingId(), context.offset(), consume.getQueue(), userId, Instant.now());
+                                            influxDBService.consume(consumeRecord);
+                                        });
                                     }
                             )
                             .build();

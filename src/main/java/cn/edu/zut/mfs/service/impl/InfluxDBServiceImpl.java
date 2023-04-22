@@ -2,6 +2,7 @@ package cn.edu.zut.mfs.service.impl;
 
 import cn.edu.zut.mfs.domain.ConsumeRecord;
 import cn.edu.zut.mfs.domain.PublishRecord;
+import cn.edu.zut.mfs.domain.PushMessage;
 import cn.edu.zut.mfs.service.InfluxDBService;
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.InfluxDBClientFactory;
@@ -31,11 +32,21 @@ public class InfluxDBServiceImpl implements InfluxDBService {
     }
 
     @Override
-    public void publishPoint(String messageId, Boolean result) {
+    public void push(PushMessage pushMessage) {
+        Point point = Point.measurement("PushMessage")
+                .addField("userId", pushMessage.getUserId())
+                .addField("route", pushMessage.getRoute())
+                .addField("body", new String(pushMessage.getBody()))
+                .time(Instant.now(), WritePrecision.MS);
+        writeApi.writePoint(point);
+    }
+
+    @Override
+    public void publishPoint(String messageId, Boolean result, Instant time) {
         Point point = Point.measurement("PublishRecord")
                 .addField("messageId", messageId)
                 .addField("submit", result)
-                .time(Instant.now().toEpochMilli(), WritePrecision.MS);
+                .time(time, WritePrecision.MS);
         writeApi.writePoint(point);
     }
 
@@ -45,9 +56,7 @@ public class InfluxDBServiceImpl implements InfluxDBService {
     }
 
     @Override
-    public void queryPublish() {
-        String start = Instant.now().minusSeconds(6000).toString();
-        String stop = Instant.now().toString();
+    public List<PublishRecord> queryPublish(String start, String stop) {
         String template = "from(bucket:\"mfs\") " +
                 " |> range(start: %s, stop: %s)" +
                 " |> filter(fn: (r) => r._measurement == \"PublishRecord\")" +
@@ -56,9 +65,33 @@ public class InfluxDBServiceImpl implements InfluxDBService {
         String flux = String.format(template, start, stop);
         QueryApi queryApi = influxDBClient.getQueryApi();
         List<PublishRecord> publishRecords = queryApi.query(flux, PublishRecord.class);
-        for (PublishRecord publishRecord : publishRecords) {
-            System.out.println("------------------------------------------" + publishRecord.toString());
-        }
+        return publishRecords;
+    }
+
+    @Override
+    public List<ConsumeRecord> queryConsume(String start, String stop) {
+        String template = "from(bucket:\"mfs\") " +
+                " |> range(start: %s, stop: %s)" +
+                " |> filter(fn: (r) => r._measurement == \"ConsumeRecord\")" +
+                " |> pivot(rowKey:[\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")" +
+                " |> limit(n:120)";
+        String flux = String.format(template, start, stop);
+        QueryApi queryApi = influxDBClient.getQueryApi();
+        List<ConsumeRecord> consumeRecords = queryApi.query(flux, ConsumeRecord.class);
+        return consumeRecords;
+    }
+
+    @Override
+    public List<PushMessage> queryPush(String start, String stop) {
+        String template = "from(bucket:\"mfs\") " +
+                " |> range(start: %s, stop: %s)" +
+                " |> filter(fn: (r) => r._measurement == \"PushMessage\")" +
+                " |> pivot(rowKey:[\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")" +
+                " |> limit(n:120)";
+        String flux = String.format(template, start, stop);
+        QueryApi queryApi = influxDBClient.getQueryApi();
+        List<PushMessage> pushMessages = queryApi.query(flux, PushMessage.class);
+        return pushMessages;
     }
 
     @Override

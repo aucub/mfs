@@ -1,25 +1,31 @@
 server:
   port: 8080
-
 logging:
   level:
     root: info
 
 spring:
+  main:
+    web-application-type: reactive
+    lazy-initialization: false
   rsocket:
     server:
-      # address: 0.0.0.0
-      # port: 9898
-      mapping-path: /rsocket/
-      transport: websocket
-  main:
-    web-application-type: servlet
-    lazy-initialization: true
+      address: localhost
+      port: 9898
+      # mapping-path: /rsocket/
+      transport: tcp
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/mfs?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
     username: root
     password: root
+  cache:
+    type: redis
+    redis:
+      time-to-live: 3600000
+      cache-null-values: true
+
   rabbitmq:
     host: 47.113.201.150
     port: 5672
@@ -27,28 +33,30 @@ spring:
     username: root
     password: root
     listener:
-      direct:
+      simple:
         retry:
           enabled: true
           initial-interval: 500
           multiplier: 10.0
           max-interval: 10000
-    cache:
-      channel:
-        size: 1
-        checkout-timeout: 1
+          max-attempts: 3
     stream:
       host: 47.113.201.150
       port: 5552
       username: root
       password: root
       name: mfs
+    publisher-returns: true
+    publisher-confirm-type: correlated
+    template:
+      mandatory: true
+
   data:
     redis:
       host: localhost
       database: 0
       port: 6379
-      password: redis
+      password:
       timeout: 3000ms
       lettuce:
         pool:
@@ -60,9 +68,25 @@ spring:
           max-idle: 10
           # 连接池中的最小空闲连接
           min-idle: 0
+
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
+  integration:
+    rsocket:
+      server:
+        message-mapping-enabled: false
+
+influx:
+  url: http://localhost:8086/
+  username: root
+  token: _toD4aYpTxcfkA4TtE3FwQdprrh0A5203bvZsyX63dIjnMmv-j6PJfrOHRDH-mZKDGiLU1SsAaenWumVx3FrOw==
+  org: example
+  bucket: mfs
+  logLevel: BODY
+  readTimeout: 5s
+  writeTimeout: 5s
+  connectTimeout: 5s
 
 mybatis-plus:
   configuration:
@@ -89,7 +113,7 @@ mybatis-plus:
 ############## Sa-Token 配置 ##############
 sa-token:
   # token名称 (同时也是cookie名称)
-  token-name: satoken
+  token-name: token
   # token有效期，单位s 默认30天, -1代表永不过期
   timeout: 2592000
   # token临时有效期 (指定时间内无操作就视为token过期) 单位: 秒
@@ -101,17 +125,27 @@ sa-token:
   # token风格
   token-style: uuid
   # 是否输出操作日志
-  is-log: false
+  is-log: true
+  is-print: true
+  log-level: trace
+  isReadBody: false
+  isReadCookie: false
+  isWriteHeader: false
+  tokenSessionCheckLogin: false
 
 # springdoc-openapi项目配置
 springdoc:
   swagger-ui:
+    use-root-path: true
     path: /swagger-ui.html
     tags-sorter: alpha
     operations-sorter: alpha
+    enabled: false
+
   api-docs:
     path: /v3/api-docs
   group-configs:
     - group: 'default'
       paths-to-match: '/**'
       packages-to-scan: cn.edu.zut.mfs.controller
+  enable-spring-security: false

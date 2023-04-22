@@ -2,7 +2,7 @@
 
 | Version              | Update Time         | Status | Author   | Description          |
 |----------------------|---------------------|--------|----------|----------------------|
-| v2023-04-20 17:15:25 | 2023-04-20 17:15:25 | auto   | @yrumily | Created by smart-doc |
+| v2023-04-22 17:17:46 | 2023-04-22 17:17:46 | auto   | @yrumily | Created by smart-doc |
 
 
 
@@ -275,89 +275,8 @@
 |└─deleted|int32|No comments found.|-|
 
 
-### 
-**URL:** /role/save
-
-**Type:** POST
-
-
-**Content-Type:** application/json
-
-**Description:** 
-
-**Body-parameters:**
-
-| Parameter | Type | Required | Description | Since |
-|-----------|------|----------|-------------|-------|
-|id|string|false|No comments found.|-|
-|name|string|false|No comments found.|-|
-|description|string|false|No comments found.|-|
-|deleted|int32|false|No comments found.|-|
-
-**Response-fields:**
-
-| Field | Type | Description | Since |
-|-------|------|-------------|-------|
-|code|int32|No comments found.|-|
-|message|string|No comments found.|-|
-|data|string|No comments found.|-|
-
-
-### 
-**URL:** /role/update
-
-**Type:** POST
-
-
-**Content-Type:** application/json
-
-**Description:** 
-
-**Body-parameters:**
-
-| Parameter | Type | Required | Description | Since |
-|-----------|------|----------|-------------|-------|
-|id|string|false|No comments found.|-|
-|name|string|false|No comments found.|-|
-|description|string|false|No comments found.|-|
-|deleted|int32|false|No comments found.|-|
-
-**Response-fields:**
-
-| Field | Type | Description | Since |
-|-------|------|-------------|-------|
-|code|int32|No comments found.|-|
-|message|string|No comments found.|-|
-|data|string|No comments found.|-|
-
-
-### 
-**URL:** /role/delete
-
-**Type:** POST
-
-
-**Content-Type:** application/x-www-form-urlencoded;charset=UTF-8
-
-**Description:** 
-
-**Query-parameters:**
-
-| Parameter | Type | Required | Description | Since |
-|-----------|------|----------|-------------|-------|
-|id|string|true|No comments found.|-|
-
-**Response-fields:**
-
-| Field | Type | Description | Since |
-|-------|------|-------------|-------|
-|code|int32|No comments found.|-|
-|message|string|No comments found.|-|
-|data|string|No comments found.|-|
-
 ## Sa-Token 会话查询
 ### 
-
 **URL:** /searchSession/list
 
 **Type:** POST
@@ -384,10 +303,10 @@
 
 
 ### 
-
 **URL:** /searchSession/onlineList
 
 **Type:** POST
+
 
 **Content-Type:** application/x-www-form-urlencoded;charset=UTF-8
 
@@ -411,7 +330,6 @@
 
 
 ### 
-
 **URL:** /searchSession/onlineUsers
 
 **Type:** POST
@@ -778,6 +696,97 @@
 | route     | string | false    | No comments found. | -     |
 | body      | array  | false    | No comments found. | -     |
 
+##  
+
+###  
+
+**URL:** /query/queryPublish
+
+**Type:** POST
+
+**Content-Type:** application/x-www-form-urlencoded;charset=UTF-8
+
+**Description:**
+
+**Query-parameters:**
+
+| Parameter | Type   | Required | Description        | Since |
+|-----------|--------|----------|--------------------|-------|
+| start     | string | false    | No comments found. | -     |
+| stop      | string | false    | No comments found. | -     |
+
+**Response-fields:**
+
+| Field           | Type    | Description        | Since |
+|-----------------|---------|--------------------|-------|
+| messageId       | string  | No comments found. | -     |
+| source          | string  | No comments found. | -     |
+| type            | string  | No comments found. | -     |
+| appId           | string  | No comments found. | -     |
+| userId          | string  | No comments found. | -     |
+| priority        | int32   | No comments found. | -     |
+| expiration      | string  | No comments found. | -     |
+| delay           | int32   | No comments found. | -     |
+| publishingId    | int64   | No comments found. | -     |
+| dataContentType | string  | No comments found. | -     |
+| contentEncoding | string  | No comments found. | -     |
+| subject         | string  | No comments found. | -     |
+| body            | string  | No comments found. | -     |
+| submit          | boolean | No comments found. | -     |
+| time            | object  | No comments found. | -     |
+
+###  
+
+**URL:** /query/queryConsume
+
+**Type:** POST
+
+**Content-Type:** application/x-www-form-urlencoded;charset=UTF-8
+
+**Description:**
+
+**Query-parameters:**
+
+| Parameter | Type   | Required | Description        | Since |
+|-----------|--------|----------|--------------------|-------|
+| start     | string | false    | No comments found. | -     |
+| stop      | string | false    | No comments found. | -     |
+
+**Response-fields:**
+
+| Field        | Type   | Description        | Since |
+|--------------|--------|--------------------|-------|
+| messageId    | string | No comments found. | -     |
+| publishingId | int64  | No comments found. | -     |
+| offset       | int64  | No comments found. | -     |
+| queue        | string | No comments found. | -     |
+| userId       | string | No comments found. | -     |
+| time         | object | No comments found. | -     |
+
+###  
+
+**URL:** /query/queryPush
+
+**Type:** POST
+
+**Content-Type:** application/x-www-form-urlencoded;charset=UTF-8
+
+**Description:**
+
+**Query-parameters:**
+
+| Parameter | Type   | Required | Description        | Since |
+|-----------|--------|----------|--------------------|-------|
+| start     | string | false    | No comments found. | -     |
+| stop      | string | false    | No comments found. | -     |
+
+**Response-fields:**
+
+| Field  | Type   | Description        | Since |
+|--------|--------|--------------------|-------|
+| userId | string | No comments found. | -     |
+| route  | string | No comments found. | -     |
+| body   | array  | No comments found. | -     |
 
 
 
