@@ -11,6 +11,7 @@
   - [背景](#背景)
   - [API](#api)
     - [连接](#连接)
+    - [生产](#生产)
   - [使用](#使用)
   - [规范](#规范)
     - [普通消息](#普通消息)
@@ -42,6 +43,30 @@
 | ------------ | ------------------------------------------ | -------- |
 | tokenValue   | message/x.rsocket.authentication.bearer.v0 | 必须     |
 | cloudEventV1 | CloudEventV1                               | 可以     |
+
+### 生产
+
+**URL:** /publish
+
+**Type:** Channel
+
+**MimeType:** application/cloudevents+json
+
+**Description:** 
+
+**Body-parameters:**
+
+| Parameter      | Type                                       | Required |
+| -------------- | ------------------------------------------ | -------- |
+| tokenValue     | message/x.rsocket.authentication.bearer.v0 | 必须     |
+| metadataHeader | application/x.metadataHeader+json          | 必须     |
+| cloudEventFlux | Flux<CloudEvent>                           | 必须     |
+
+**Response-fields:**
+
+| Field     | Type         | Required | Description      |
+| --------- | ------------ | -------- | ---------------- |
+| messageId | Flux<String> | 推荐     | RabbitMQ确认返回 |
 
 ## 使用
 
