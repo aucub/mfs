@@ -10,6 +10,7 @@
   - [目录](#目录)
   - [背景](#背景)
   - [API](#api)
+    - [连接](#连接)
   - [使用](#使用)
   - [规范](#规范)
     - [普通消息](#普通消息)
@@ -24,6 +25,23 @@
 ## 背景
 
 ## API
+
+### 连接
+
+**URL:** /connect
+
+**Type:** connectTcp
+
+**MimeType:** application/cloudevents+json
+
+**Description:** 
+
+**Body-parameters:**
+
+| Parameter    | Type                                       | Required |
+| ------------ | ------------------------------------------ | -------- |
+| tokenValue   | message/x.rsocket.authentication.bearer.v0 | 必须     |
+| cloudEventV1 | CloudEventV1                               | 可以     |
 
 ## 使用
 
