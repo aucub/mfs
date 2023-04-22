@@ -16,7 +16,8 @@
     - [经典消息](#经典消息)
     - [普通消息-消费](#普通消息-消费)
     - [经典消息-消费](#经典消息-消费)
-    - [身份验证](#身份验证)
+    - [身份验证-元数据](#身份验证-元数据)
+    - [MetadataHeader-元数据](#metadataheader-元数据)
   - [额外部分](#额外部分)
 
 ## 背景
@@ -81,11 +82,18 @@
 | 过期     | 可以     | expiration      | expiration(扩展)      | 60000(毫秒)                          |
 | 延时     | 可以     | receivedDelay   | delay(扩展)           | 5000(毫秒)                           |
 
-### 身份验证
+### 身份验证-元数据
 
 | 属性       | 符号约定 | MimeType                                   | 样例                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | ---------- | -------- | ------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | tokenValue | 必须     | message/x.rsocket.authentication.bearer.v0 | eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJkMWM1ZDI3OS1kMTk4LTRiMTYtYjEzMy1mYzE5ODhjNWJjYzUiLCJpc3MiOiIwYzU5OTg5ZDM5NzAzODBhZTE2ODg4MDY4NmM0YTA3MCIsInN1YiI6IjBjNTk5ODlkMzk3MDM4MGFlMTY4ODgwNjg2YzRhMDcwIiwiZXhwIjoxNzgyMDE2OTEyLCJhdWQiOiJtZnMiLCJzY29wZSI6WyJ1c2VyTWFuIiwiZ2V0Snd0IiwiZ2VuZXJhdGVKd3QiLCJzZWFyY2hTZXNzaW9uIiwicm9sZSIsImtpY2tvdXQiLCJkaXNhYmxlIiwiY29ubmVjdCIsInB1c2giLCJwdWJsaXNoIiwiY29uc3VtZSJdfQ.8wHE60sj9wYkZ_aejpgIpssi6-S034td3GjnF7qW2Sw |
 
+### MetadataHeader-元数据
+
+| 属性   | 符号约定 | MetadataHeader | RabbitMQ           | 样例       |
+| ------ | -------- | -------------- | ------------------ | ---------- |
+| 交换机 | 可选     | exchange       | receivedExchange   | amq.direct |
+| 路由键 | 必须     | routingKey     | receivedRoutingKey | hello      |
+| 批大小 | 可选     | batchSize      |                    | 10         |
 
 ## 额外部分
