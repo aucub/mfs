@@ -60,13 +60,13 @@
 | -------------- | ------------------------------------------ | -------- |
 | tokenValue     | message/x.rsocket.authentication.bearer.v0 | 必须     |
 | metadataHeader | application/x.metadataHeader+json          | 必须     |
-| cloudEventFlux | Flux<CloudEvent>                           | 必须     |
+| cloudEventFlux | Flux\<CloudEvent\>                         | 必须     |
 
 **Response-fields:**
 
-| Field     | Type         | Required | Description      |
-| --------- | ------------ | -------- | ---------------- |
-| messageId | Flux<String> | 推荐     | RabbitMQ确认返回 |
+| Field     | Type           | Required | Description      |
+| --------- | -------------- | -------- | ---------------- |
+| messageId | Flux\<String\> | 推荐     | RabbitMQ确认返回 |
 
 ## 使用
 
