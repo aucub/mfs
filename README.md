@@ -12,6 +12,7 @@
   - [API](#api)
     - [连接](#连接)
     - [生产](#生产)
+    - [生产-经典](#生产-经典)
   - [使用](#使用)
   - [规范](#规范)
     - [普通消息](#普通消息)
@@ -67,6 +68,30 @@
 | Field     | Type           | Required | Description      |
 | --------- | -------------- | -------- | ---------------- |
 | messageId | Flux\<String\> | 推荐     | RabbitMQ确认返回 |
+
+### 生产-经典
+
+**URL:** /publishClassic,/publishTask,/publishBatch
+
+**Type:** Channel
+
+**MimeType:** application/cloudevents+json
+
+**Description:** 
+
+**Body-parameters:**
+
+| Parameter      | Type                                       | Required |
+| -------------- | ------------------------------------------ | -------- |
+| tokenValue     | message/x.rsocket.authentication.bearer.v0 | 必须     |
+| metadataHeader | application/x.metadataHeader+json          | 必须     |
+| cloudEventFlux | Flux\<CloudEvent\>                         | 必须     |
+
+**Response-fields:**
+
+| Field     | Type           | Required | Description |
+| --------- | -------------- | -------- | ----------- |
+| messageId | Flux\<String\> | 可以     | 定时返回    |
 
 ## 使用
 
