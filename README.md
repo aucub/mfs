@@ -14,6 +14,8 @@
     - [生产](#生产)
     - [生产-经典](#生产-经典)
     - [推送](#推送)
+    - [消费](#消费)
+    - [消费-经典](#消费-经典)
   - [使用](#使用)
   - [规范](#规范)
     - [普通消息](#普通消息)
@@ -115,6 +117,52 @@
 | Field  | Type    | Required | Description |
 | ------ | ------- | -------- | ----------- |
 | result | Boolean | 可以     | 返回        |
+
+### 消费
+
+**URL:** /consume
+
+**Type:** Request/Stream
+
+**MimeType:** application/json
+
+**Description:** 
+
+**Body-parameters:**
+
+| Parameter  | Type                                       | Required |
+| ---------- | ------------------------------------------ | -------- |
+| tokenValue | message/x.rsocket.authentication.bearer.v0 | 必须     |
+| consume    | Consume                                    | 必须     |
+
+**Response-fields:**
+
+| Field  | Type                 | Required | Description   |
+| ------ | -------------------- | -------- | ------------- |
+| result | Flux\<CloudEventV1\> | 必须     | 普通消息-消费 |
+
+### 消费-经典
+
+**URL:** /consumeBatch
+
+**Type:** Request/Stream
+
+**MimeType:** application/json
+
+**Description:** 
+
+**Body-parameters:**
+
+| Parameter  | Type                                       | Required |
+| ---------- | ------------------------------------------ | -------- |
+| tokenValue | message/x.rsocket.authentication.bearer.v0 | 必须     |
+| consume    | Consume                                    | 必须     |
+
+**Response-fields:**
+
+| Field  | Type                 | Required | Description   |
+| ------ | -------------------- | -------- | ------------- |
+| result | Flux\<CloudEventV1\> | 必须     | 经典消息-消费 |
 
 ## 使用
 
