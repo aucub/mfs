@@ -13,6 +13,7 @@
     - [连接](#连接)
     - [生产](#生产)
     - [生产-经典](#生产-经典)
+    - [推送](#推送)
   - [使用](#使用)
   - [规范](#规范)
     - [普通消息](#普通消息)
@@ -92,6 +93,28 @@
 | Field | Type           | Required | Description |
 | ----- | -------------- | -------- | ----------- |
 | OK    | Flux\<String\> | 可以     | 定时返回    |
+
+### 推送
+
+**URL:** /push
+
+**Type:** HTTP Request/Response
+
+**MimeType:** None
+
+**Description:** 
+
+**Body-parameters:**
+
+| Parameter   | Type        | Required |
+| ----------- | ----------- | -------- |
+| pushMessage | PushMessage | 必须     |
+
+**Response-fields:**
+
+| Field  | Type    | Required | Description |
+| ------ | ------- | -------- | ----------- |
+| result | Boolean | 可以     | 返回        |
 
 ## 使用
 
