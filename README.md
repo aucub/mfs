@@ -102,7 +102,7 @@
 
 **Type:** HTTP Request/Response
 
-**MimeType:** None
+**MimeType:** application/json
 
 **Description:** 
 
@@ -137,9 +137,9 @@
 
 **Response-fields:**
 
-| Field  | Type                 | Required | Description   |
-| ------ | -------------------- | -------- | ------------- |
-| result | Flux\<CloudEventV1\> | 必须     | 普通/经典 |
+| Field  | Type                 | Required | Description |
+| ------ | -------------------- | -------- | ----------- |
+| result | Flux\<CloudEventV1\> | 必须     | 普通/经典   |
 
 ### 消费-批处理
 
@@ -160,9 +160,9 @@
 
 **Response-fields:**
 
-| Field  | Type                 | Required | Description   |
-| ------ | -------------------- | -------- | ------------- |
-| result | Flux\<CloudEventV1\> | 必须     | 批处理 |
+| Field  | Type                 | Required | Description |
+| ------ | -------------------- | -------- | ----------- |
+| result | Flux\<CloudEventV1\> | 必须     | 批处理      |
 
 ## 使用
 
