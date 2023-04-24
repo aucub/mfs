@@ -51,15 +51,15 @@ public class SearchSessionController {
         return BaseResponse.success(sessionList);
     }
 
-    @SaCheckRole("searchSession")
+   // @SaCheckRole("searchSession")
     @PostMapping("onlineList")
     public List<User> onlineList() {
         return userService.onlineList();
     }
 
-    @SaCheckRole("searchSession")
+    //@SaCheckRole("searchSession")
     @PostMapping("onlineUsers")
-    public int onlineUsers() {
+    public long onlineUsers() {
         return userService.onlineUsers();
     }
 

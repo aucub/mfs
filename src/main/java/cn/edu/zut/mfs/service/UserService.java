@@ -56,5 +56,5 @@ public interface UserService {
 
     List<User> onlineList();
 
-    int onlineUsers();
+    Long onlineUsers();
 }

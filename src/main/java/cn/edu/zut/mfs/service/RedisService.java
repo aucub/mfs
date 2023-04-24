@@ -1,7 +1,5 @@
 package cn.edu.zut.mfs.service;
 
-import org.springframework.messaging.rsocket.RSocketRequester;
-
 import java.util.Map;
 import java.util.Set;
 
@@ -37,11 +35,15 @@ public interface RedisService {
      */
     Long increment(String key, long delta);
 
-    void writeHash(String key, String userId, RSocketRequester requester);
+    void writeHash(String key, String userId, Integer value);
 
-    RSocketRequester loadHash(String key, String userId);
+    void incrementHash(String key, String userId);
 
-    Map<String, RSocketRequester> entries(String key);
+    void reduceHash(String key, String userId);
+
+    Integer loadHash(String key, String userId);
+
+    Map<String, String> entries(String key);
 
     Boolean delete(String key, String userId);
 

@@ -1,6 +1,5 @@
 package cn.edu.zut.mfs.controller;
 
-import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.annotation.SaCheckRole;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.edu.zut.mfs.domain.Role;
@@ -105,14 +104,14 @@ public class UserController {
     }
 
     @Operation(summary = "获取用户的角色列表")
-    @SaCheckPermission("userMan")
+    @SaCheckRole("userMan")
     @PostMapping(value = "/getRoleListByUserId")
-    public BaseResponse<List<Role>> getRoleListByUserId(@NotBlank(message = "用户id不能为空") @RequestParam String userId) {
+    public BaseResponse<List<Role>> getRoleListByUserId(@NotBlank(message = "用户id不能为空") @RequestBody String userId) {
         return BaseResponse.success(userService.getRoleList(userId));
     }
 
     @Operation(summary = "保存授权角色")
-    @SaCheckPermission("userMan")
+    @SaCheckRole("userMan")
     @PostMapping(value = "/saveAuthRole")
     public BaseResponse<String> saveAuthRole(@RequestBody RoleRelationDto roleRelationDto) {
         if (userService.updateRole(roleRelationDto.getUserId(), roleRelationDto.getRoleIds())) {

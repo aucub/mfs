@@ -11,7 +11,6 @@ import cn.edu.zut.mfs.service.UserService;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,7 +53,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Cacheable
+    //@Cacheable
     public List<User> onlineList() {
         List<User> users = new ArrayList<>();
         redisService.keys("rsocket").forEach(key -> {
@@ -64,8 +63,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int onlineUsers() {
-        return redisService.keys("rsocket").size();
+    public Long onlineUsers() {
+        return redisService.size("rsocket");
     }
 
     @Override

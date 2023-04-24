@@ -2,7 +2,7 @@ server:
   port: 8080
 logging:
   level:
-    root: info
+    root: debug
 
 spring:
   main:
@@ -10,7 +10,7 @@ spring:
     lazy-initialization: false
   rsocket:
     server:
-      address: localhost
+      address: 127.0.0.1
       port: 9898
       # mapping-path: /rsocket/
       transport: tcp
@@ -128,10 +128,6 @@ sa-token:
   is-log: true
   is-print: true
   log-level: trace
-  isReadBody: false
-  isReadCookie: false
-  isWriteHeader: false
-  tokenSessionCheckLogin: false
 
 # springdoc-openapi项目配置
 springdoc:

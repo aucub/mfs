@@ -2,9 +2,9 @@ package cn.edu.zut.mfs.service.impl;
 
 import cn.edu.zut.mfs.service.RedisService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.messaging.rsocket.RSocketRequester;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -17,12 +17,13 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Service
 public class RedisServiceImpl implements RedisService {
-    private final StringRedisTemplate stringRedisTemplate;
-    HashOperations<String, String, RSocketRequester> hashOperations;
+    private StringRedisTemplate stringRedisTemplate;
+    private HashOperations<String, String, String> hashOperations;
 
-    public RedisServiceImpl(StringRedisTemplate stringRedisTemplate) {
+    @Autowired
+    public void setStringRedisTemplate(StringRedisTemplate stringRedisTemplate) {
         this.stringRedisTemplate = stringRedisTemplate;
-        hashOperations = stringRedisTemplate.opsForHash();
+        this.hashOperations = stringRedisTemplate.opsForHash();
     }
 
     @Override
@@ -31,17 +32,27 @@ public class RedisServiceImpl implements RedisService {
     }
 
     @Override
-    public void writeHash(String key, String userId, RSocketRequester requester) {
-        hashOperations.put(key, userId, requester);
+    public void writeHash(String key, String userId, Integer value) {
+        hashOperations.put(key, userId, String.valueOf(value));
     }
 
     @Override
-    public RSocketRequester loadHash(String key, String userId) {
-        return (RSocketRequester) hashOperations.get(key, userId);
+    public void incrementHash(String key, String userId) {
+        hashOperations.increment(key, userId, 1);
     }
 
     @Override
-    public Map<String, RSocketRequester> entries(String key) {
+    public void reduceHash(String key, String userId) {
+        hashOperations.increment(key, userId, -1);
+    }
+
+    @Override
+    public Integer loadHash(String key, String userId) {
+        return Integer.valueOf(hashOperations.get(key, userId));
+    }
+
+    @Override
+    public Map<String, String> entries(String key) {
         return hashOperations.entries(key);
     }
 

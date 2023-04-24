@@ -3,6 +3,7 @@ package cn.edu.zut.mfs.service.impl;
 import cn.edu.zut.mfs.domain.PushMessage;
 import cn.edu.zut.mfs.service.RSocketServer;
 import cn.edu.zut.mfs.service.RedisService;
+import cn.edu.zut.mfs.service.RequestProcessor;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.Unpooled;
@@ -30,7 +31,7 @@ public class RSocketServerImpl implements RSocketServer {
     @Override
     public Boolean push(PushMessage pushMessage) {
         if (redisService.hasKey("rsocket", pushMessage.getUserId())) {
-            RSocketRequester requester = redisService.loadHash("rsocket", pushMessage.getUserId());
+            RSocketRequester requester = RequestProcessor.nonBlockingHashMap.get(pushMessage.getUserId());
             ByteBuf routeMetadata = TaggingMetadataCodec
                     .createTaggingContent(ByteBufAllocator.DEFAULT, Collections.singletonList(pushMessage.getRoute()));
             ByteBuf body = Unpooled.wrappedBuffer(pushMessage.getBody());
