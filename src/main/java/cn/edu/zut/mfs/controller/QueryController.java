@@ -5,7 +5,6 @@ import cn.edu.zut.mfs.domain.PublishRecord;
 import cn.edu.zut.mfs.domain.PushMessage;
 import cn.edu.zut.mfs.service.InfluxDBService;
 import cn.edu.zut.mfs.service.impl.InfluxDBServiceImpl;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +15,6 @@ import java.util.List;
 
 @Slf4j
 @RequestMapping("/query/")
-@Tag(name = "查询")
 @RestController
 public class QueryController {
     private InfluxDBService influxDBService = new InfluxDBServiceImpl();

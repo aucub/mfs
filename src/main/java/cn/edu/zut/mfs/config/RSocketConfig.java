@@ -14,6 +14,7 @@ import org.springframework.messaging.rsocket.RSocketStrategies;
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 import org.springframework.security.config.annotation.rsocket.EnableRSocketSecurity;
 import org.springframework.security.config.annotation.rsocket.RSocketSecurity;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.NimbusReactiveJwtDecoder;
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
@@ -23,6 +24,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtRea
 import org.springframework.security.oauth2.server.resource.authentication.ReactiveJwtAuthenticationConverterAdapter;
 import org.springframework.security.rsocket.core.PayloadSocketAcceptorInterceptor;
 import org.springframework.security.rsocket.metadata.SimpleAuthenticationEncoder;
+import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.util.MimeType;
 import org.springframework.web.util.pattern.PathPatternRouteMatcher;
 
@@ -40,10 +42,21 @@ import java.util.Map;
 public class RSocketConfig {
 
     @Bean
+    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
+        http.csrf(s -> s.disable())
+                .formLogin(s -> s
+                        .loginPage("/login/doLogin")
+                )
+                .authorizeExchange(n -> n
+                        .pathMatchers("/login/**").permitAll());
+        return http.build();
+    }
+
+    @Bean
     PayloadSocketAcceptorInterceptor authorization(RSocketSecurity security) {
         security.authorizePayload(authorize ->
                 authorize
-                        .setup().permitAll()
+                        .setup().authenticated()
                         .anyExchange().permitAll()
                         .anyRequest().permitAll()
         ).jwt(jwtSpec -> {
