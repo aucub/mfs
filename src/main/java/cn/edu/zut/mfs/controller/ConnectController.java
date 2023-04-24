@@ -12,9 +12,6 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
-/**
- * 连接控制器
- */
 @Slf4j
 @RestController
 public class ConnectController {

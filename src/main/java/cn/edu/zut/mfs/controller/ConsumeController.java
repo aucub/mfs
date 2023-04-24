@@ -17,9 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 
 
-/**
- * 消费控制器
- */
 @Slf4j
 @RestController
 public class ConsumeController {

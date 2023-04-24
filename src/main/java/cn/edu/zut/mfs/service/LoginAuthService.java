@@ -1,5 +1,6 @@
 package cn.edu.zut.mfs.service;
 
+import cn.edu.zut.mfs.domain.LinkLog;
 import cn.edu.zut.mfs.domain.UserLoginLog;
 import cn.edu.zut.mfs.dto.UserLoginDto;
 
@@ -18,4 +19,6 @@ public interface LoginAuthService {
      * @return
      */
     Boolean addLoginLog(UserLoginLog userLoginLog);
+
+    Boolean addLinkLog(LinkLog linkLog);
 }
