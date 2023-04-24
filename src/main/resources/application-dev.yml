@@ -2,7 +2,7 @@ server:
   port: 8080
 logging:
   level:
-    root: debug
+    root: error
 
 spring:
   main:
@@ -14,6 +14,16 @@ spring:
       port: 9898
       # mapping-path: /rsocket/
       transport: tcp
+      ssl:
+        enabled: true
+        key-store-type: PKCS12
+        key-store: classpath:keystore.p12
+        key-store-password: changeit
+        enabled-protocols: TLSv1.2
+        client-auth: need
+        trust-store: classpath:keystore.p12
+        trust-store-password: changeit
+        protocol: TLS
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver

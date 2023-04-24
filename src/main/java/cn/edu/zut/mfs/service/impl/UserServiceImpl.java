@@ -7,6 +7,7 @@ import cn.edu.zut.mfs.domain.RoleRelation;
 import cn.edu.zut.mfs.domain.User;
 import cn.edu.zut.mfs.dto.FindUserPageDto;
 import cn.edu.zut.mfs.service.RedisService;
+import cn.edu.zut.mfs.service.RequestProcessor;
 import cn.edu.zut.mfs.service.UserService;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -57,6 +58,15 @@ public class UserServiceImpl implements UserService {
     public List<User> onlineList() {
         List<User> users = new ArrayList<>();
         redisService.keys("rsocket").forEach(key -> {
+            users.add(userDao.selectById(key));
+        });
+        return users;
+    }
+
+    @Override
+    public List<User> connectList() {
+        List<User> users = new ArrayList<>();
+        RequestProcessor.nonBlockingHashMap.keySet().forEach(key -> {
             users.add(userDao.selectById(key));
         });
         return users;

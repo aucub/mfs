@@ -57,4 +57,6 @@ public interface UserService {
     List<User> onlineList();
 
     Long onlineUsers();
+
+    List<User> connectList();
 }
