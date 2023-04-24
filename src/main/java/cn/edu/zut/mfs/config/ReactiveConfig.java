@@ -14,6 +14,7 @@ import org.springframework.messaging.rsocket.RSocketStrategies;
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 import org.springframework.security.config.annotation.rsocket.EnableRSocketSecurity;
 import org.springframework.security.config.annotation.rsocket.RSocketSecurity;
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.NimbusReactiveJwtDecoder;
@@ -38,17 +39,28 @@ import java.util.Map;
  */
 @Configuration
 @EnableRSocketSecurity
+@EnableWebFluxSecurity
 @EnableReactiveMethodSecurity
-public class RSocketConfig {
+public class ReactiveConfig {
 
     @Bean
-    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
-        http.csrf(s -> s.disable())
-                .formLogin(s -> s
-                        .loginPage("/login/doLogin")
-                )
-                .authorizeExchange(n -> n
-                        .pathMatchers("/login/**").permitAll());
+    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
+        try {
+            http.authorizeExchange().anyExchange().authenticated().and()
+                    .oauth2ResourceServer(oauth2 -> oauth2
+                            .jwt(jwt -> {
+                                        try {
+                                            jwt
+                                                    .authenticationManager(jwtReactiveAuthenticationManager(reactiveJwtDecoder()));
+                                        } catch (Exception e) {
+                                            throw new RuntimeException(e);
+                                        }
+                                    }
+                            )
+                    );
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         return http.build();
     }
 

@@ -2,12 +2,13 @@ server:
   port: 8080
 logging:
   level:
-    root: info
+    root: debug
 
 spring:
   main:
     web-application-type: reactive
     lazy-initialization: false
+
   rsocket:
     server:
       address: 127.0.0.1
