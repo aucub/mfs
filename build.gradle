@@ -39,7 +39,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-aop'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation 'org.springframework.boot:spring-boot-configuration-processor'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.2'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.0'
     implementation 'org.springframework.boot:spring-boot-starter-logging'
     implementation 'org.springframework.amqp:spring-rabbit:3.0.4'
     implementation 'org.springframework.boot:spring-boot-starter-integration'

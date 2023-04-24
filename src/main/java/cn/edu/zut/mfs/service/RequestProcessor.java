@@ -1,11 +1,13 @@
 package cn.edu.zut.mfs.service;
 
+import cn.edu.zut.mfs.domain.LinkLog;
 import lombok.extern.slf4j.Slf4j;
 import org.jctools.maps.NonBlockingHashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.rsocket.RSocketRequester;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.Objects;
 
 @Slf4j
@@ -14,7 +16,14 @@ public class RequestProcessor {
 
     private RedisService redisService;
 
+    private LoginAuthService loginAuthService;
+
     public static NonBlockingHashMap<String, RSocketRequester> nonBlockingHashMap = new NonBlockingHashMap<>();
+
+    @Autowired
+    public void setLoginAuthService(LoginAuthService loginAuthService) {
+        this.loginAuthService = loginAuthService;
+    }
 
     @Autowired
     public void setRedisService(RedisService redisService) {
@@ -25,13 +34,14 @@ public class RequestProcessor {
         Objects.requireNonNull(requester.rsocket())
                 .onClose()
                 .doFirst(() -> {
-                    log.info("客户端: {} 连接", userId);
                     if (Objects.equals(route, "connect")) {
                         nonBlockingHashMap.put(userId, requester);
                     }
                     if (redisService.hasKey("rsocket", userId)) {
                         redisService.incrementHash("rsocket", userId);
                     } else redisService.writeHash("rsocket", userId, Integer.valueOf(1));
+                    loginAuthService.addLinkLog(new LinkLog(null, userId, new Date(), route, null));
+                    log.info("客户端: {} 连接", userId);
                 })
                 .doOnError(error -> log.warn("通道被客户端： {} 关闭", userId))
                 .doFinally(consumer -> {

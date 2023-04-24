@@ -106,3 +106,13 @@ INSERT INTO mfs.user_login_log (id, user_id, create_time, ip)
 VALUES (15, '0c59989d3970380ae168880686c4a070', '2023-04-21 02:39:35', null);
 INSERT INTO mfs.user_login_log (id, user_id, create_time, ip)
 VALUES (16, '0c59989d3970380ae168880686c4a070', '2023-04-21 02:40:23', null);
+
+create table if not exists link_log
+(
+    id          bigint auto_increment
+        primary key,
+    user_id     varchar(32) null,
+    create_time datetime    null,
+    route       varchar(32) null,
+    ip          varchar(64) null
+);
