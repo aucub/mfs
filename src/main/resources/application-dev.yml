@@ -16,12 +16,12 @@ spring:
       # mapping-path: /rsocket/
       transport: tcp
       ssl:
-        enabled: true
+        enabled: false
         key-store-type: PKCS12
         key-store: classpath:keystore.p12
         key-store-password: changeit
         enabled-protocols: TLSv1.2
-        client-auth: need
+        client-auth: none
         trust-store: classpath:keystore.p12
         trust-store-password: changeit
         protocol: TLS

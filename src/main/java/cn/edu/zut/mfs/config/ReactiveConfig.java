@@ -46,7 +46,16 @@ public class ReactiveConfig {
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         try {
-            http.authorizeExchange().anyExchange().authenticated().and()
+            http
+                    .csrf().disable()
+                    .cors().disable()
+                    .authorizeExchange(
+                            authorize -> {
+                                authorize.pathMatchers("/login/doLogin").permitAll();
+                                authorize.pathMatchers("/rsocket/**", "/publish").permitAll();
+                                authorize.anyExchange().authenticated();
+                            }
+                    )
                     .oauth2ResourceServer(oauth2 -> oauth2
                             .jwt(jwt -> {
                                         try {
