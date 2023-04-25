@@ -18,13 +18,9 @@ import java.util.List;
 
 @Service
 public class InfluxDBServiceImpl implements InfluxDBService {
-    private InfluxDBClient influxDBClient;
-    private WriteApi writeApi;
+    private final static InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://127.0.0.1:8086", "UV6YDazxbkL4Oda9q4h6eUMUGIRUWMAPcjqPrb1VCNB5QwR-340Xd1WPyQqufT2hmBUflIy8gN71cHz686HrTg==".toCharArray(), "example", "mfs");
+    private final static WriteApi writeApi = influxDBClient.makeWriteApi();
 
-    public InfluxDBServiceImpl() {
-        this.influxDBClient = InfluxDBClientFactory.create();
-        this.writeApi = influxDBClient.makeWriteApi();
-    }
 
     @Override
     public void publish(PublishRecord publishRecord) {
@@ -64,8 +60,7 @@ public class InfluxDBServiceImpl implements InfluxDBService {
                 " |> limit(n:120)";
         String flux = String.format(template, start, stop);
         QueryApi queryApi = influxDBClient.getQueryApi();
-        List<PublishRecord> publishRecords = queryApi.query(flux, PublishRecord.class);
-        return publishRecords;
+        return queryApi.query(flux, PublishRecord.class);
     }
 
     @Override
@@ -77,8 +72,7 @@ public class InfluxDBServiceImpl implements InfluxDBService {
                 " |> limit(n:120)";
         String flux = String.format(template, start, stop);
         QueryApi queryApi = influxDBClient.getQueryApi();
-        List<ConsumeRecord> consumeRecords = queryApi.query(flux, ConsumeRecord.class);
-        return consumeRecords;
+        return queryApi.query(flux, ConsumeRecord.class);
     }
 
     @Override
@@ -90,8 +84,7 @@ public class InfluxDBServiceImpl implements InfluxDBService {
                 " |> limit(n:120)";
         String flux = String.format(template, start, stop);
         QueryApi queryApi = influxDBClient.getQueryApi();
-        List<PushMessage> pushMessages = queryApi.query(flux, PushMessage.class);
-        return pushMessages;
+        return queryApi.query(flux, PushMessage.class);
     }
 
     @Override

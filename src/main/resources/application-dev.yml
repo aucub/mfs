@@ -91,7 +91,7 @@ spring:
 influx:
   url: http://localhost:8086/
   username: root
-  token: _toD4aYpTxcfkA4TtE3FwQdprrh0A5203bvZsyX63dIjnMmv-j6PJfrOHRDH-mZKDGiLU1SsAaenWumVx3FrOw==
+  token: UV6YDazxbkL4Oda9q4h6eUMUGIRUWMAPcjqPrb1VCNB5QwR-340Xd1WPyQqufT2hmBUflIy8gN71cHz686HrTg==
   org: example
   bucket: mfs
   logLevel: BODY

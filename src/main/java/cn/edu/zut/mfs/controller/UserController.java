@@ -41,76 +41,83 @@ public class UserController {
     }
 
     @PostMapping("/list")
-    public BaseResponse<Page<User>> list(@RequestBody FindUserPageDto findUserPageDto) {
-        return BaseResponse.success(userService.list(findUserPageDto));
+    @PreAuthorize("hasRole('userMan')")
+    public Mono<BaseResponse<Page<User>>> list(@RequestBody FindUserPageDto findUserPageDto) {
+        return Mono.just(BaseResponse.success(userService.list(findUserPageDto)));
     }
 
     @PostMapping("/save")
-    public BaseResponse<String> save(@RequestBody UserRegisterDto userRegisterDto) {
+    @PreAuthorize("hasRole('userMan')")
+    public Mono<BaseResponse<String>> save(@RequestBody UserRegisterDto userRegisterDto) {
         UserLoginDto userLoginDto = new UserLoginDto();
         userLoginDto.setUsername(userRegisterDto.getUsername());
         userLoginDto.setPassword(EncryptUtils.encrypt(userRegisterDto.getPassword(), userRegisterDto.getUsername()));
         userRegisterDto.setPassword(userLoginDto.getPassword());
-        if (registerService.register(userRegisterDto)) {
-            return BaseResponse.success("添加成功");
+        if (Boolean.TRUE.equals(registerService.register(userRegisterDto))) {
+            return Mono.just(BaseResponse.success("添加成功"));
         }
-        return BaseResponse.fail("添加失败");
+        return Mono.just(BaseResponse.fail("添加失败"));
     }
 
     @PostMapping(value = "/update")
-    public BaseResponse<String> update(@RequestBody User user) {
-        if (userService.update(user)) {
-            return BaseResponse.success("修改成功");
+    @PreAuthorize("hasRole('userMan')")
+    public Mono<BaseResponse<String>> update(@RequestBody User user) {
+        if (Boolean.TRUE.equals(userService.update(user))) {
+            return Mono.just(BaseResponse.success("修改成功"));
         }
-        return BaseResponse.fail("修改失败");
+        return Mono.just(BaseResponse.fail("修改失败"));
     }
 
-    @PostMapping(value = "/delete")
-    public BaseResponse<String> delete(@RequestParam String id) {
-        if (userService.delete(id)) {
-            return BaseResponse.success("删除成功");
-        } else return BaseResponse.fail("删除失败");
-    }
-
-
-    @PostMapping(value = "/getUserInfoByUsername")
-    public BaseResponse<User> getUserInfoByUsername(@RequestParam String username) {
-        return BaseResponse.success(userService.getUserByUsername(username));
+    @GetMapping(value = "/delete")
+    @PreAuthorize("hasRole('userMan')")
+    public Mono<BaseResponse<String>> delete(@RequestParam String id) {
+        if (Boolean.TRUE.equals(userService.delete(id))) {
+            return Mono.just(BaseResponse.success("删除成功"));
+        } else return Mono.just(BaseResponse.fail("删除失败"));
     }
 
 
-    @PostMapping(value = "/getUserInfoByUserId")
-    public BaseResponse<User> getUserInfoByUserId(@RequestParam String userId) {
-        return BaseResponse.success(userService.getUserById(userId));
+    @GetMapping(value = "/getUserInfoByUsername")
+    @PreAuthorize("hasRole('userMan')")
+    public Mono<BaseResponse<User>> getUserInfoByUsername(@RequestParam String username) {
+        return Mono.just(BaseResponse.success(userService.getUserByUsername(username)));
+    }
+
+
+    @GetMapping(value = "/getUserInfoByUserId")
+    @PreAuthorize("hasRole('userMan')")
+    public Mono<BaseResponse<User>> getUserInfoByUserId(@RequestParam String userId) {
+        return Mono.just(BaseResponse.success(userService.getUserById(userId)));
     }
 
 
     @GetMapping("/getLoginUserInfo")
     @PreAuthorize("hasRole('userMan')")
     public Mono<BaseResponse<User>> getLoginUserInfo(@AuthenticationPrincipal Jwt jwt) {
-        System.out.println(jwt.getSubject());
-        //return BaseResponse.success(userService.getUserById());
-        return Mono.just(BaseResponse.success(new User()));
+        return Mono.just(BaseResponse.success(userService.getUserById(jwt.getSubject())));
     }
 
 
-    @PostMapping(value = "/getRoleListByUserId")
-    public BaseResponse<List<Role>> getRoleListByUserId(@RequestBody String userId) {
-        return BaseResponse.success(userService.getRoleList(userId));
+    @GetMapping(value = "/getRoleListByUserId")
+    @PreAuthorize("hasRole('userMan')")
+    public Mono<BaseResponse<List<Role>>> getRoleListByUserId(@RequestParam String userId) {
+        return Mono.just(BaseResponse.success(userService.getRoleList(userId)));
     }
 
 
     @PostMapping(value = "/saveAuthRole")
-    public BaseResponse<String> saveAuthRole(@RequestBody RoleRelationDto roleRelationDto) {
-        if (userService.updateRole(roleRelationDto.getUserId(), roleRelationDto.getRoleIds())) {
-            return BaseResponse.success("保存成功");
+    @PreAuthorize("hasRole('userMan')")
+    public Mono<BaseResponse<String>> saveAuthRole(@RequestBody RoleRelationDto roleRelationDto) {
+        if (Boolean.TRUE.equals(userService.updateRole(roleRelationDto.getUserId(), roleRelationDto.getRoleIds()))) {
+            return Mono.just(BaseResponse.success("保存成功"));
         }
-        return BaseResponse.fail("保存失败");
+        return Mono.just(BaseResponse.fail("保存失败"));
     }
 
     @PostMapping(value = "/generateJwt")
-    public BaseResponse<String> generateJwt(@AuthenticationPrincipal Jwt jwt, JwtDto jwtDto) {
-        return BaseResponse.success(JwtUtils.generate(new JwtDto(UUID.randomUUID().toString(), jwt.getSubject(), jwtDto.getSubject(), jwtDto.getExpiresAt(), "mfs", userService.getRoleListAsString(jwt.getSubject()))));
+    @PreAuthorize("hasRole('userMan')")
+    public Mono<BaseResponse<String>> generateJwt(@AuthenticationPrincipal Jwt jwt, @RequestBody JwtDto jwtDto) {
+        return Mono.just(BaseResponse.success(JwtUtils.generate(new JwtDto(UUID.randomUUID().toString(), jwt.getSubject(), jwtDto.getSubject(), jwtDto.getExpiresAt(), "mfs", userService.getRoleListAsString(jwt.getSubject())))));
     }
 
 }
