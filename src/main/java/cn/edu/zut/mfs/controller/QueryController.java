@@ -4,7 +4,10 @@ import cn.edu.zut.mfs.domain.ConsumeRecord;
 import cn.edu.zut.mfs.domain.PublishRecord;
 import cn.edu.zut.mfs.domain.PushMessage;
 import cn.edu.zut.mfs.service.InfluxDBService;
+import cn.edu.zut.mfs.service.MeiliSearchService;
 import cn.edu.zut.mfs.service.impl.InfluxDBServiceImpl;
+import com.meilisearch.sdk.exceptions.MeilisearchException;
+import com.meilisearch.sdk.model.Searchable;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,5 +40,11 @@ public class QueryController {
     @PostMapping("/queryPush")
     public Mono<List<PushMessage>> queryPush(@RequestParam String start, @RequestParam String stop) {
         return Mono.just(influxDBService.queryPush(start, stop));
+    }
+
+    @PreAuthorize("hasRole('query')")
+    @PostMapping("/search")
+    public Mono<Searchable> search(String uid, String keyword, Integer offset) throws MeilisearchException {
+        return Mono.just(MeiliSearchService.search(uid, keyword, offset));
     }
 }
