@@ -72,18 +72,15 @@ public class UserServiceImpl implements UserService {
     @Cacheable("onlineList")
     public List<User> onlineList() {
         List<User> users = new ArrayList<>();
-        redisService.keys("rsocket").forEach(key -> {
-            users.add(userDao.selectById(key));
-        });
+        redisService.keys("rsocket").forEach(key -> users.add(userDao.selectById(key)));
         return users;
     }
 
     @Override
+    @Cacheable("connectList")
     public List<User> connectList() {
         List<User> users = new ArrayList<>();
-        RequestProcessor.nonBlockingHashMap.keySet().forEach(key -> {
-            users.add(userDao.selectById(key));
-        });
+        RequestProcessor.nonBlockingHashMap.keySet().forEach(key -> users.add(userDao.selectById(key)));
         return users;
     }
 

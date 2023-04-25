@@ -22,7 +22,7 @@ public enum ResultCode {
     /**
      * 认证异常
      **/
-    SaTokenException(401, "认证异常"),
+    AuthException(401, "认证异常"),
     /**
      * 异常
      **/

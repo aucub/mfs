@@ -26,7 +26,7 @@ import java.util.UUID;
 @Slf4j
 @Service
 public class ConsumeStreamServiceImpl implements ConsumeStreamService {
-    private final static Environment environment = Environment.builder()
+    private static final Environment environment = Environment.builder()
             .uri("rabbitmq-stream://root:root@47.113.201.150:5552/%2fmfs")
             .build();
     RSocketServer rSocketServer;
@@ -48,7 +48,7 @@ public class ConsumeStreamServiceImpl implements ConsumeStreamService {
         }
         InfluxDBService influxDBService = new InfluxDBServiceImpl();
         OffsetSpecification offsetSpecification = OffsetSpecification.none();
-        if (consume.getManual()) {
+        if (Boolean.TRUE.equals(Boolean.TRUE.equals(consume.getManual()))) {
             if (consume.getTimestamp() > 0) {
                 offsetSpecification = OffsetSpecification.timestamp(consume.getTimestamp());
             } else if (consume.getOffset() == -1) {
@@ -77,9 +77,7 @@ public class ConsumeStreamServiceImpl implements ConsumeStreamService {
                                     }
                             )
                             .build();
-            emitter.onDispose(() -> {
-                consumer.close();
-            });
+            emitter.onDispose(() -> consumer.close());
         });
         return Flux.interval(Duration.ofSeconds(5))
                 .map(v -> new CloudEventV1(UUID.randomUUID().toString(), URI.create("example.com/mfs"), "com.example.mfs", "text/plain", URI.create("mfs"), "mfs", Instant.now().atOffset(ZoneOffset.UTC), BytesCloudEventData.wrap("暂无新消息".getBytes()), null))

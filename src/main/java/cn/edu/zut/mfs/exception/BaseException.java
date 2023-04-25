@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 异常基类
+ * 异常
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

@@ -25,12 +25,12 @@ import java.util.UUID;
 @Service
 public class ConsumeServiceImpl implements ConsumeService {
 
-    private static AmqpAdmin amqpAdmin;
+    private AmqpAdmin amqpAdmin;
     private ConnectionFactory connectionFactory;
 
     @Autowired
-    public static void setAmqpAdmin(AmqpAdmin amqpAdmin) {
-        ConsumeServiceImpl.amqpAdmin = amqpAdmin;
+    public void setAmqpAdmin(AmqpAdmin amqpAdmin) {
+        this.amqpAdmin = amqpAdmin;
     }
 
     @Autowired
@@ -48,16 +48,12 @@ public class ConsumeServiceImpl implements ConsumeService {
             simpleMessageListenerContainer.setupMessageListener(message -> {
                 emitter.next(MessageConverter.fromMessage(message));
                 Thread.startVirtualThread(() -> {
-                    ConsumeRecord consumeRecord = new ConsumeRecord((String) message.getMessageProperties().getMessageId(), consume.getQueue(), userId, Instant.now());
+                    ConsumeRecord consumeRecord = new ConsumeRecord(message.getMessageProperties().getMessageId(), consume.getQueue(), userId, Instant.now());
                     influxDBService.consume(consumeRecord);
                 });
             });
-            emitter.onRequest(v -> {
-                simpleMessageListenerContainer.start();
-            });
-            emitter.onDispose(() -> {
-                simpleMessageListenerContainer.stop();
-            });
+            emitter.onRequest(v -> simpleMessageListenerContainer.start());
+            emitter.onDispose(simpleMessageListenerContainer::stop);
         });
         return Flux.interval(Duration.ofSeconds(5))
                 .map(v -> new CloudEventV1(UUID.randomUUID().toString(), URI.create("http://example.com/mfs"), "com.example.mfs", "text/plain", URI.create("mfs"), "mfs", Instant.now().atOffset(ZoneOffset.UTC), BytesCloudEventData.wrap("暂无新消息".getBytes()), null))

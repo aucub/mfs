@@ -8,6 +8,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -48,7 +49,7 @@ public class RedisServiceImpl implements RedisService {
 
     @Override
     public Integer loadHash(String key, String userId) {
-        return Integer.valueOf(hashOperations.get(key, userId));
+        return Integer.valueOf(Objects.requireNonNull(hashOperations.get(key, userId)));
     }
 
     @Override

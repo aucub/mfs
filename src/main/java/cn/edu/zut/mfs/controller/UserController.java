@@ -1,7 +1,9 @@
 package cn.edu.zut.mfs.controller;
 
+import cn.edu.zut.mfs.domain.LinkLog;
 import cn.edu.zut.mfs.domain.Role;
 import cn.edu.zut.mfs.domain.User;
+import cn.edu.zut.mfs.domain.UserLoginLog;
 import cn.edu.zut.mfs.dto.*;
 import cn.edu.zut.mfs.pojo.BaseResponse;
 import cn.edu.zut.mfs.service.RegisterService;
@@ -120,4 +122,22 @@ public class UserController {
         return Mono.just(BaseResponse.success(JwtUtils.generate(new JwtDto(UUID.randomUUID().toString(), jwt.getSubject(), jwtDto.getSubject(), jwtDto.getExpiresAt(), "mfs", userService.getRoleListAsString(jwt.getSubject())))));
     }
 
+
+    @PostMapping(value = "/connectList")
+    @PreAuthorize("hasRole('userMan')")
+    public Mono<BaseResponse<List<User>>> connectList() {
+        return Mono.just(BaseResponse.success(userService.connectList()));
+    }
+
+    @PostMapping(value = "/getUserLoginLogList")
+    @PreAuthorize("hasRole('userMan')")
+    public Mono<BaseResponse<Page<UserLoginLog>>> getUserLoginLogList(@RequestBody FindPageDto findPageDto) {
+        return Mono.just(BaseResponse.success(userService.getUserLoginLogList(findPageDto)));
+    }
+
+    @PostMapping(value = "/getLinkLogList")
+    @PreAuthorize("hasRole('userMan')")
+    public Mono<BaseResponse<Page<LinkLog>>> getLinkLogList(@RequestBody FindPageDto findPageDto) {
+        return Mono.just(BaseResponse.success(userService.getLinkLogList(findPageDto)));
+    }
 }

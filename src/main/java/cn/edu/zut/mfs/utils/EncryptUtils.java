@@ -32,10 +32,6 @@ public class EncryptUtils {
 
     /**
      * 加密
-     *
-     * @param plaintext
-     * @param contextInfo
-     * @return
      */
     @SneakyThrows
     public static String encrypt(String plaintext, String contextInfo) {

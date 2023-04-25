@@ -7,12 +7,13 @@ import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
 import java.net.SocketAddress;
+import java.util.Objects;
 
 public class RSocketUtil {
     public static DuplexConnection getConnectionFromRequester(RSocketRequester requester) {
         RSocket rsocket = requester.rsocket();
-        Field connectionField = ReflectionUtils.findField(rsocket.getClass(), "connection");
-        connectionField.setAccessible(true);
+        Field connectionField = ReflectionUtils.findField(Objects.requireNonNull(rsocket).getClass(), "connection");
+        Objects.requireNonNull(connectionField).setAccessible(true);
         return (DuplexConnection) ReflectionUtils.getField(connectionField, rsocket);
     }
 

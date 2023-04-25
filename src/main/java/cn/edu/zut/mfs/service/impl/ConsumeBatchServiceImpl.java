@@ -17,12 +17,12 @@ import java.time.Instant;
 
 @Service
 public class ConsumeBatchServiceImpl implements ConsumeBatchService {
-    private static AmqpAdmin amqpAdmin;
+    private AmqpAdmin amqpAdmin;
     private RabbitTemplate rabbitTemplate;
 
     @Autowired
-    public static void setAmqpAdmin(AmqpAdmin amqpAdmin) {
-        ConsumeBatchServiceImpl.amqpAdmin = amqpAdmin;
+    public void setAmqpAdmin(AmqpAdmin amqpAdmin) {
+        this.amqpAdmin = amqpAdmin;
     }
 
     @Autowired
@@ -37,11 +37,14 @@ public class ConsumeBatchServiceImpl implements ConsumeBatchService {
         return Flux.create(emitter -> {
             for (int i = 0; i < consume.getBatchSize(); i++) {
                 Message message = rabbitTemplate.receive(consume.getQueue());
-                emitter.next(MessageConverter.fromMessage(message));
-                Thread.startVirtualThread(() -> {
-                    ConsumeRecord consumeRecord = new ConsumeRecord((String) message.getMessageProperties().getMessageId(), consume.getQueue(), userId, Instant.now());
-                    influxDBService.consume(consumeRecord);
-                });
+                if (message != null) {
+                    emitter.next(MessageConverter.fromMessage(message));
+                    Thread.startVirtualThread(() -> {
+                        ConsumeRecord consumeRecord;
+                        consumeRecord = new ConsumeRecord(message.getMessageProperties().getMessageId(), consume.getQueue(), userId, Instant.now());
+                        influxDBService.consume(consumeRecord);
+                    });
+                }
             }
             emitter.complete();
         });

@@ -63,10 +63,10 @@ public class BaseResponse<T> {
     /**
      * SaToken异常 返回
      */
-    public static <T> BaseResponse<T> saTokenException(T data) {
+    public static <T> BaseResponse<T> authException(T data) {
         BaseResponse<T> response = new BaseResponse<>();
-        response.setCode(ResultCode.SaTokenException.getCode());
-        response.setMessage(ResultCode.SaTokenException.getMessage());
+        response.setCode(ResultCode.AuthException.getCode());
+        response.setMessage(ResultCode.AuthException.getMessage());
         response.setData(data);
         return response;
     }

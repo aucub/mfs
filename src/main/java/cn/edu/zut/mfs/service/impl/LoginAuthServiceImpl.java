@@ -46,27 +46,25 @@ public class LoginAuthServiceImpl implements LoginAuthService {
 
     @Override
     public Boolean login(UserLoginDto userLoginDto) {
+        if (!loginDao.selectByMap(set(userLoginDto)).isEmpty()) {
+            return true;
+        } else throw new BaseException("账号或密码错误");
+    }
+
+    public Map<String, Object> set(UserLoginDto userLoginDto) {
         if (CharSequenceUtil.isEmpty(userLoginDto.getUsername()) || CharSequenceUtil.isEmpty(userLoginDto.getPassword())) {
             throw new BaseException("账号或密码格式错误");
         }
         Map<String, Object> params = new HashMap<>();
         params.put("username", userLoginDto.getUsername());
         params.put("password", userLoginDto.getPassword());
-        if (!loginDao.selectByMap(params).isEmpty()) {
-            return true;
-        } else throw new BaseException("账号或密码错误");
+        return params;
     }
 
 
     @Override
     public Boolean updatePassword(UserLoginDto userLoginDto) {
-        if (CharSequenceUtil.isEmpty(userLoginDto.getUsername()) || CharSequenceUtil.isEmpty(userLoginDto.getPassword())) {
-            throw new BaseException("账号或密码格式错误");
-        }
-        Map<String, Object> params = new HashMap<>();
-        params.put("username", userLoginDto.getUsername());
-        params.put("password", userLoginDto.getPassword());
-        if (loginDao.selectByMap(params).isEmpty()) {
+        if (loginDao.selectByMap(set(userLoginDto)).isEmpty()) {
             return loginDao.updateById(userLoginDto) == 1;
         } else throw new BaseException("密码格式错误");
     }

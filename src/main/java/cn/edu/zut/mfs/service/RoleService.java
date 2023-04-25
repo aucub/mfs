@@ -5,20 +5,6 @@ import cn.edu.zut.mfs.domain.Role;
 import java.util.List;
 
 public interface RoleService {
-    /**
-     * 添加角色
-     */
-    Boolean save(Role role);
-
-    /**
-     * 删除角色
-     */
-    Boolean delete(String id);
-
-    /**
-     * 修改角色信息
-     */
-    Boolean update(Role role);
 
     /**
      * 获取所有角色列表

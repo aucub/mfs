@@ -119,9 +119,7 @@ public class ReactiveConfig {
                             MimeType.valueOf("application/x.metadata+json"),
                             new ParameterizedTypeReference<Map<String, String>>() {
                             },
-                            (jsonMap, outputMap) -> {
-                                outputMap.putAll(jsonMap);
-                            });
+                            (jsonMap, outputMap) -> outputMap.putAll(jsonMap));
                     registry.metadataToExtract(MimeType.valueOf("application/x.metadataHeader+json"), MetadataHeader.class, "metadataHeader");
                 })
                 .encoders(encoders -> {

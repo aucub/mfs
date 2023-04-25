@@ -57,13 +57,38 @@ public interface UserService {
     User getUserByUsername(String username);
 
 
+    /**
+     * 在线列表
+     *
+     * @return {@link List}<{@link User}>
+     */
     List<User> onlineList();
 
+    /**
+     * 在线用户
+     *
+     * @return {@link Long}
+     */
     Long onlineUsers();
 
+    /**
+     * 连接列表
+     *
+     * @return {@link List}<{@link User}>
+     */
     List<User> connectList();
 
+    /**
+     * 用户登录日志列表
+     *
+     * @return {@link Page}<{@link UserLoginLog}>
+     */
     Page<UserLoginLog> getUserLoginLogList(FindPageDto findPageDto);
 
+    /**
+     * 得到链接日志列表
+     *
+     * @return {@link Page}<{@link LinkLog}>
+     */
     Page<LinkLog> getLinkLogList(FindPageDto findPageDto);
 }

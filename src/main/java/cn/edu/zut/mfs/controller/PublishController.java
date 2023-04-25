@@ -67,12 +67,12 @@ public class PublishController {
         publishStreamService.publish(mpmcAtomicArrayQueue, userId, metadataHeader, cloudEventFlux);
         return Flux.interval(Duration.ofSeconds(5)).map(
                 i -> {
-                    String s = "";
+                    StringBuilder s = new StringBuilder();
                     int size = mpmcAtomicArrayQueue.size();
                     for (int i1 = 0; i1 < size; i1++) {
-                        s += mpmcAtomicArrayQueue.poll() + ",";
+                        s.append(mpmcAtomicArrayQueue.poll());
                     }
-                    return s;
+                    return s.toString();
                 });
     }
 

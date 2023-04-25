@@ -8,12 +8,23 @@ spring:
   main:
     web-application-type: reactive
     lazy-initialization: false
+
   rsocket:
     server:
-      address: localhost
+      address: 127.0.0.1
       port: 9898
       # mapping-path: /rsocket/
       transport: tcp
+      ssl:
+        enabled: false
+        key-store-type: PKCS12
+        key-store: classpath:keystore.p12
+        key-store-password: changeit
+        enabled-protocols: TLSv1.2
+        client-auth: none
+        trust-store: classpath:keystore.p12
+        trust-store-password: changeit
+        protocol: TLS
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -80,7 +91,7 @@ spring:
 influx:
   url: http://localhost:8086/
   username: root
-  token: _toD4aYpTxcfkA4TtE3FwQdprrh0A5203bvZsyX63dIjnMmv-j6PJfrOHRDH-mZKDGiLU1SsAaenWumVx3FrOw==
+  token: UV6YDazxbkL4Oda9q4h6eUMUGIRUWMAPcjqPrb1VCNB5QwR-340Xd1WPyQqufT2hmBUflIy8gN71cHz686HrTg==
   org: example
   bucket: mfs
   logLevel: BODY
@@ -109,3 +120,39 @@ mybatis-plus:
   mapper-locations:
     - classpath:mapper/*.xml
     - classpath*:com/**/mapper/*.xml
+
+management:
+  server:
+    port: 8091
+  influx:
+    metrics:
+      export:
+        auto-create-db: true
+        bucket: mfs
+        org: example
+        api-version: v2
+        uri: http://localhost:8086/
+        token: UV6YDazxbkL4Oda9q4h6eUMUGIRUWMAPcjqPrb1VCNB5QwR-340Xd1WPyQqufT2hmBUflIy8gN71cHz686HrTg==
+  endpoint:
+    info:
+      enabled: true
+    loggers:
+      enabled: true
+    metrics:
+      enabled: true
+    health:
+      enabled: true
+    beans:
+      enabled: true
+    conditions:
+      enabled: true
+    heapdump:
+      enabled: true
+    mappings:
+      enabled: true
+    threaddump:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: [ "*" ]

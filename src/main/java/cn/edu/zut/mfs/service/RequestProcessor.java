@@ -36,15 +36,16 @@ public class RequestProcessor {
                     if (Objects.equals(route, "connect")) {
                         nonBlockingHashMap.put(userId, requester);
                     }
-                    if (redisService.hasKey("rsocket", userId)) {
+                    if (Boolean.TRUE.equals(redisService.hasKey("rsocket", userId))) {
                         redisService.incrementHash("rsocket", userId);
-                    } else redisService.writeHash("rsocket", userId, Integer.valueOf(1));
+                    } else redisService.writeHash("rsocket", userId, 1);
                     loginAuthService.addLinkLog(new LinkLog(null, userId, new Date(), route, RSocketUtil.getRemoteAddressFromRequester(requester).toString()));
                     log.info("客户端: {} 连接", userId);
                 })
                 .doOnError(error -> log.warn("通道被客户端： {} 关闭", userId))
                 .doFinally(consumer -> {
                     nonBlockingHashMap.remove(userId);
+                    loginAuthService.addLinkLog(new LinkLog(null, userId, new Date(), "-" + route, RSocketUtil.getRemoteAddressFromRequester(requester).toString()));
                     if (redisService.loadHash("rsocket", userId) == 1) {
                         redisService.delete("rsocket", userId);
                     } else redisService.reduceHash("rsocket", userId);

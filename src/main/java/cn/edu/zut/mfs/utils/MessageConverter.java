@@ -14,6 +14,7 @@ import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class MessageConverter {
     public static Message toMessage(CloudEventV1 payload) {
@@ -23,7 +24,9 @@ public class MessageConverter {
             messageProperties.setMessageId(payload.getId());
             messageProperties.setContentType(payload.getDataContentType());
             messageProperties.setType(payload.getType());
-            messageProperties.setTimestamp(Date.from(payload.getTime().toInstant()));
+            if (payload.getTime() != null) {
+                messageProperties.setTimestamp(Date.from(payload.getTime().toInstant()));
+            }
             payload.getExtensionNames().forEach(item -> {
                 switch (item) {
                     case "appid" -> messageProperties.setAppId((String) payload.getExtension("appid"));
@@ -36,7 +39,7 @@ public class MessageConverter {
                     default -> headers.put(item, payload.getExtension(item));
                 }
             });
-            return new Message(payload.getData().toBytes(), messageProperties);
+            return new Message(Objects.requireNonNull(payload.getData()).toBytes(), messageProperties);
         }
         return null;
     }

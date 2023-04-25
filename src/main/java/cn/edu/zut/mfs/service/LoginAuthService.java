@@ -14,9 +14,6 @@ public interface LoginAuthService {
 
     /**
      * 添加登录日志
-     *
-     * @param userLoginLog
-     * @return
      */
     Boolean addLoginLog(UserLoginLog userLoginLog);
 

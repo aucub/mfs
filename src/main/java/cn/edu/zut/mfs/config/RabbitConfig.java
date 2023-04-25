@@ -1,10 +1,10 @@
 package cn.edu.zut.mfs.config;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.ConditionalRejectingErrorHandler;
-import org.springframework.amqp.rabbit.support.ListenerExecutionFailedException;
 import org.springframework.boot.autoconfigure.amqp.SimpleRabbitListenerContainerFactoryConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.task.TaskExecutor;
@@ -26,8 +26,10 @@ public class RabbitConfig {
         CachingConnectionFactory ccf = new CachingConnectionFactory("localhost", 5672);
         ccf.setVirtualHost("mfs");
         CachingConnectionFactory publisherCF = (CachingConnectionFactory) ccf.getPublisherConnectionFactory();
-        publisherCF.setChannelCacheSize(1);
-        publisherCF.setChannelCheckoutTimeout(1000L);
+        if (publisherCF != null) {
+            publisherCF.setChannelCacheSize(1);
+            publisherCF.setChannelCheckoutTimeout(1000L);
+        }
         return ccf;
     }
 
@@ -43,10 +45,7 @@ public class RabbitConfig {
     public static class FatalExceptionStrategy extends ConditionalRejectingErrorHandler.DefaultExceptionStrategy {
 
         @Override
-        public boolean isFatal(Throwable t) {
-            if (t instanceof ListenerExecutionFailedException) {
-                ListenerExecutionFailedException lefe = (ListenerExecutionFailedException) t;
-            }
+        public boolean isFatal(@NotNull Throwable t) {
             return super.isFatal(t);
         }
 

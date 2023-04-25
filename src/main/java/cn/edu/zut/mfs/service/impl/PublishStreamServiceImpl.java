@@ -18,7 +18,7 @@ import java.util.Objects;
 @Slf4j
 @Service
 public class PublishStreamServiceImpl implements PublishStreamService {
-    private static Environment environment = Environment.builder()
+    private static final Environment environment = Environment.builder()
             .uri("rabbitmq-stream://root:root@47.113.201.150:5552/%2fmfs")
             .build();
     private RabbitStreamTemplate rabbitStreamTemplate;
@@ -61,9 +61,9 @@ public class PublishStreamServiceImpl implements PublishStreamService {
             }
             rabbitStreamTemplate.send(rabbitStreamTemplate.messageBuilder().properties().messageId(cloudEvent.getId()).contentType(contentType).contentEncoding(contentEncoding).subject(subject).creationTime(creationTime).messageBuilder().publishingId(Long.parseLong((String) Objects.requireNonNull(cloudEvent.getExtension("publishingid")))).addData(Objects.requireNonNull(cloudEvent.getData()).toBytes()).build()).thenAccept(result -> {
                 influxDBService.publishPoint(cloudEvent.getId(), result, cloudEvent.getTime().toInstant());
-                mpmcAtomicArrayQueue.add(cloudEvent.getId());
+                mpmcAtomicArrayQueue.add(cloudEvent.getId() + result);
             });
-            PublishRecord publishRecord = new PublishRecord(cloudEvent.getId(), cloudEvent.getSource().toString(), cloudEvent.getType(), (String) cloudEvent.getExtension("appid"), userId, Long.valueOf((String) cloudEvent.getExtension("publishingid")), cloudEvent.getDataContentType(), (String) cloudEvent.getExtension("contentEncoding"), cloudEvent.getSubject(), new String(cloudEvent.getData().toBytes()), null, cloudEvent.getTime().toInstant());
+            PublishRecord publishRecord = new PublishRecord(cloudEvent.getId(), cloudEvent.getSource().toString(), cloudEvent.getType(), (String) cloudEvent.getExtension("appid"), userId, Long.parseLong((String) Objects.requireNonNull(cloudEvent.getExtension("publishingid"))), cloudEvent.getDataContentType(), (String) cloudEvent.getExtension("contentEncoding"), cloudEvent.getSubject(), new String(cloudEvent.getData().toBytes()), null, cloudEvent.getTime().toInstant());
             influxDBService.publish(publishRecord);
         });
     }

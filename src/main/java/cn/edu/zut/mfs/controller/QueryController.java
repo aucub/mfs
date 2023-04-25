@@ -19,7 +19,7 @@ import java.util.List;
 @RequestMapping("/query/")
 @RestController
 public class QueryController {
-    private InfluxDBService influxDBService = new InfluxDBServiceImpl();
+    private final InfluxDBService influxDBService = new InfluxDBServiceImpl();
 
     @PreAuthorize("hasRole('query')")
     @PostMapping("/queryPublish")
