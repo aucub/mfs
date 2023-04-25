@@ -24,6 +24,11 @@ public class SearchOnlineController {
         this.userService = userService;
     }
 
+    /**
+     * 在线列表
+     *
+     * @return {@link Mono}<{@link List}<{@link User}>>
+     */
     @GetMapping("onlineList")
     @PreAuthorize("hasRole('searchOnline')")
     public Mono<List<User>> onlineList() {
@@ -31,6 +36,11 @@ public class SearchOnlineController {
     }
 
 
+    /**
+     * 在线用户
+     *
+     * @return {@link Mono}<{@link Long}>
+     */
     @GetMapping("onlineUsers")
     @PreAuthorize("hasRole('searchOnline')")
     public Mono<Long> onlineUsers() {

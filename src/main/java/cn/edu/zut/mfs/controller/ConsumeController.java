@@ -48,6 +48,14 @@ public class ConsumeController {
         this.consumeBatchService = consumeBatchService;
     }
 
+    /**
+     * 消费
+     *
+     * @param requester 请求者
+     * @param jwt       jwt
+     * @param consume   消费
+     * @return {@link Flux}<{@link CloudEventV1}>
+     */
     @PreAuthorize("hasRole('consume')")
     @MessageMapping("consume")
     public Flux<CloudEventV1> consume(RSocketRequester requester, @AuthenticationPrincipal Jwt jwt, Consume consume) {
@@ -59,6 +67,14 @@ public class ConsumeController {
         return consumeService.consume(userId, consume);
     }
 
+    /**
+     * 使用批处理
+     *
+     * @param requester 请求者
+     * @param jwt       jwt
+     * @param consume   消费
+     * @return {@link Flux}<{@link CloudEventV1}>
+     */
     @PreAuthorize("hasRole('consume')")
     @MessageMapping("consumeBatch")
     public Flux<CloudEventV1> ConsumeBatch(RSocketRequester requester, @AuthenticationPrincipal Jwt jwt, Consume consume) {

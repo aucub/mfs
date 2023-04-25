@@ -20,6 +20,12 @@ public class PushController {
         this.rSocketServer = rSocketServer;
     }
 
+    /**
+     * 推
+     *
+     * @param pushMessage 推送消息
+     * @return {@link Mono}<{@link Boolean}>
+     */
     @PreAuthorize("hasRole('push')")
     @PostMapping("/push")
     public Mono<Boolean> push(@RequestBody PushMessage pushMessage) {

@@ -22,6 +22,14 @@ public class ConnectController {
         this.requestProcessor = requestProcessor;
     }
 
+    /**
+     * 连接
+     *
+     * @param requester    请求者
+     * @param jwt          jwt
+     * @param cloudEventV1 云事件v1
+     * @return {@link Mono}<{@link Void}>
+     */
     @PreAuthorize("hasRole('connect')")
     @ConnectMapping("connect")
     public Mono<Void> connect(RSocketRequester requester, @AuthenticationPrincipal Jwt jwt, CloudEventV1 cloudEventV1) {

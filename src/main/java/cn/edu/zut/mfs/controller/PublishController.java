@@ -57,6 +57,15 @@ public class PublishController {
         this.publishBatchService = publishBatchService;
     }
 
+    /**
+     * 发布
+     *
+     * @param requester      请求者
+     * @param metadata       元数据
+     * @param jwt            jwt
+     * @param cloudEventFlux 云事件
+     * @return {@link Flux}<{@link String}>
+     */
     @MessageMapping("publish")
     @PreAuthorize("hasRole('publish')")
     public Flux<String> publish(RSocketRequester requester, @Headers Map<String, Object> metadata, @AuthenticationPrincipal Jwt jwt, Flux<CloudEvent> cloudEventFlux) {
@@ -76,6 +85,15 @@ public class PublishController {
                 });
     }
 
+    /**
+     * 发布经典
+     *
+     * @param requester      请求者
+     * @param metadata       元数据
+     * @param jwt            jwt
+     * @param cloudEventFlux 云事件
+     * @return {@link Flux}<{@link String}>
+     */
     @PreAuthorize("hasRole('publish')")
     @MessageMapping("publishClassic")
     public Flux<String> publishClassic(RSocketRequester requester, @Headers Map<String, Object> metadata, @AuthenticationPrincipal Jwt jwt, Flux<CloudEvent> cloudEventFlux) {
@@ -86,6 +104,15 @@ public class PublishController {
         return Flux.interval(Duration.ofSeconds(5)).map(i -> "OK");
     }
 
+    /**
+     * 发布
+     *
+     * @param requester      请求者
+     * @param metadata       元数据
+     * @param jwt            jwt
+     * @param cloudEventFlux 云事件通量
+     * @return {@link Flux}<{@link String}>
+     */
     @PreAuthorize("hasRole('publish')")
     @MessageMapping("publishTask")
     public Flux<String> publishTask(RSocketRequester requester, @Headers Map<String, Object> metadata, @AuthenticationPrincipal Jwt jwt, Flux<CloudEvent> cloudEventFlux) {
@@ -96,6 +123,15 @@ public class PublishController {
         return Flux.interval(Duration.ofSeconds(5)).map(i -> "OK");
     }
 
+    /**
+     * 发布
+     *
+     * @param requester      请求者
+     * @param metadata       元数据
+     * @param jwt            jwt
+     * @param cloudEventFlux 云事件
+     * @return {@link Flux}<{@link String}>
+     */
     @PreAuthorize("hasRole('publish')")
     @MessageMapping("publishBatch")
     public Flux<String> publishBatch(RSocketRequester requester, @Headers Map<String, Object> metadata, @AuthenticationPrincipal Jwt jwt, Flux<CloudEvent> cloudEventFlux) {
