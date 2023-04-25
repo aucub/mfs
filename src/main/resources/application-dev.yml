@@ -120,3 +120,39 @@ mybatis-plus:
   mapper-locations:
     - classpath:mapper/*.xml
     - classpath*:com/**/mapper/*.xml
+
+management:
+  server:
+    port: 8091
+  influx:
+    metrics:
+      export:
+        auto-create-db: true
+        bucket: mfs
+        org: example
+        api-version: v2
+        uri: http://localhost:8086/
+        token: UV6YDazxbkL4Oda9q4h6eUMUGIRUWMAPcjqPrb1VCNB5QwR-340Xd1WPyQqufT2hmBUflIy8gN71cHz686HrTg==
+  endpoint:
+    info:
+      enabled: true
+    loggers:
+      enabled: true
+    metrics:
+      enabled: true
+    health:
+      enabled: true
+    beans:
+      enabled: true
+    conditions:
+      enabled: true
+    heapdump:
+      enabled: true
+    mappings:
+      enabled: true
+    threaddump:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: [ "*" ]

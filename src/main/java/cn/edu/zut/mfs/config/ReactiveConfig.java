@@ -52,7 +52,7 @@ public class ReactiveConfig {
                     .authorizeExchange(
                             authorize -> {
                                 authorize.pathMatchers("/login/doLogin").permitAll();
-                                authorize.pathMatchers("/rsocket/**").permitAll();
+                                authorize.pathMatchers("/rsocket/**", "/actuator/**").permitAll();
                                 authorize.anyExchange().authenticated();
                             }
                     )
