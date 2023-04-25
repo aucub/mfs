@@ -1,3 +1,13 @@
+create table if not exists link_log
+(
+    id          bigint auto_increment
+        primary key,
+    user_id     varchar(32) null,
+    create_time datetime    null,
+    route       varchar(32) null,
+    ip          varchar(64) null
+);
+
 create table if not exists role
 (
     id          bigint auto_increment
@@ -6,21 +16,16 @@ create table if not exists role
     description varchar(500)      null comment '描述',
     deleted     tinyint default 0 null comment '启用状态：0->启用；1->禁用'
 )
-    comment '角色表';
+    comment '角色表' auto_increment = 13;
+
 INSERT INTO mfs.role (id, name, description, deleted)
 VALUES (1, 'userMan', '用户管理', 0);
 INSERT INTO mfs.role (id, name, description, deleted)
-VALUES (2, 'getJwt', null, 0);
-INSERT INTO mfs.role (id, name, description, deleted)
 VALUES (3, 'generateJwt', null, 0);
 INSERT INTO mfs.role (id, name, description, deleted)
-VALUES (4, 'searchSession', '会话查询', 0);
+VALUES (4, 'searchOnline', '', 0);
 INSERT INTO mfs.role (id, name, description, deleted)
 VALUES (5, 'role', '角色管理', 0);
-INSERT INTO mfs.role (id, name, description, deleted)
-VALUES (6, 'kickout', null, 0);
-INSERT INTO mfs.role (id, name, description, deleted)
-VALUES (7, 'disable', '账号封禁', 0);
 INSERT INTO mfs.role (id, name, description, deleted)
 VALUES (8, 'connect', null, 0);
 INSERT INTO mfs.role (id, name, description, deleted)
@@ -39,22 +44,16 @@ create table if not exists role_relation
     user_id varchar(32) null,
     role_id bigint      null
 )
-    comment '用户和角色关系表';
+    comment '用户和角色关系表' auto_increment = 13;
 
 INSERT INTO mfs.role_relation (id, user_id, role_id)
 VALUES (1, '0c59989d3970380ae168880686c4a070', 1);
-INSERT INTO mfs.role_relation (id, user_id, role_id)
-VALUES (2, '0c59989d3970380ae168880686c4a070', 2);
 INSERT INTO mfs.role_relation (id, user_id, role_id)
 VALUES (3, '0c59989d3970380ae168880686c4a070', 3);
 INSERT INTO mfs.role_relation (id, user_id, role_id)
 VALUES (4, '0c59989d3970380ae168880686c4a070', 4);
 INSERT INTO mfs.role_relation (id, user_id, role_id)
 VALUES (5, '0c59989d3970380ae168880686c4a070', 5);
-INSERT INTO mfs.role_relation (id, user_id, role_id)
-VALUES (6, '0c59989d3970380ae168880686c4a070', 6);
-INSERT INTO mfs.role_relation (id, user_id, role_id)
-VALUES (7, '0c59989d3970380ae168880686c4a070', 7);
 INSERT INTO mfs.role_relation (id, user_id, role_id)
 VALUES (8, '0c59989d3970380ae168880686c4a070', 8);
 INSERT INTO mfs.role_relation (id, user_id, role_id)
@@ -89,8 +88,16 @@ create table if not exists user
 
 INSERT INTO mfs.user (id, username, password, nickname, creator, create_time, updater, last_update_time, login_time,
                       type, note, deleted)
+VALUES ('0a30044edb19099f6e00e4593ed3fb42', 'test1', 'AWLT6P2Mx9qCMNSwPIcPWnVUvO4GlmZn+KI=', 'test1', null,
+        '2023-04-25 10:49:50', null, '2023-04-25 10:49:50', null, 1, 'test1', 0);
+INSERT INTO mfs.user (id, username, password, nickname, creator, create_time, updater, last_update_time, login_time,
+                      type, note, deleted)
 VALUES ('0c59989d3970380ae168880686c4a070', 'root', 'AWLT6P1xxJ3Dize/bcMKDr478IJoiRbPlw==', 'root', null,
         '2023-04-02 17:40:20', null, '2023-04-02 17:43:33', '2023-04-02 17:43:33', 0, null, 0);
+INSERT INTO mfs.user (id, username, password, nickname, creator, create_time, updater, last_update_time, login_time,
+                      type, note, deleted)
+VALUES ('9513bf1221694ab1f1a7e2aa0e9fab41', 'username_5ci6f', 'AWLT6P1ZIW9AntqvjCsjwpg6OjzXY7RuH4dpjWH4NK1pdKA=',
+        'nickname_gwh9w', null, '2023-04-25 11:25:03', null, '2023-04-25 11:25:03', null, 1, 'note_n3jpw', 0);
 
 create table if not exists user_login_log
 (
@@ -100,19 +107,4 @@ create table if not exists user_login_log
     create_time datetime    null,
     ip          varchar(64) null
 )
-    comment '登录记录';
-
-INSERT INTO mfs.user_login_log (id, user_id, create_time, ip)
-VALUES (15, '0c59989d3970380ae168880686c4a070', '2023-04-21 02:39:35', null);
-INSERT INTO mfs.user_login_log (id, user_id, create_time, ip)
-VALUES (16, '0c59989d3970380ae168880686c4a070', '2023-04-21 02:40:23', null);
-
-create table if not exists link_log
-(
-    id          bigint auto_increment
-        primary key,
-    user_id     varchar(32) null,
-    create_time datetime    null,
-    route       varchar(32) null,
-    ip          varchar(64) null
-);
+    comment '登录记录' auto_increment = 18;

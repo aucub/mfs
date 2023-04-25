@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DisableAccountDto {
-    private String userId;
-    private long time;
+public class FindPageDto {
+    private String keyword;
+    private Integer pageSize;
+    private Integer pageNum;
 }

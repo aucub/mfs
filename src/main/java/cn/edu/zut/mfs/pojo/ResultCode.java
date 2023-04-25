@@ -20,9 +20,9 @@ public enum ResultCode {
      **/
     APIException(503, "API异常"),
     /**
-     * SaToken异常
+     * 认证异常
      **/
-    SaTokenException(401, "SaToken异常"),
+    SaTokenException(401, "认证异常"),
     /**
      * 异常
      **/

@@ -1,5 +1,6 @@
 package cn.edu.zut.mfs.dto;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
@@ -10,8 +11,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class UserLoginDto {
+public class UpdatePasswordDto {
     @TableId
     private String username;
-    private String password;
+    @TableField(exist = false)
+    private String oldPassword;
+    @TableField(exist = false)
+    private String newPassword;
 }

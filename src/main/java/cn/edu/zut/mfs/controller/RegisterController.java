@@ -5,21 +5,19 @@ import cn.edu.zut.mfs.dto.UserRegisterDto;
 import cn.edu.zut.mfs.pojo.BaseResponse;
 import cn.edu.zut.mfs.service.RegisterService;
 import cn.edu.zut.mfs.utils.EncryptUtils;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 
 /**
  * 用户注册
  */
 @Slf4j
 @RequestMapping("/register")
-@Tag(name = "用户注册")
 @RestController
 public class RegisterController {
     RegisterService registerService;
@@ -29,15 +27,14 @@ public class RegisterController {
         this.registerService = registerService;
     }
 
-    @Operation(summary = "用户注册")
     @PostMapping("/user")
-    public BaseResponse<String> user(@RequestBody UserRegisterDto userRegisterDto) {
+    public Mono<BaseResponse<String>> user(@RequestBody UserRegisterDto userRegisterDto) {
         UserLoginDto userLoginDto = new UserLoginDto();
         userLoginDto.setUsername(userRegisterDto.getUsername());
         userRegisterDto.setPassword(EncryptUtils.encrypt(userRegisterDto.getPassword(), userRegisterDto.getUsername()));
-        if (registerService.register(userRegisterDto)) {
-            return BaseResponse.success("注册成功");
+        if (Boolean.TRUE.equals(registerService.register(userRegisterDto))) {
+            return Mono.just(BaseResponse.success("注册成功"));
         }
-        return BaseResponse.fail("注册失败");
+        return Mono.just(BaseResponse.fail("注册失败"));
     }
 }

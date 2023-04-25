@@ -1,7 +1,10 @@
 package cn.edu.zut.mfs.service;
 
+import cn.edu.zut.mfs.domain.LinkLog;
 import cn.edu.zut.mfs.domain.Role;
 import cn.edu.zut.mfs.domain.User;
+import cn.edu.zut.mfs.domain.UserLoginLog;
+import cn.edu.zut.mfs.dto.FindPageDto;
 import cn.edu.zut.mfs.dto.FindUserPageDto;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,4 +62,8 @@ public interface UserService {
     Long onlineUsers();
 
     List<User> connectList();
+
+    Page<UserLoginLog> getUserLoginLogList(FindPageDto findPageDto);
+
+    Page<LinkLog> getLinkLogList(FindPageDto findPageDto);
 }

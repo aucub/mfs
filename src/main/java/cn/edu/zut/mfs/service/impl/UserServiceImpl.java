@@ -1,10 +1,11 @@
 package cn.edu.zut.mfs.service.impl;
 
+import cn.edu.zut.mfs.dao.LinkLogDao;
 import cn.edu.zut.mfs.dao.RoleRelationDao;
 import cn.edu.zut.mfs.dao.UserDao;
-import cn.edu.zut.mfs.domain.Role;
-import cn.edu.zut.mfs.domain.RoleRelation;
-import cn.edu.zut.mfs.domain.User;
+import cn.edu.zut.mfs.dao.UserLoginLogDao;
+import cn.edu.zut.mfs.domain.*;
+import cn.edu.zut.mfs.dto.FindPageDto;
 import cn.edu.zut.mfs.dto.FindUserPageDto;
 import cn.edu.zut.mfs.service.RedisService;
 import cn.edu.zut.mfs.service.RequestProcessor;
@@ -12,6 +13,7 @@ import cn.edu.zut.mfs.service.UserService;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +28,19 @@ public class UserServiceImpl implements UserService {
     private RoleRelationDao roleRelationDao;
 
     private RedisService redisService;
+    private LinkLogDao linkLogDao;
+
+    private UserLoginLogDao userLoginLogDao;
+
+    @Autowired
+    public void setUserLoginLogDao(UserLoginLogDao userLoginLogDao) {
+        this.userLoginLogDao = userLoginLogDao;
+    }
+
+    @Autowired
+    public void setLinkLogDao(LinkLogDao linkLogDao) {
+        this.linkLogDao = linkLogDao;
+    }
 
     @Autowired
     public void setRedisService(RedisService redisService) {
@@ -54,7 +69,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    //@Cacheable
+    @Cacheable("onlineList")
     public List<User> onlineList() {
         List<User> users = new ArrayList<>();
         redisService.keys("rsocket").forEach(key -> {
@@ -125,5 +140,17 @@ public class UserServiceImpl implements UserService {
         Map<String, Object> params = new HashMap<>();
         params.put("username", username);
         return userDao.selectByMap(params).get(0);
+    }
+
+    @Override
+    public Page<UserLoginLog> getUserLoginLogList(FindPageDto findPageDto) {
+        Page<UserLoginLog> page = Page.of(findPageDto.getPageNum(), findPageDto.getPageSize());
+        return userLoginLogDao.list(page, findPageDto.getKeyword());
+    }
+
+    @Override
+    public Page<LinkLog> getLinkLogList(FindPageDto findPageDto) {
+        Page<LinkLog> page = Page.of(findPageDto.getPageNum(), findPageDto.getPageSize());
+        return linkLogDao.list(page, findPageDto.getKeyword());
     }
 }

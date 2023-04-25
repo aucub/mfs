@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.zut.mfs.dao.LinkLogDao">
+    <select id="list" resultType="cn.edu.zut.mfs.domain.LinkLog">
+        select link_log.*
+        from link_log
+        where (link_log.user_id like CONCAT('%', #{keyword}, '%') or link_log.ip like CONCAT('%', #{keyword}, '%') or
+               link_log.route like CONCAT('%', #{keyword}, '%'))
+    </select>
+</mapper>

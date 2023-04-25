@@ -14,6 +14,8 @@ import org.springframework.messaging.rsocket.RSocketStrategies;
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 import org.springframework.security.config.annotation.rsocket.EnableRSocketSecurity;
 import org.springframework.security.config.annotation.rsocket.RSocketSecurity;
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.NimbusReactiveJwtDecoder;
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
@@ -23,6 +25,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtRea
 import org.springframework.security.oauth2.server.resource.authentication.ReactiveJwtAuthenticationConverterAdapter;
 import org.springframework.security.rsocket.core.PayloadSocketAcceptorInterceptor;
 import org.springframework.security.rsocket.metadata.SimpleAuthenticationEncoder;
+import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.util.MimeType;
 import org.springframework.web.util.pattern.PathPatternRouteMatcher;
 
@@ -36,8 +39,39 @@ import java.util.Map;
  */
 @Configuration
 @EnableRSocketSecurity
+@EnableWebFluxSecurity
 @EnableReactiveMethodSecurity
-public class RSocketConfig {
+public class ReactiveConfig {
+
+    @Bean
+    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
+        try {
+            http
+                    .csrf().disable()
+                    .cors().disable()
+                    .authorizeExchange(
+                            authorize -> {
+                                authorize.pathMatchers("/login/doLogin").permitAll();
+                                authorize.pathMatchers("/rsocket/**").permitAll();
+                                authorize.anyExchange().authenticated();
+                            }
+                    )
+                    .oauth2ResourceServer(oauth2 -> oauth2
+                            .jwt(jwt -> {
+                                        try {
+                                            jwt
+                                                    .authenticationManager(jwtReactiveAuthenticationManager(reactiveJwtDecoder()));
+                                        } catch (Exception e) {
+                                            throw new RuntimeException(e);
+                                        }
+                                    }
+                            )
+                    );
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return http.build();
+    }
 
     @Bean
     PayloadSocketAcceptorInterceptor authorization(RSocketSecurity security) {

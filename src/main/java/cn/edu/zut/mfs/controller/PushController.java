@@ -8,6 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 
 @Slf4j
 @RestController
@@ -21,7 +22,7 @@ public class PushController {
 
     @PreAuthorize("hasRole('push')")
     @PostMapping("/push")
-    public Boolean push(@RequestBody PushMessage pushMessage) {
-        return rSocketServer.push(pushMessage);
+    public Mono<Boolean> push(@RequestBody PushMessage pushMessage) {
+        return Mono.just(rSocketServer.push(pushMessage));
     }
 }
