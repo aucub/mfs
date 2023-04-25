@@ -26,6 +26,7 @@
 |-----------------|--------|----------|--------------------|-------|
 | X-Forwarded-For | string | true     | No comments found. | -     |
 
+
 **Body-parameters:**
 
 | Parameter | Type   | Required | Description        | Since |
@@ -244,10 +245,10 @@
 
 
 ### 
-
 **URL:** /user/delete
 
 **Type:** GET
+
 
 **Content-Type:** application/x-www-form-urlencoded;charset=UTF-8
 
@@ -269,10 +270,10 @@
 
 
 ### 
-
 **URL:** /user/getUserInfoByUsername
 
 **Type:** GET
+
 
 **Content-Type:** application/x-www-form-urlencoded;charset=UTF-8
 
@@ -305,10 +306,10 @@
 
 
 ### 
-
 **URL:** /user/getUserInfoByUserId
 
 **Type:** GET
+
 
 **Content-Type:** application/x-www-form-urlencoded;charset=UTF-8
 
@@ -371,10 +372,10 @@
 
 
 ### 
-
 **URL:** /user/getRoleListByUserId
 
 **Type:** GET
+
 
 **Content-Type:** application/x-www-form-urlencoded;charset=UTF-8
 
@@ -426,7 +427,6 @@
 
 
 ### 
-
 **URL:** /user/generateJwt
 
 **Type:** POST
@@ -437,14 +437,14 @@
 
 **Body-parameters:**
 
-| Parameter | Type | Required | Description | Since |
-|-----------|------|----------|-------------|-------|
-|jwtId|string|false|No comments found.|-|
-|issuer|string|false|No comments found.|-|
-|subject|string|false|No comments found.|-|
-|expiresAt|object|false|No comments found.|-|
-|audience|string|false|No comments found.|-|
-|authorities|array|false|No comments found.|-|
+| Parameter   | Type   | Required | Description        | Since |
+|-------------|--------|----------|--------------------|-------|
+| jwtId       | string | false    | No comments found. | -     |
+| issuer      | string | false    | No comments found. | -     |
+| subject     | string | false    | No comments found. | -     |
+| expiresAt   | object | false    | No comments found. | -     |
+| audience    | string | false    | No comments found. | -     |
+| authorities | array  | false    | No comments found. | -     |
 
 **Response-fields:**
 
@@ -454,9 +454,90 @@
 | message | string | No comments found. | -     |
 | data    | string | No comments found. | -     |
 
-##  
+###  
+
+**URL:** /user/connectList
+
+**Type:** POST
+
+**Content-Type:** application/x-www-form-urlencoded;charset=UTF-8
+
+**Description:**
+
+**Response-fields:**
+
+| Field            | Type    | Description        | Since |
+|------------------|---------|--------------------|-------|
+| code             | int32   | No comments found. | -     |
+| message          | string  | No comments found. | -     |
+| data             | array   | No comments found. | -     |
+| └─id             | string  | ID                 | -     |
+| └─username       | string  | 用户名                | -     |
+| └─nickname       | string  | 用户昵称               | -     |
+| └─creator        | string  | No comments found. | -     |
+| └─createTime     | string  | No comments found. | -     |
+| └─updater        | string  | No comments found. | -     |
+| └─lastUpdateTime | string  | No comments found. | -     |
+| └─loginTime      | string  | No comments found. | -     |
+| └─type           | boolean | No comments found. | -     |
+| └─note           | string  | No comments found. | -     |
+| └─deleted        | boolean | No comments found. | -     |
 
 ###  
+
+**URL:** /user/getUserLoginLogList
+
+**Type:** POST
+
+**Content-Type:** application/json
+
+**Description:**
+
+**Body-parameters:**
+
+| Parameter | Type   | Required | Description        | Since |
+|-----------|--------|----------|--------------------|-------|
+| keyword   | string | false    | No comments found. | -     |
+| pageSize  | int32  | false    | No comments found. | -     |
+| pageNum   | int32  | false    | No comments found. | -     |
+
+**Response-fields:**
+
+| Field   | Type   | Description        | Since |
+|---------|--------|--------------------|-------|
+| code    | int32  | No comments found. | -     |
+| message | string | No comments found. | -     |
+| data    | object | No comments found. | -     |
+
+###  
+
+**URL:** /user/getLinkLogList
+
+**Type:** POST
+
+**Content-Type:** application/json
+
+**Description:**
+
+**Body-parameters:**
+
+| Parameter | Type   | Required | Description        | Since |
+|-----------|--------|----------|--------------------|-------|
+| keyword   | string | false    | No comments found. | -     |
+| pageSize  | int32  | false    | No comments found. | -     |
+| pageNum   | int32  | false    | No comments found. | -     |
+
+**Response-fields:**
+
+| Field   | Type   | Description        | Since |
+|---------|--------|--------------------|-------|
+| code    | int32  | No comments found. | -     |
+| message | string | No comments found. | -     |
+| data    | object | No comments found. | -     |
+
+##  
+
+### 推
 
 **URL:** /push
 
@@ -464,7 +545,7 @@
 
 **Content-Type:** application/json
 
-**Description:**
+**Description:** 推
 
 **Body-parameters:**
 
@@ -514,6 +595,7 @@
 | time            | object  | No comments found. | -     |
 
 ###  
+
 **URL:** /query/queryConsume
 
 **Type:** POST
@@ -541,6 +623,7 @@
 | time         | object | No comments found. | -     |
 
 ###  
+
 **URL:** /query/queryPush
 
 **Type:** POST
@@ -564,9 +647,27 @@
 | route  | string | No comments found. | -     |
 | body   | array  | No comments found. | -     |
 
+###  
+
+**URL:** /query/search
+
+**Type:** POST
+
+**Content-Type:** application/x-www-form-urlencoded;charset=UTF-8
+
+**Description:**
+
+**Query-parameters:**
+
+| Parameter | Type   | Required | Description        | Since |
+|-----------|--------|----------|--------------------|-------|
+| uid       | string | false    | No comments found. | -     |
+| keyword   | string | false    | No comments found. | -     |
+| offset    | int32  | false    | No comments found. | -     |
+
 ##  
 
-###  
+### 在线列表
 
 **URL:** /searchOnline/onlineList
 
@@ -574,7 +675,7 @@
 
 **Content-Type:** application/x-www-form-urlencoded;charset=UTF-8
 
-**Description:**
+**Description:** 在线列表
 
 **Response-fields:**
 
@@ -592,15 +693,14 @@
 | note           | string  | No comments found. | -     |
 | deleted        | boolean | No comments found. | -     |
 
-###  
-
+### 在线用户
 **URL:** /searchOnline/onlineUsers
 
 **Type:** GET
 
 **Content-Type:** application/x-www-form-urlencoded;charset=UTF-8
 
-**Description:** 
+**Description:** 在线用户
 
 
 
