@@ -4,12 +4,19 @@ import cn.edu.zut.mfs.domain.ConsumeRecord;
 import cn.edu.zut.mfs.domain.PublishRecord;
 import cn.edu.zut.mfs.domain.PushMessage;
 import cn.edu.zut.mfs.service.InfluxDBService;
+import cn.edu.zut.mfs.service.Meilisearch;
+import com.google.gson.Gson;
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.InfluxDBClientFactory;
 import com.influxdb.client.QueryApi;
 import com.influxdb.client.WriteApi;
 import com.influxdb.client.domain.WritePrecision;
+import com.influxdb.client.reactive.InfluxDBClientReactive;
+import com.influxdb.client.reactive.InfluxDBClientReactiveFactory;
+import com.influxdb.client.reactive.QueryReactiveApi;
 import com.influxdb.client.write.Point;
+import io.reactivex.rxjava3.core.Flowable;
+import org.reactivestreams.Publisher;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -21,6 +28,12 @@ public class InfluxDBServiceImpl implements InfluxDBService {
     private final static InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://127.0.0.1:8086", "UV6YDazxbkL4Oda9q4h6eUMUGIRUWMAPcjqPrb1VCNB5QwR-340Xd1WPyQqufT2hmBUflIy8gN71cHz686HrTg==".toCharArray(), "example", "mfs");
     private final static WriteApi writeApi = influxDBClient.makeWriteApi();
 
+    InfluxDBClientReactive influxDBClientReactive = InfluxDBClientReactiveFactory.create("http://127.0.0.1:8086", "UV6YDazxbkL4Oda9q4h6eUMUGIRUWMAPcjqPrb1VCNB5QwR-340Xd1WPyQqufT2hmBUflIy8gN71cHz686HrTg==".toCharArray(), "example", "mfs");
+
+    QueryReactiveApi queryReactiveApi = influxDBClientReactive.getQueryReactiveApi();
+
+
+    Gson gson = new Gson();
 
     @Override
     public void publish(PublishRecord publishRecord) {
@@ -90,5 +103,20 @@ public class InfluxDBServiceImpl implements InfluxDBService {
     @Override
     public void close() {
         this.influxDBClient.close();
+    }
+
+    public void se(String start, String stop) {
+        String template = "from(bucket:\"mfs\") " +
+                " |> range(start: %s, stop: %s)" +
+                " |> filter(fn: (r) => r._measurement == \"PublishRecord\")" +
+                " |> pivot(rowKey:[\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")" +
+                " |> limit(n:120)";
+        String flux = String.format(template, start, stop);
+        Publisher<PublishRecord> query = queryReactiveApi.query(flux, PublishRecord.class);
+        Flowable.fromPublisher(query)
+                .take(10)
+                .subscribe(publishRecord -> {
+                    Meilisearch.store(gson.toJson(publishRecord), "PublishRecord");
+                });
     }
 }

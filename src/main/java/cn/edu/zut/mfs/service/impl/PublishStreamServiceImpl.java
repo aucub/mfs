@@ -63,8 +63,8 @@ public class PublishStreamServiceImpl implements PublishStreamService {
                 influxDBService.publishPoint(cloudEvent.getId(), result, cloudEvent.getTime().toInstant());
                 mpmcAtomicArrayQueue.add(cloudEvent.getId());
             });
-                PublishRecord publishRecord = new PublishRecord(cloudEvent.getId(), cloudEvent.getSource().toString(), cloudEvent.getType(), (String) cloudEvent.getExtension("appid"), userId, Long.valueOf((String) cloudEvent.getExtension("publishingid")), cloudEvent.getDataContentType(), (String) cloudEvent.getExtension("contentEncoding"), cloudEvent.getSubject(), new String(cloudEvent.getData().toBytes()), null, cloudEvent.getTime().toInstant());
-                influxDBService.publish(publishRecord);
+            PublishRecord publishRecord = new PublishRecord(cloudEvent.getId(), cloudEvent.getSource().toString(), cloudEvent.getType(), (String) cloudEvent.getExtension("appid"), userId, Long.valueOf((String) cloudEvent.getExtension("publishingid")), cloudEvent.getDataContentType(), (String) cloudEvent.getExtension("contentEncoding"), cloudEvent.getSubject(), new String(cloudEvent.getData().toBytes()), null, cloudEvent.getTime().toInstant());
+            influxDBService.publish(publishRecord);
         });
     }
 }

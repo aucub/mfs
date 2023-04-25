@@ -15,11 +15,9 @@ import java.util.Objects;
 @Service
 public class RequestProcessor {
 
-    private RedisService redisService;
-
-    private LoginAuthService loginAuthService;
-
     public static NonBlockingHashMap<String, RSocketRequester> nonBlockingHashMap = new NonBlockingHashMap<>();
+    private RedisService redisService;
+    private LoginAuthService loginAuthService;
 
     @Autowired
     public void setLoginAuthService(LoginAuthService loginAuthService) {
