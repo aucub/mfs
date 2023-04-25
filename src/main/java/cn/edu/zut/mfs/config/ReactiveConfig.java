@@ -52,7 +52,7 @@ public class ReactiveConfig {
                     .authorizeExchange(
                             authorize -> {
                                 authorize.pathMatchers("/login/doLogin").permitAll();
-                                authorize.pathMatchers("/rsocket/**", "/publish").permitAll();
+                                authorize.pathMatchers("/rsocket/**").permitAll();
                                 authorize.anyExchange().authenticated();
                             }
                     )
@@ -77,7 +77,7 @@ public class ReactiveConfig {
     PayloadSocketAcceptorInterceptor authorization(RSocketSecurity security) {
         security.authorizePayload(authorize ->
                 authorize
-                        .setup().authenticated()
+                        .setup().permitAll()
                         .anyExchange().permitAll()
                         .anyRequest().permitAll()
         ).jwt(jwtSpec -> {

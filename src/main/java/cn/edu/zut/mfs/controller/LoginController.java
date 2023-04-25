@@ -42,11 +42,11 @@ public class LoginController {
     }
 
     @PostMapping("doLogin")
-    public Mono<BaseResponse<Object>> doLogin(@RequestBody UserLoginDto userLoginDto) {
+    public Mono<BaseResponse<Object>> doLogin(@RequestHeader("X-Forwarded-For") String ip, @RequestBody UserLoginDto userLoginDto) {
         userLoginDto.setPassword(EncryptUtils.encrypt(userLoginDto.getPassword(), userLoginDto.getUsername()));
         if (Boolean.TRUE.equals(loginAuthService.login(userLoginDto))) {
             String userId = userService.getUserByUsername(userLoginDto.getUsername()).getId();
-            loginAuthService.addLoginLog(new UserLoginLog(null, userId, Date.from(Instant.now()), null));
+            loginAuthService.addLoginLog(new UserLoginLog(null, userId, Date.from(Instant.now()), ip));
             return Mono.just(BaseResponse.success(JwtUtils.generate(new JwtDto(UUID.randomUUID().toString(), userId, userId, Instant.now().plusSeconds(60 * 60 * 24 * 7), "mfs", userService.getRoleListAsString(userId)))));
         }
         return Mono.just(BaseResponse.fail("登录失败"));

@@ -2,108 +2,36 @@
 
 | Version              | Update Time         | Status | Author   | Description          |
 |----------------------|---------------------|--------|----------|----------------------|
-| v2023-04-22 17:17:46 | 2023-04-22 17:17:46 | auto   | @yrumily | Created by smart-doc |
+| v2023-04-25 17:00:55 | 2023-04-25 17:00:55 | auto   | @yrumily | Created by smart-doc |
 
+##  
 
+##  
 
-## 连接控制器
-## 消费控制器
-## Sa-Token 账号封禁
-### 
-**URL:** /disable/disable
+## 登录
 
-**Type:** POST
+###  
 
-
-**Content-Type:** application/json
-
-**Description:** 
-
-**Body-parameters:**
-
-| Parameter | Type | Required | Description | Since |
-|-----------|------|----------|-------------|-------|
-|userId|string|false|No comments found.|-|
-|time|int64|false|No comments found.|-|
-
-**Response-fields:**
-
-| Field | Type | Description | Since |
-|-------|------|-------------|-------|
-|code|int32|No comments found.|-|
-|message|string|No comments found.|-|
-|data|string|No comments found.|-|
-
-
-### 
-**URL:** /disable/untieDisable
-
-**Type:** POST
-
-
-**Content-Type:** application/x-www-form-urlencoded;charset=UTF-8
-
-**Description:** 
-
-**Query-parameters:**
-
-| Parameter | Type | Required | Description | Since |
-|-----------|------|----------|-------------|-------|
-|userId|string|true|No comments found.|-|
-
-**Response-fields:**
-
-| Field | Type | Description | Since |
-|-------|------|-------------|-------|
-|code|int32|No comments found.|-|
-|message|string|No comments found.|-|
-|data|string|No comments found.|-|
-
-
-## Sa-Token 账号注销
-### 
-**URL:** /kickout/logout
-
-**Type:** POST
-
-
-**Content-Type:** application/x-www-form-urlencoded;charset=UTF-8
-
-**Description:** 
-
-**Query-parameters:**
-
-| Parameter | Type | Required | Description | Since |
-|-----------|------|----------|-------------|-------|
-|userId|string|true|No comments found.|-|
-
-**Response-fields:**
-
-| Field | Type | Description | Since |
-|-------|------|-------------|-------|
-|code|int32|No comments found.|-|
-|message|string|No comments found.|-|
-|data|string|No comments found.|-|
-
-
-## Sa-Token 登录
-### 
 **URL:** /login/doLogin
 
 **Type:** POST
 
-
 **Content-Type:** application/json
 
-**Description:** 
+**Description:**
+
+**Request-headers:**
+
+| Header          | Type   | Required | Description        | Since |
+|-----------------|--------|----------|--------------------|-------|
+| X-Forwarded-For | string | true     | No comments found. | -     |
 
 **Body-parameters:**
 
-| Parameter | Type | Required | Description | Since |
-|-----------|------|----------|-------------|-------|
-|username|string|false|No comments found.|-|
-|password|string|false|No comments found.|-|
-|isLastingCookie|boolean|false|No comments found.|-|
+| Parameter | Type   | Required | Description        | Since |
+|-----------|--------|----------|--------------------|-------|
+| username  | string | false    | No comments found. | -     |
+| password  | string | false    | No comments found. | -     |
 
 **Response-fields:**
 
@@ -113,63 +41,6 @@
 | message      | string | No comments found. | -     |
 | data         | object | No comments found. | -     |
 | └─any object | object | any object.        | -     |
-
-
-### 
-**URL:** /login/isLogin
-
-**Type:** GET
-
-
-**Content-Type:** application/x-www-form-urlencoded;charset=UTF-8
-
-**Description:** 
-
-**Response-fields:**
-
-| Field | Type | Description | Since |
-|-------|------|-------------|-------|
-|code|int32|No comments found.|-|
-|message|string|No comments found.|-|
-|data|string|No comments found.|-|
-
-
-### 
-**URL:** /login/logout
-
-**Type:** GET
-
-
-**Content-Type:** application/x-www-form-urlencoded;charset=UTF-8
-
-**Description:** 
-
-**Response-fields:**
-
-| Field | Type | Description | Since |
-|-------|------|-------------|-------|
-|code|int32|No comments found.|-|
-|message|string|No comments found.|-|
-|data|string|No comments found.|-|
-
-
-### 
-**URL:** /login/checkLogin
-
-**Type:** GET
-
-
-**Content-Type:** application/x-www-form-urlencoded;charset=UTF-8
-
-**Description:** 
-
-**Response-fields:**
-
-| Field | Type | Description | Since |
-|-------|------|-------------|-------|
-|code|int32|No comments found.|-|
-|message|string|No comments found.|-|
-|data|string|No comments found.|-|
 
 
 ### 
@@ -203,11 +74,11 @@
 
 **Body-parameters:**
 
-| Parameter | Type | Required | Description | Since |
-|-----------|------|----------|-------------|-------|
-|username|string|false|No comments found.|-|
-|password|string|false|No comments found.|-|
-|isLastingCookie|boolean|false|No comments found.|-|
+| Parameter   | Type   | Required | Description        | Since |
+|-------------|--------|----------|--------------------|-------|
+| username    | string | false    | No comments found. | -     |
+| oldPassword | string | false    | No comments found. | -     |
+| newPassword | string | false    | No comments found. | -     |
 
 **Response-fields:**
 
@@ -274,69 +145,6 @@
 |└─description|string|No comments found.|-|
 |└─deleted|int32|No comments found.|-|
 
-
-## Sa-Token 会话查询
-### 
-**URL:** /searchSession/list
-
-**Type:** POST
-
-
-**Content-Type:** application/json
-
-**Description:** 
-
-**Body-parameters:**
-
-| Parameter | Type  | Required | Description        | Since |
-|-----------|-------|----------|--------------------|-------|
-| start     | int32 | false    | No comments found. | -     |
-| size      | int32 | false    | No comments found. | -     |
-
-**Response-fields:**
-
-| Field   | Type   | Description        | Since |
-|---------|--------|--------------------|-------|
-| code    | int32  | No comments found. | -     |
-| message | string | No comments found. | -     |
-| data    | array  | No comments found. | -     |
-
-
-### 
-**URL:** /searchSession/onlineList
-
-**Type:** POST
-
-
-**Content-Type:** application/x-www-form-urlencoded;charset=UTF-8
-
-**Description:** 
-
-**Response-fields:**
-
-| Field          | Type    | Description        | Since |
-|----------------|---------|--------------------|-------|
-| id             | string  | ID                 | -     |
-| username       | string  | 用户名                | -     |
-| nickname       | string  | 用户昵称               | -     |
-| creator        | string  | No comments found. | -     |
-| createTime     | string  | No comments found. | -     |
-| updater        | string  | No comments found. | -     |
-| lastUpdateTime | string  | No comments found. | -     |
-| loginTime      | string  | No comments found. | -     |
-| type           | boolean | No comments found. | -     |
-| note           | string  | No comments found. | -     |
-| deleted        | boolean | No comments found. | -     |
-
-
-### 
-**URL:** /searchSession/onlineUsers
-
-**Type:** POST
-
-**Content-Type:** application/x-www-form-urlencoded;charset=UTF-8
-
-**Description:**
 
 ## 
 ## 用户管理
@@ -436,10 +244,10 @@
 
 
 ### 
+
 **URL:** /user/delete
 
-**Type:** POST
-
+**Type:** GET
 
 **Content-Type:** application/x-www-form-urlencoded;charset=UTF-8
 
@@ -461,10 +269,10 @@
 
 
 ### 
+
 **URL:** /user/getUserInfoByUsername
 
-**Type:** POST
-
+**Type:** GET
 
 **Content-Type:** application/x-www-form-urlencoded;charset=UTF-8
 
@@ -497,10 +305,10 @@
 
 
 ### 
+
 **URL:** /user/getUserInfoByUserId
 
-**Type:** POST
-
+**Type:** GET
 
 **Content-Type:** application/x-www-form-urlencoded;charset=UTF-8
 
@@ -563,10 +371,10 @@
 
 
 ### 
+
 **URL:** /user/getRoleListByUserId
 
-**Type:** POST
-
+**Type:** GET
 
 **Content-Type:** application/x-www-form-urlencoded;charset=UTF-8
 
@@ -618,16 +426,16 @@
 
 
 ### 
-**URL:** /user/getJwt
+
+**URL:** /user/generateJwt
 
 **Type:** POST
 
+**Content-Type:** application/json
 
-**Content-Type:** application/x-www-form-urlencoded;charset=UTF-8
+**Description:**
 
-**Description:** 
-
-**Query-parameters:**
+**Body-parameters:**
 
 | Parameter | Type | Required | Description | Since |
 |-----------|------|----------|-------------|-------|
@@ -637,36 +445,6 @@
 |expiresAt|object|false|No comments found.|-|
 |audience|string|false|No comments found.|-|
 |authorities|array|false|No comments found.|-|
-
-**Response-fields:**
-
-| Field | Type | Description | Since |
-|-------|------|-------------|-------|
-|code|int32|No comments found.|-|
-|message|string|No comments found.|-|
-|data|string|No comments found.|-|
-
-
-### 
-**URL:** /user/generateJwt
-
-**Type:** POST
-
-
-**Content-Type:** application/x-www-form-urlencoded;charset=UTF-8
-
-**Description:** 
-
-**Query-parameters:**
-
-| Parameter   | Type   | Required | Description        | Since |
-|-------------|--------|----------|--------------------|-------|
-| jwtId       | string | false    | No comments found. | -     |
-| issuer      | string | false    | No comments found. | -     |
-| subject     | string | false    | No comments found. | -     |
-| expiresAt   | object | false    | No comments found. | -     |
-| audience    | string | false    | No comments found. | -     |
-| authorities | array  | false    | No comments found. | -     |
 
 **Response-fields:**
 
@@ -712,8 +490,8 @@
 
 | Parameter | Type   | Required | Description        | Since |
 |-----------|--------|----------|--------------------|-------|
-| start     | string | false    | No comments found. | -     |
-| stop      | string | false    | No comments found. | -     |
+| start     | string | true     | No comments found. | -     |
+| stop      | string | true     | No comments found. | -     |
 
 **Response-fields:**
 
@@ -736,7 +514,6 @@
 | time            | object  | No comments found. | -     |
 
 ###  
-
 **URL:** /query/queryConsume
 
 **Type:** POST
@@ -749,8 +526,8 @@
 
 | Parameter | Type   | Required | Description        | Since |
 |-----------|--------|----------|--------------------|-------|
-| start     | string | false    | No comments found. | -     |
-| stop      | string | false    | No comments found. | -     |
+| start     | string | true     | No comments found. | -     |
+| stop      | string | true     | No comments found. | -     |
 
 **Response-fields:**
 
@@ -764,7 +541,6 @@
 | time         | object | No comments found. | -     |
 
 ###  
-
 **URL:** /query/queryPush
 
 **Type:** POST
@@ -777,8 +553,8 @@
 
 | Parameter | Type   | Required | Description        | Since |
 |-----------|--------|----------|--------------------|-------|
-| start     | string | false    | No comments found. | -     |
-| stop      | string | false    | No comments found. | -     |
+| start     | string | true     | No comments found. | -     |
+| stop      | string | true     | No comments found. | -     |
 
 **Response-fields:**
 
@@ -787,6 +563,45 @@
 | userId | string | No comments found. | -     |
 | route  | string | No comments found. | -     |
 | body   | array  | No comments found. | -     |
+
+##  
+
+###  
+
+**URL:** /searchOnline/onlineList
+
+**Type:** GET
+
+**Content-Type:** application/x-www-form-urlencoded;charset=UTF-8
+
+**Description:**
+
+**Response-fields:**
+
+| Field          | Type    | Description        | Since |
+|----------------|---------|--------------------|-------|
+| id             | string  | ID                 | -     |
+| username       | string  | 用户名                | -     |
+| nickname       | string  | 用户昵称               | -     |
+| creator        | string  | No comments found. | -     |
+| createTime     | string  | No comments found. | -     |
+| updater        | string  | No comments found. | -     |
+| lastUpdateTime | string  | No comments found. | -     |
+| loginTime      | string  | No comments found. | -     |
+| type           | boolean | No comments found. | -     |
+| note           | string  | No comments found. | -     |
+| deleted        | boolean | No comments found. | -     |
+
+###  
+
+**URL:** /searchOnline/onlineUsers
+
+**Type:** GET
+
+**Content-Type:** application/x-www-form-urlencoded;charset=UTF-8
+
+**Description:** 
+
 
 
 
