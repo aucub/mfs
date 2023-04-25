@@ -105,16 +105,43 @@ public class InfluxDBServiceImpl implements InfluxDBService {
         influxDBClient.close();
     }
 
-    public void se(String start, String stop) {
+    @Override
+    public void tranPublish(String start, String stop) {
         String template = "from(bucket:\"mfs\") " +
                 " |> range(start: %s, stop: %s)" +
                 " |> filter(fn: (r) => r._measurement == \"PublishRecord\")" +
-                " |> pivot(rowKey:[\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")" +
-                " |> limit(n:120)";
+                " |> pivot(rowKey:[\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")";
         String flux = String.format(template, start, stop);
         Publisher<PublishRecord> query = queryReactiveApi.query(flux, PublishRecord.class);
         Flowable.fromPublisher(query)
                 .take(10)
                 .subscribe(publishRecord -> MeiliSearchService.store(gson.toJson(publishRecord), "PublishRecord"));
     }
+
+    @Override
+    public void tranConsume(String start, String stop) {
+        String template = "from(bucket:\"mfs\") " +
+                " |> range(start: %s, stop: %s)" +
+                " |> filter(fn: (r) => r._measurement == \"ConsumeRecord\")" +
+                " |> pivot(rowKey:[\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")";
+        String flux = String.format(template, start, stop);
+        Publisher<ConsumeRecord> query = queryReactiveApi.query(flux, ConsumeRecord.class);
+        Flowable.fromPublisher(query)
+                .take(10)
+                .subscribe(consumeRecord -> MeiliSearchService.store(gson.toJson(consumeRecord), "ConsumeRecord"));
+    }
+
+    @Override
+    public void tranPush(String start, String stop) {
+        String template = "from(bucket:\"mfs\") " +
+                " |> range(start: %s, stop: %s)" +
+                " |> filter(fn: (r) => r._measurement == \"PushMessage\")" +
+                " |> pivot(rowKey:[\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")";
+        String flux = String.format(template, start, stop);
+        Publisher<PushMessage> query = queryReactiveApi.query(flux, PushMessage.class);
+        Flowable.fromPublisher(query)
+                .take(10)
+                .subscribe(pushMessage -> MeiliSearchService.store(gson.toJson(pushMessage), "PushMessage"));
+    }
+
 }

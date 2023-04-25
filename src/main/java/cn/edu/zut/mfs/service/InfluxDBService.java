@@ -22,5 +22,11 @@ public interface InfluxDBService {
 
     List<PushMessage> queryPush(String start, String stop);
 
+    void tranPublish(String start, String stop);
+
+    void tranConsume(String start, String stop);
+
+    void tranPush(String start, String stop);
+
     void close();
 }
