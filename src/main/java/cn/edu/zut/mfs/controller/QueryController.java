@@ -47,4 +47,17 @@ public class QueryController {
     public Mono<Searchable> search(String uid, String keyword, Integer offset) throws MeilisearchException {
         return Mono.just(MeiliSearchService.search(uid, keyword, offset));
     }
+
+    @PreAuthorize("hasRole('query')")
+    @PostMapping("/tran")
+    public Mono<Void> tran(String uid, String start, String stop) {
+        Thread.startVirtualThread(() -> {
+            switch (uid) {
+                case "PublishRecord" -> influxDBService.tranPublish(start, stop);
+                case "ConsumeRecord" -> influxDBService.tranConsume(start, stop);
+                case "PushMessage" -> influxDBService.tranPush(start, stop);
+            }
+        });
+        return Mono.empty();
+    }
 }
