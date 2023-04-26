@@ -16,14 +16,14 @@ jobs:
         with:
           secrets: ${{ toJSON(secrets) }}
 
-      - name: 'Set up latest Oracle JDK 20'
-      - uses: oracle-actions/setup-java@v1
+      - name: 'Set up latest JDK 20 from jdk.java.net'
+        uses: oracle-actions/setup-java@v1
         with:
-          website: oracle.com
+          website: jdk.java.net
           release: 20
 
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2.4.0
 
       - name: Execute Gradle build
-        run: gradle jib -Djib.to.image=docker.io/$DOCKERHUB_USERNAME/mfs:latest -Djib.to.auth.username=$DOCKERHUB_USERNAME -Djib.to.auth.password=$DOCKERHUB_TOKEN
+        run: gradle jib -Djib.to.image=docker.io/$DOCKERHUB_USERNAME/mfs:latest -Djib.from.image=bitnami/java:latest -Djib.to.auth.username=$DOCKERHUB_USERNAME -Djib.to.auth.password=$DOCKERHUB_TOKEN
