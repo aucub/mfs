@@ -45,7 +45,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-integration'
     implementation 'org.springframework.integration:spring-integration-amqp:6.0.5'
     implementation 'org.springframework.integration:spring-integration-redis:6.0.5'
-    implementation 'org.junit.jupiter:junit-jupiter:5.9.2'
+    implementation 'org.junit.jupiter:junit-jupiter:5.9.3'
     implementation 'com.baomidou:mybatis-plus-boot-starter:3.5.3.1'
     implementation 'com.baomidou:mybatis-plus:3.5.3.1'
     implementation 'com.baomidou:mybatis-plus-extension:3.5.3.1'
