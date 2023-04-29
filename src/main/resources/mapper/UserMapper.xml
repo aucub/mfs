@@ -5,6 +5,7 @@
         select user.*
         from user
         where
+        user.deleted=0 and
         (user.username like CONCAT('%',#{keyword},'%') or user.nickname like CONCAT('%',#{keyword},'%'))
         <if test="roleId != null and roleId != ''">
             and user.id in (select role_relation.user_id from role_relation where role_relation.role_id = #{roleId})

@@ -19,7 +19,7 @@ public class JwtUtils {
                 .withSubject(jwtDto.getSubject())
                 .withExpiresAt(jwtDto.getExpiresAt())
                 .withAudience(jwtDto.getAudience())
-                .withClaim("scope", jwtDto.getAuthorities())
+                .withClaim("scope", jwtDto.getAuthorities().toString())
                 .sign(algorithm);
     }
 }
