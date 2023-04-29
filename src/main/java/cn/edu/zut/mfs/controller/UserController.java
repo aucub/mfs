@@ -123,7 +123,7 @@ public class UserController {
     }
 
 
-    @PostMapping(value = "/connectList")
+    @GetMapping(value = "/connectList")
     @PreAuthorize("hasRole('userMan')")
     public Mono<BaseResponse<List<User>>> connectList() {
         return Mono.just(BaseResponse.success(userService.connectList()));
