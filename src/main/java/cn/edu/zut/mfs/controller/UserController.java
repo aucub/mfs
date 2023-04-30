@@ -70,6 +70,15 @@ public class UserController {
         return Mono.just(BaseResponse.fail("修改失败"));
     }
 
+    @PostMapping(value = "/updateAccount")
+    public Mono<BaseResponse<String>> update(@AuthenticationPrincipal Jwt jwt, @RequestBody User user) {
+        user.setUsername(jwt.getSubject());
+        if (Boolean.TRUE.equals(userService.update(user))) {
+            return Mono.just(BaseResponse.success("修改成功"));
+        }
+        return Mono.just(BaseResponse.fail("修改失败"));
+    }
+
     @GetMapping(value = "/delete")
     @PreAuthorize("hasRole('userMan')")
     public Mono<BaseResponse<String>> delete(@RequestParam String id) {
