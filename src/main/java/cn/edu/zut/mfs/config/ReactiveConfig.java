@@ -51,7 +51,7 @@ public class ReactiveConfig {
                     .cors().disable()
                     .authorizeExchange(
                             authorize -> {
-                                authorize.pathMatchers("/login/doLogin").permitAll();
+                                authorize.pathMatchers("/login/doLogin", "/register/user").permitAll();
                                 authorize.pathMatchers("/rsocket/**", "/actuator/**").permitAll();
                                 authorize.anyExchange().authenticated();
                             }
