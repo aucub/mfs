@@ -23,7 +23,7 @@ jobs:
           release: 20
 
       - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2.4.0
+        uses: gradle/gradle-build-action@v2.4.2
 
       - name: Execute Gradle build
         run: gradle jib -Djib.to.image=docker.io/$DOCKERHUB_USERNAME/mfs:latest -Djib.from.image=bitnami/java:latest -Djib.to.auth.username=$DOCKERHUB_USERNAME -Djib.to.auth.password=$DOCKERHUB_TOKEN
