@@ -72,7 +72,7 @@ public class PublishController {
         MetadataHeader metadataHeader = (MetadataHeader) metadata.get("metadataHeader");
         String userId = jwt.getSubject();
         requestProcessor.processRequests(requester, userId, "publish");
-        MpmcAtomicArrayQueue mpmcAtomicArrayQueue = new MpmcAtomicArrayQueue(200);
+        MpmcAtomicArrayQueue mpmcAtomicArrayQueue = new MpmcAtomicArrayQueue(500);
         publishStreamService.publish(mpmcAtomicArrayQueue, userId, metadataHeader, cloudEventFlux);
         return Flux.interval(Duration.ofSeconds(5)).map(
                 i -> {

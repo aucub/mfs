@@ -8,6 +8,7 @@ import cn.edu.zut.mfs.utils.MessageConverter;
 import io.cloudevents.core.v1.CloudEventV1;
 import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,7 @@ public class ConsumeBatchServiceImpl implements ConsumeBatchService {
 
     @Override
     public Flux<CloudEventV1> consume(String userId, Consume consume) {
-        if (amqpAdmin.getQueueInfo(consume.getQueue()) == null) amqpAdmin.deleteQueue(consume.getQueue());
+        if (amqpAdmin.getQueueInfo(consume.getQueue()) == null) amqpAdmin.declareQueue(new Queue(consume.getQueue()));
         InfluxDBService influxDBService = new InfluxDBServiceImpl();
         return Flux.create(emitter -> {
             for (int i = 0; i < consume.getBatchSize(); i++) {

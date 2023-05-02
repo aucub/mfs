@@ -1,7 +1,6 @@
 package cn.edu.zut.mfs.controller;
 
 import cn.edu.zut.mfs.service.RequestProcessor;
-import io.cloudevents.core.v1.CloudEventV1;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.rsocket.RSocketRequester;
@@ -22,17 +21,17 @@ public class ConnectController {
         this.requestProcessor = requestProcessor;
     }
 
+
     /**
      * 连接
      *
-     * @param requester    请求者
-     * @param jwt          jwt
-     * @param cloudEventV1 云事件v1
+     * @param requester 请求者
+     * @param jwt       jwt
      * @return {@link Mono}<{@link Void}>
      */
     @PreAuthorize("hasRole('connect')")
     @ConnectMapping("connect")
-    public Mono<Void> connect(RSocketRequester requester, @AuthenticationPrincipal Jwt jwt, CloudEventV1 cloudEventV1) {
+    public Mono<Void> connect(RSocketRequester requester, @AuthenticationPrincipal Jwt jwt) {
         requestProcessor.processRequests(requester, jwt.getSubject(), "connect");
         return Mono.empty();
     }

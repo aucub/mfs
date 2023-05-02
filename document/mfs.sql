@@ -104,7 +104,6 @@ create table if not exists user_login_log
     id          bigint auto_increment
         primary key,
     user_id     varchar(32) null,
-    create_time datetime    null,
-    ip          varchar(64) null
+    create_time datetime null
 )
     comment '登录记录' auto_increment = 18;

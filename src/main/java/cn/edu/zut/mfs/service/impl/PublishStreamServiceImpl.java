@@ -42,7 +42,7 @@ public class PublishStreamServiceImpl implements PublishStreamService {
             stream(metadataHeader.getRoutingKey());
         }
         setRabbitStreamTemplate(metadataHeader.getRoutingKey());
-        cloudEventFlux.subscribe(cloudEvent -> {
+        cloudEventFlux.limitRate(3000).subscribe(cloudEvent -> {
             String subject = "message";
             if (cloudEvent.getSubject() != null) {
                 subject = cloudEvent.getSubject();

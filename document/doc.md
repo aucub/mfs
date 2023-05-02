@@ -2,7 +2,7 @@
 
 | Version              | Update Time         | Status | Author   | Description          |
 |----------------------|---------------------|--------|----------|----------------------|
-| v2023-04-25 17:00:55 | 2023-04-25 17:00:55 | auto   | @yrumily | Created by smart-doc |
+| v2023-05-03 03:18:34 | 2023-05-03 03:18:34 | auto   | @yrumily | Created by smart-doc |
 
 ##  
 
@@ -19,13 +19,6 @@
 **Content-Type:** application/json
 
 **Description:**
-
-**Request-headers:**
-
-| Header          | Type   | Required | Description        | Since |
-|-----------------|--------|----------|--------------------|-------|
-| X-Forwarded-For | string | true     | No comments found. | -     |
-
 
 **Body-parameters:**
 
@@ -237,22 +230,55 @@
 
 **Response-fields:**
 
-| Field | Type | Description | Since |
-|-------|------|-------------|-------|
-|code|int32|No comments found.|-|
-|message|string|No comments found.|-|
-|data|string|No comments found.|-|
+| Field   | Type   | Description        | Since |
+|---------|--------|--------------------|-------|
+| code    | int32  | No comments found. | -     |
+| message | string | No comments found. | -     |
+| data    | string | No comments found. | -     |
 
+###  
 
-### 
+**URL:** /user/updateAccount
+
+**Type:** POST
+
+**Content-Type:** application/json
+
+**Description:**
+
+**Body-parameters:**
+
+| Parameter      | Type    | Required | Description        | Since |
+|----------------|---------|----------|--------------------|-------|
+| id             | string  | false    | ID                 | -     |
+| username       | string  | false    | 用户名                | -     |
+| nickname       | string  | false    | 用户昵称               | -     |
+| creator        | string  | false    | No comments found. | -     |
+| createTime     | string  | false    | No comments found. | -     |
+| updater        | string  | false    | No comments found. | -     |
+| lastUpdateTime | string  | false    | No comments found. | -     |
+| loginTime      | string  | false    | No comments found. | -     |
+| type           | boolean | false    | No comments found. | -     |
+| note           | string  | false    | No comments found. | -     |
+| deleted        | boolean | false    | No comments found. | -     |
+
+**Response-fields:**
+
+| Field   | Type   | Description        | Since |
+|---------|--------|--------------------|-------|
+| code    | int32  | No comments found. | -     |
+| message | string | No comments found. | -     |
+| data    | string | No comments found. | -     |
+
+###  
+
 **URL:** /user/delete
 
 **Type:** GET
 
-
 **Content-Type:** application/x-www-form-urlencoded;charset=UTF-8
 
-**Description:** 
+**Description:**
 
 **Query-parameters:**
 
@@ -458,7 +484,7 @@
 
 **URL:** /user/connectList
 
-**Type:** POST
+**Type:** GET
 
 **Content-Type:** application/x-www-form-urlencoded;charset=UTF-8
 
@@ -484,7 +510,6 @@
 | └─deleted        | boolean | No comments found. | -     |
 
 ###  
-
 **URL:** /user/getUserLoginLogList
 
 **Type:** POST
@@ -510,7 +535,6 @@
 | data    | object | No comments found. | -     |
 
 ###  
-
 **URL:** /user/getLinkLogList
 
 **Type:** POST
@@ -536,12 +560,11 @@
 | data    | object | No comments found. | -     |
 
 ##  
-
 ### 推
-
 **URL:** /push
 
 **Type:** POST
+
 
 **Content-Type:** application/json
 
@@ -554,6 +577,7 @@
 | userId    | string | false    | No comments found. | -     |
 | route     | string | false    | No comments found. | -     |
 | body      | array  | false    | No comments found. | -     |
+| id        | string | false    | No comments found. | -     |
 
 ##  
 
@@ -595,7 +619,6 @@
 | time            | object  | No comments found. | -     |
 
 ###  
-
 **URL:** /query/queryConsume
 
 **Type:** POST
@@ -623,7 +646,6 @@
 | time         | object | No comments found. | -     |
 
 ###  
-
 **URL:** /query/queryPush
 
 **Type:** POST
@@ -646,10 +668,29 @@
 | userId | string | No comments found. | -     |
 | route  | string | No comments found. | -     |
 | body   | array  | No comments found. | -     |
+| id     | string | No comments found. | -     |
 
 ###  
 
 **URL:** /query/search
+
+**Type:** POST
+
+**Content-Type:** application/json
+
+**Description:**
+
+**Body-parameters:**
+
+| Parameter | Type   | Required | Description        | Since |
+|-----------|--------|----------|--------------------|-------|
+| uid       | string | false    | No comments found. | -     |
+| keyword   | string | false    | No comments found. | -     |
+| offset    | int32  | false    | No comments found. | -     |
+
+###  
+
+**URL:** /query/tran
 
 **Type:** POST
 
@@ -662,8 +703,18 @@
 | Parameter | Type   | Required | Description        | Since |
 |-----------|--------|----------|--------------------|-------|
 | uid       | string | false    | No comments found. | -     |
-| keyword   | string | false    | No comments found. | -     |
-| offset    | int32  | false    | No comments found. | -     |
+| start     | string | false    | No comments found. | -     |
+| stop      | string | false    | No comments found. | -     |
+
+###  
+
+**URL:** /query/tranScheduled
+
+**Type:** POST
+
+**Content-Type:** application/x-www-form-urlencoded;charset=UTF-8
+
+**Description:**
 
 ##  
 

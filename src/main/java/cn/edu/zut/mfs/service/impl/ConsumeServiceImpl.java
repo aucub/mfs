@@ -9,6 +9,7 @@ import io.cloudevents.core.data.BytesCloudEventData;
 import io.cloudevents.core.v1.CloudEventV1;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.AmqpAdmin;
+import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +41,7 @@ public class ConsumeServiceImpl implements ConsumeService {
 
     @Override
     public Flux<CloudEventV1> consume(String userId, Consume consume) {
-        if (amqpAdmin.getQueueInfo(consume.getQueue()) == null) amqpAdmin.deleteQueue(consume.getQueue());
+        if (amqpAdmin.getQueueInfo(consume.getQueue()) == null) amqpAdmin.declareQueue(new Queue(consume.getQueue()));
         InfluxDBService influxDBService = new InfluxDBServiceImpl();
         SimpleMessageListenerContainer simpleMessageListenerContainer = new SimpleMessageListenerContainer(connectionFactory);
         simpleMessageListenerContainer.addQueueNames(consume.getQueue());

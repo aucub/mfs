@@ -19,5 +19,4 @@ public class UserLoginLog {
     private String userId;
     @TableField("create_time")
     private Date createTime;
-    private String ip;
 }

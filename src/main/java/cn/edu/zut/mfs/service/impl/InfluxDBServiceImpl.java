@@ -26,10 +26,11 @@ import java.util.List;
 
 @Service
 public class InfluxDBServiceImpl implements InfluxDBService {
-    private static final InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://127.0.0.1:8086", "UV6YDazxbkL4Oda9q4h6eUMUGIRUWMAPcjqPrb1VCNB5QwR-340Xd1WPyQqufT2hmBUflIy8gN71cHz686HrTg==".toCharArray(), "example", "mfs");
+
+    private static final InfluxDBClient influxDBClient = InfluxDBClientFactory.create();
     private static final WriteApi writeApi = influxDBClient.makeWriteApi();
     private final static ObjectMapper mapper = new ObjectMapper();
-    InfluxDBClientReactive influxDBClientReactive = InfluxDBClientReactiveFactory.create("http://127.0.0.1:8086", "UV6YDazxbkL4Oda9q4h6eUMUGIRUWMAPcjqPrb1VCNB5QwR-340Xd1WPyQqufT2hmBUflIy8gN71cHz686HrTg==".toCharArray(), "example", "mfs");
+    InfluxDBClientReactive influxDBClientReactive = InfluxDBClientReactiveFactory.create();
     QueryReactiveApi queryReactiveApi = influxDBClientReactive.getQueryReactiveApi();
 
     @Override
@@ -112,7 +113,7 @@ public class InfluxDBServiceImpl implements InfluxDBService {
         String flux = String.format(template, start, stop);
         Publisher<PublishRecord> query = queryReactiveApi.query(flux, PublishRecord.class);
         Flowable.fromPublisher(query)
-                .take(10)
+                .take(100)
                 .subscribe(publishRecord -> {
                     MeiliSearchService.store(mapper.writeValueAsString(publishRecord), "PublishRecord");
                 });
@@ -128,7 +129,7 @@ public class InfluxDBServiceImpl implements InfluxDBService {
         String flux = String.format(template, start, stop);
         Publisher<ConsumeRecord> query = queryReactiveApi.query(flux, ConsumeRecord.class);
         Flowable.fromPublisher(query)
-                .take(10)
+                .take(100)
                 .subscribe(consumeRecord -> MeiliSearchService.store(mapper.writeValueAsString(consumeRecord), "ConsumeRecord"));
     }
 
@@ -142,7 +143,7 @@ public class InfluxDBServiceImpl implements InfluxDBService {
         String flux = String.format(template, start, stop);
         Publisher<PushMessage> query = queryReactiveApi.query(flux, PushMessage.class);
         Flowable.fromPublisher(query)
-                .take(10)
+                .take(100)
                 .subscribe(pushMessage -> MeiliSearchService.store(mapper.writeValueAsString(pushMessage), "PushMessage"));
     }
 
