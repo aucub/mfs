@@ -65,8 +65,12 @@ public class QueryController {
     @Scheduled(initialDelay = 1000 * 60 * 60, fixedRate = 1000 * 60 * 60 * 6)
     public Mono<Void> tranScheduled() {
         Thread.startVirtualThread(() -> {
-            influxDBService.tranPublish("-70d", "0d");
+            influxDBService.tranPublish("-6h", "0h");
+        });
+        Thread.startVirtualThread(() -> {
             influxDBService.tranConsume("-6h", "0h");
+        });
+        Thread.startVirtualThread(() -> {
             influxDBService.tranPush("-6h", "0h");
         });
         return Mono.empty();

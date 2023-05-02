@@ -7,6 +7,7 @@ import cn.edu.zut.mfs.service.RegisterService;
 import cn.edu.zut.mfs.utils.EncryptUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +29,7 @@ public class RegisterController {
     }
 
     @PostMapping("/user")
+    @MessageMapping("/register")
     public Mono<BaseResponse<String>> user(@RequestBody UserRegisterDto userRegisterDto) {
         UserLoginDto userLoginDto = new UserLoginDto();
         userLoginDto.setUsername(userRegisterDto.getUsername());

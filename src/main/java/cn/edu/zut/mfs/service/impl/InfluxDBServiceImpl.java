@@ -28,13 +28,9 @@ import java.util.List;
 public class InfluxDBServiceImpl implements InfluxDBService {
     private static final InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://127.0.0.1:8086", "UV6YDazxbkL4Oda9q4h6eUMUGIRUWMAPcjqPrb1VCNB5QwR-340Xd1WPyQqufT2hmBUflIy8gN71cHz686HrTg==".toCharArray(), "example", "mfs");
     private static final WriteApi writeApi = influxDBClient.makeWriteApi();
-
-    InfluxDBClientReactive influxDBClientReactive = InfluxDBClientReactiveFactory.create("http://127.0.0.1:8086", "UV6YDazxbkL4Oda9q4h6eUMUGIRUWMAPcjqPrb1VCNB5QwR-340Xd1WPyQqufT2hmBUflIy8gN71cHz686HrTg==".toCharArray(), "example", "mfs");
-
-    QueryReactiveApi queryReactiveApi = influxDBClientReactive.getQueryReactiveApi();
-
-
     private final static ObjectMapper mapper = new ObjectMapper();
+    InfluxDBClientReactive influxDBClientReactive = InfluxDBClientReactiveFactory.create("http://127.0.0.1:8086", "UV6YDazxbkL4Oda9q4h6eUMUGIRUWMAPcjqPrb1VCNB5QwR-340Xd1WPyQqufT2hmBUflIy8gN71cHz686HrTg==".toCharArray(), "example", "mfs");
+    QueryReactiveApi queryReactiveApi = influxDBClientReactive.getQueryReactiveApi();
 
     @Override
     public void publish(PublishRecord publishRecord) {

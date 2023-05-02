@@ -11,6 +11,7 @@ import cn.edu.zut.mfs.utils.EncryptUtils;
 import cn.edu.zut.mfs.utils.JwtUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
@@ -42,6 +43,7 @@ public class LoginController {
     }
 
     @PostMapping("doLogin")
+    @MessageMapping("/doLogin")
     public Mono<BaseResponse<Object>> doLogin(@RequestBody UserLoginDto userLoginDto) {
         userLoginDto.setPassword(EncryptUtils.encrypt(userLoginDto.getPassword(), userLoginDto.getUsername()));
         if (Boolean.TRUE.equals(loginAuthService.login(userLoginDto))) {
@@ -53,11 +55,13 @@ public class LoginController {
     }
 
     @GetMapping("getLoginIdAsString")
+    @MessageMapping("/getLoginIdAsString")
     public Mono<BaseResponse<String>> getLoginIdAsString(@AuthenticationPrincipal Jwt jwt) {
         return Mono.just(BaseResponse.success("当前登录的账号是：" + jwt.getSubject()));
     }
 
     @PostMapping("updatePassword")
+    @MessageMapping("/updatePassword")
     public Mono<BaseResponse<String>> updatePassword(@AuthenticationPrincipal Jwt jwt, @RequestBody UpdatePasswordDto updatePasswordDto) {
         UserLoginDto userLoginDto = new UserLoginDto();
         userLoginDto.setUsername(jwt.getSubject());
