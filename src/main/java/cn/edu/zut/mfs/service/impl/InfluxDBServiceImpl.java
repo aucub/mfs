@@ -5,7 +5,8 @@ import cn.edu.zut.mfs.domain.PublishRecord;
 import cn.edu.zut.mfs.domain.PushMessage;
 import cn.edu.zut.mfs.service.InfluxDBService;
 import cn.edu.zut.mfs.service.MeiliSearchService;
-import com.google.gson.Gson;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.InfluxDBClientFactory;
 import com.influxdb.client.QueryApi;
@@ -33,7 +34,7 @@ public class InfluxDBServiceImpl implements InfluxDBService {
     QueryReactiveApi queryReactiveApi = influxDBClientReactive.getQueryReactiveApi();
 
 
-    Gson gson = new Gson();
+    private final static ObjectMapper mapper = new ObjectMapper();
 
     @Override
     public void publish(PublishRecord publishRecord) {
@@ -107,6 +108,7 @@ public class InfluxDBServiceImpl implements InfluxDBService {
 
     @Override
     public void tranPublish(String start, String stop) {
+        mapper.registerModule(new JavaTimeModule());
         String template = "from(bucket:\"mfs\") " +
                 " |> range(start: %s, stop: %s)" +
                 " |> filter(fn: (r) => r._measurement == \"PublishRecord\")" +
@@ -115,11 +117,14 @@ public class InfluxDBServiceImpl implements InfluxDBService {
         Publisher<PublishRecord> query = queryReactiveApi.query(flux, PublishRecord.class);
         Flowable.fromPublisher(query)
                 .take(10)
-                .subscribe(publishRecord -> MeiliSearchService.store(gson.toJson(publishRecord), "PublishRecord"));
+                .subscribe(publishRecord -> {
+                    MeiliSearchService.store(mapper.writeValueAsString(publishRecord), "PublishRecord");
+                });
     }
 
     @Override
     public void tranConsume(String start, String stop) {
+        mapper.registerModule(new JavaTimeModule());
         String template = "from(bucket:\"mfs\") " +
                 " |> range(start: %s, stop: %s)" +
                 " |> filter(fn: (r) => r._measurement == \"ConsumeRecord\")" +
@@ -128,11 +133,12 @@ public class InfluxDBServiceImpl implements InfluxDBService {
         Publisher<ConsumeRecord> query = queryReactiveApi.query(flux, ConsumeRecord.class);
         Flowable.fromPublisher(query)
                 .take(10)
-                .subscribe(consumeRecord -> MeiliSearchService.store(gson.toJson(consumeRecord), "ConsumeRecord"));
+                .subscribe(consumeRecord -> MeiliSearchService.store(mapper.writeValueAsString(consumeRecord), "ConsumeRecord"));
     }
 
     @Override
     public void tranPush(String start, String stop) {
+        mapper.registerModule(new JavaTimeModule());
         String template = "from(bucket:\"mfs\") " +
                 " |> range(start: %s, stop: %s)" +
                 " |> filter(fn: (r) => r._measurement == \"PushMessage\")" +
@@ -141,7 +147,7 @@ public class InfluxDBServiceImpl implements InfluxDBService {
         Publisher<PushMessage> query = queryReactiveApi.query(flux, PushMessage.class);
         Flowable.fromPublisher(query)
                 .take(10)
-                .subscribe(pushMessage -> MeiliSearchService.store(gson.toJson(pushMessage), "PushMessage"));
+                .subscribe(pushMessage -> MeiliSearchService.store(mapper.writeValueAsString(pushMessage), "PushMessage"));
     }
 
 }

@@ -3,6 +3,7 @@ package cn.edu.zut.mfs.controller;
 import cn.edu.zut.mfs.domain.ConsumeRecord;
 import cn.edu.zut.mfs.domain.PublishRecord;
 import cn.edu.zut.mfs.domain.PushMessage;
+import cn.edu.zut.mfs.domain.Search;
 import cn.edu.zut.mfs.service.InfluxDBService;
 import cn.edu.zut.mfs.service.MeiliSearchService;
 import cn.edu.zut.mfs.service.impl.InfluxDBServiceImpl;
@@ -11,16 +12,13 @@ import com.meilisearch.sdk.model.Searchable;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
 
 @Slf4j
-@RequestMapping("/query/")
+@RequestMapping("/query")
 @RestController
 public class QueryController {
     private final InfluxDBService influxDBService = new InfluxDBServiceImpl();
@@ -45,8 +43,8 @@ public class QueryController {
 
     @PreAuthorize("hasRole('query')")
     @PostMapping("/search")
-    public Mono<Searchable> search(String uid, String keyword, Integer offset) throws MeilisearchException {
-        return Mono.just(MeiliSearchService.search(uid, keyword, offset));
+    public Mono<Searchable> search(@RequestBody Search search) throws MeilisearchException {
+        return Mono.just(MeiliSearchService.search(search.getUid(), search.getKeyword(), search.getOffset()));
     }
 
     @PreAuthorize("hasRole('query')")
@@ -65,11 +63,12 @@ public class QueryController {
     @PreAuthorize("hasRole('query')")
     @PostMapping("/tranScheduled")
     @Scheduled(initialDelay = 1000 * 60 * 60, fixedRate = 1000 * 60 * 60 * 6)
-    public void tranScheduled() {
+    public Mono<Void> tranScheduled() {
         Thread.startVirtualThread(() -> {
-            influxDBService.tranPublish("-6h", "0h");
+            influxDBService.tranPublish("-70d", "0d");
             influxDBService.tranConsume("-6h", "0h");
             influxDBService.tranPush("-6h", "0h");
         });
+        return Mono.empty();
     }
 }
