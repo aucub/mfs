@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,6 +55,7 @@ public class SearchOnlineController {
     @GetMapping("clearConnectCache")
     @MessageMapping("/clearConnectCache")
     @PreAuthorize("hasRole('searchOnline')")
+    @Scheduled(fixedDelay = 1800000)
     @CacheEvict(value = "connectList", allEntries = true)
     public Mono<Void> clearConnectCache() {
         return Mono.empty();
@@ -62,6 +64,7 @@ public class SearchOnlineController {
     @GetMapping("clearOnLineCache")
     @MessageMapping("/clearOnLineCache")
     @PreAuthorize("hasRole('searchOnline')")
+    @Scheduled(fixedDelay = 1800000)
     @CacheEvict(value = "onlineList", allEntries = true)
     public Mono<Void> clearOnLineCache() {
         return Mono.empty();
