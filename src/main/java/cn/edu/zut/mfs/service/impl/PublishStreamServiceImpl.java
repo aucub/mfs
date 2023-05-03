@@ -38,11 +38,13 @@ public class PublishStreamServiceImpl implements PublishStreamService {
     @Override
     public void publish(MpmcAtomicArrayQueue mpmcAtomicArrayQueue, String userId, MetadataHeader metadataHeader, Flux<CloudEvent> cloudEventFlux) {
         InfluxDBService influxDBService = new InfluxDBServiceImpl();
-        if (environment.queryStreamStats(metadataHeader.getRoutingKey()) == null) {
+        try {
+            environment.queryStreamStats(metadataHeader.getRoutingKey());
+        } catch (Exception e) {
             stream(metadataHeader.getRoutingKey());
         }
         setRabbitStreamTemplate(metadataHeader.getRoutingKey());
-        cloudEventFlux.limitRate(3000).subscribe(cloudEvent -> {
+        cloudEventFlux.subscribe(cloudEvent -> {
             String subject = "message";
             if (cloudEvent.getSubject() != null) {
                 subject = cloudEvent.getSubject();
@@ -68,7 +70,7 @@ public class PublishStreamServiceImpl implements PublishStreamService {
                 appid = (String) cloudEvent.getExtension("appid");
             }
             Long publishingid = null;
-            if ((cloudEvent.getExtension("publishingid")) == null) {
+            if ((cloudEvent.getExtension("publishingid")) != null) {
                 publishingid = Long.parseLong((String) Objects.requireNonNull(cloudEvent.getExtension("publishingid")));
             }
             PublishRecord publishRecord = new PublishRecord(cloudEvent.getId(), cloudEvent.getSource().toString(), cloudEvent.getType(), appid, userId, publishingid, cloudEvent.getDataContentType(), contentEncoding, cloudEvent.getSubject(), new String(cloudEvent.getData().toBytes()), null, cloudEvent.getTime().toInstant());

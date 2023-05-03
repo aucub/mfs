@@ -65,7 +65,7 @@ public class ConsumeStreamServiceImpl implements ConsumeStreamService {
                             .name(userId)
                             .offset(finalOffsetSpecification)
                             .autoTrackingStrategy()
-                            .messageCountBeforeStorage(50_000)
+                            .messageCountBeforeStorage(500)
                             .flushInterval(Duration.ofSeconds(10))
                             .builder()
                             .messageHandler((context, message) -> {
