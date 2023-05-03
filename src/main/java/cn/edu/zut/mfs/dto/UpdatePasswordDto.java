@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UpdatePasswordDto {
     @TableId
-    private String username;
+    private String id;
     @TableField(exist = false)
     private String oldPassword;
     @TableField(exist = false)

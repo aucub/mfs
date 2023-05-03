@@ -4,6 +4,7 @@ import cn.edu.zut.mfs.domain.User;
 import cn.edu.zut.mfs.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,6 +49,22 @@ public class SearchOnlineController {
     @PreAuthorize("hasRole('searchOnline')")
     public Mono<Long> onlineUsers() {
         return Mono.just(userService.onlineUsers());
+    }
+
+    @GetMapping("clearConnectCache")
+    @MessageMapping("/clearConnectCache")
+    @PreAuthorize("hasRole('searchOnline')")
+    @CacheEvict(value = "connectList", allEntries = true)
+    public Mono<Void> clearConnectCache() {
+        return Mono.empty();
+    }
+
+    @GetMapping("clearOnLineCache")
+    @MessageMapping("/clearOnLineCache")
+    @PreAuthorize("hasRole('searchOnline')")
+    @CacheEvict(value = "onlineList", allEntries = true)
+    public Mono<Void> clearOnLineCache() {
+        return Mono.empty();
     }
 
 }

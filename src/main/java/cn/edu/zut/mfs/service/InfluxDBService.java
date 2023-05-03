@@ -2,7 +2,7 @@ package cn.edu.zut.mfs.service;
 
 import cn.edu.zut.mfs.domain.ConsumeRecord;
 import cn.edu.zut.mfs.domain.PublishRecord;
-import cn.edu.zut.mfs.domain.PushMessage;
+import cn.edu.zut.mfs.domain.PushRecord;
 
 import java.time.Instant;
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.List;
 public interface InfluxDBService {
     void publish(PublishRecord publishRecord);
 
-    void push(PushMessage pushMessage);
+    void push(PushRecord pushRecord);
 
     void publishPoint(String messageId, Boolean result, Instant time);
 
@@ -20,7 +20,7 @@ public interface InfluxDBService {
 
     List<ConsumeRecord> queryConsume(String start, String stop);
 
-    List<PushMessage> queryPush(String start, String stop);
+    List<PushRecord> queryPush(String start, String stop);
 
     void tranPublish(String start, String stop);
 

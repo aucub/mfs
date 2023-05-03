@@ -1,21 +1,18 @@
 package cn.edu.zut.mfs.service.impl;
 
 import cn.edu.zut.mfs.domain.PushMessage;
+import cn.edu.zut.mfs.domain.PushRecord;
+import cn.edu.zut.mfs.service.InfluxDBService;
 import cn.edu.zut.mfs.service.RSocketServer;
 import cn.edu.zut.mfs.service.RedisService;
 import cn.edu.zut.mfs.service.RequestProcessor;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufAllocator;
-import io.netty.buffer.Unpooled;
-import io.rsocket.metadata.TaggingMetadataCodec;
-import io.rsocket.util.ByteBufPayload;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.rsocket.RSocketRequester;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Mono;
 
-import java.util.Collections;
+import java.time.Instant;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 @Slf4j
@@ -23,31 +20,28 @@ public class RSocketServerImpl implements RSocketServer {
 
     private RedisService redisService;
 
+    private InfluxDBService influxDBService = new InfluxDBServiceImpl();
+
     @Autowired
     public void setRedisService(RedisService redisService) {
         this.redisService = redisService;
     }
 
     @Override
-    public Boolean push(PushMessage pushMessage) {
+    public String push(PushMessage pushMessage) {
         if (redisService.hasKey("rsocket", pushMessage.getUserId())) {
             RSocketRequester requester = RequestProcessor.nonBlockingHashMap.get(pushMessage.getUserId());
-            ByteBuf routeMetadata = TaggingMetadataCodec
-                    .createTaggingContent(ByteBufAllocator.DEFAULT, Collections.singletonList(pushMessage.getRoute()));
-            ByteBuf body = Unpooled.wrappedBuffer(pushMessage.getBody());
-            Mono.just("服务端呼叫")
-                    .flatMap(m -> requester.rsocketClient().requestResponse(
-                                    Mono.just(
-                                            ByteBufPayload.create(
-                                                    body,
-                                                    routeMetadata)))
-                            .doOnSubscribe(subscription -> log.info("客户端订阅"))
-                            .doOnError(throwable -> log.error("服务端呼叫失败 {}", throwable.toString()))
-                            .doOnSuccess(p -> log.info("客户端返回: {}", p.getDataUtf8()))
-                    )
-                    .subscribe();
-            return true;
+            AtomicReference<String> res = new AtomicReference<>("");
+            try {
+                requester.route(pushMessage.getRoute()).data(pushMessage.getBody()).retrieveMono(String.class).subscribe(r -> {
+                    res.set(r.toString());
+                    influxDBService.push(new PushRecord(pushMessage.getUserId(), pushMessage.getRoute(), pushMessage.getBody(), r.toString(), pushMessage.getId(), Instant.now()));
+                });
+            } catch (Exception e) {
+                influxDBService.push(new PushRecord(pushMessage.getUserId(), pushMessage.getRoute(), pushMessage.getBody(), null, pushMessage.getId(), Instant.now()));
+            }
+            return res.get().toString();
         }
-        return false;
+        return "";
     }
 }

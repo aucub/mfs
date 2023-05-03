@@ -30,7 +30,7 @@ public class PushController {
     @PreAuthorize("hasRole('push')")
     @PostMapping("/push")
     @MessageMapping("/push")
-    public Mono<Boolean> push(@RequestBody PushMessage pushMessage) {
+    public Mono<String> push(@RequestBody PushMessage pushMessage) {
         return Mono.just(rSocketServer.push(pushMessage));
     }
 }

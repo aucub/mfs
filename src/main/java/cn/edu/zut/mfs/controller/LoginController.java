@@ -64,7 +64,7 @@ public class LoginController {
     @MessageMapping("/updatePassword")
     public Mono<BaseResponse<String>> updatePassword(@AuthenticationPrincipal Jwt jwt, @RequestBody UpdatePasswordDto updatePasswordDto) {
         UserLoginDto userLoginDto = new UserLoginDto();
-        userLoginDto.setUsername(jwt.getSubject());
+        userLoginDto.setUsername(userService.getUserById(jwt.getSubject()).getUsername());
         userLoginDto.setPassword(EncryptUtils.encrypt(updatePasswordDto.getOldPassword(), userLoginDto.getUsername()));
         if (Boolean.TRUE.equals(loginAuthService.login(userLoginDto))) {
             userLoginDto.setPassword(EncryptUtils.encrypt(updatePasswordDto.getNewPassword(), userLoginDto.getUsername()));

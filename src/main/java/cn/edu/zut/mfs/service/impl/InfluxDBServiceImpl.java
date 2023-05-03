@@ -2,7 +2,7 @@ package cn.edu.zut.mfs.service.impl;
 
 import cn.edu.zut.mfs.domain.ConsumeRecord;
 import cn.edu.zut.mfs.domain.PublishRecord;
-import cn.edu.zut.mfs.domain.PushMessage;
+import cn.edu.zut.mfs.domain.PushRecord;
 import cn.edu.zut.mfs.service.InfluxDBService;
 import cn.edu.zut.mfs.service.MeiliSearchService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -39,13 +39,8 @@ public class InfluxDBServiceImpl implements InfluxDBService {
     }
 
     @Override
-    public void push(PushMessage pushMessage) {
-        Point point = Point.measurement("PushMessage")
-                .addField("userId", pushMessage.getUserId())
-                .addField("route", pushMessage.getRoute())
-                .addField("body", new String(pushMessage.getBody()))
-                .time(Instant.now(), WritePrecision.MS);
-        writeApi.writePoint(point);
+    public void push(PushRecord pushRecord) {
+        writeApi.writeMeasurement(WritePrecision.NS, pushRecord);
     }
 
     @Override
@@ -87,15 +82,15 @@ public class InfluxDBServiceImpl implements InfluxDBService {
     }
 
     @Override
-    public List<PushMessage> queryPush(String start, String stop) {
+    public List<PushRecord> queryPush(String start, String stop) {
         String template = "from(bucket:\"mfs\") " +
                 " |> range(start: %s, stop: %s)" +
-                " |> filter(fn: (r) => r._measurement == \"PushMessage\")" +
+                " |> filter(fn: (r) => r._measurement == \"PushRecord\")" +
                 " |> pivot(rowKey:[\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")" +
                 " |> limit(n:120)";
         String flux = String.format(template, start, stop);
         QueryApi queryApi = influxDBClient.getQueryApi();
-        return queryApi.query(flux, PushMessage.class);
+        return queryApi.query(flux, PushRecord.class);
     }
 
     @Override
@@ -115,6 +110,7 @@ public class InfluxDBServiceImpl implements InfluxDBService {
         Flowable.fromPublisher(query)
                 .take(100)
                 .subscribe(publishRecord -> {
+                    publishRecord.setDate(publishRecord.getTime().toString());
                     MeiliSearchService.store(mapper.writeValueAsString(publishRecord), "PublishRecord");
                 });
     }
@@ -130,7 +126,10 @@ public class InfluxDBServiceImpl implements InfluxDBService {
         Publisher<ConsumeRecord> query = queryReactiveApi.query(flux, ConsumeRecord.class);
         Flowable.fromPublisher(query)
                 .take(100)
-                .subscribe(consumeRecord -> MeiliSearchService.store(mapper.writeValueAsString(consumeRecord), "ConsumeRecord"));
+                .subscribe(consumeRecord -> {
+                    consumeRecord.setDate(consumeRecord.getTime().toString());
+                    MeiliSearchService.store(mapper.writeValueAsString(consumeRecord), "ConsumeRecord");
+                });
     }
 
     @Override
@@ -138,13 +137,15 @@ public class InfluxDBServiceImpl implements InfluxDBService {
         mapper.registerModule(new JavaTimeModule());
         String template = "from(bucket:\"mfs\") " +
                 " |> range(start: %s, stop: %s)" +
-                " |> filter(fn: (r) => r._measurement == \"PushMessage\")" +
+                " |> filter(fn: (r) => r._measurement == \"PushRecord\")" +
                 " |> pivot(rowKey:[\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")";
         String flux = String.format(template, start, stop);
-        Publisher<PushMessage> query = queryReactiveApi.query(flux, PushMessage.class);
+        Publisher<PushRecord> query = queryReactiveApi.query(flux, PushRecord.class);
         Flowable.fromPublisher(query)
-                .take(100)
-                .subscribe(pushMessage -> MeiliSearchService.store(mapper.writeValueAsString(pushMessage), "PushMessage"));
+                .subscribe(pushRecord -> {
+                    pushRecord.setDate(pushRecord.getTime().toString());
+                    MeiliSearchService.store(mapper.writeValueAsString(pushRecord), "PushRecord");
+                });
     }
 
 }

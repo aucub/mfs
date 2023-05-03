@@ -80,7 +80,10 @@ public class UserServiceImpl implements UserService {
     @Cacheable("connectList")
     public List<User> connectList() {
         List<User> users = new ArrayList<>();
-        RequestProcessor.nonBlockingHashMap.keySet().forEach(key -> users.add(userDao.selectById(key)));
+        RequestProcessor.nonBlockingHashMap.keySet().forEach(key -> {
+            System.out.println(key);
+            users.add(userDao.selectById(key));
+        });
         return users;
     }
 

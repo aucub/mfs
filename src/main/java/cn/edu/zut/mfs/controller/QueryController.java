@@ -2,7 +2,7 @@ package cn.edu.zut.mfs.controller;
 
 import cn.edu.zut.mfs.domain.ConsumeRecord;
 import cn.edu.zut.mfs.domain.PublishRecord;
-import cn.edu.zut.mfs.domain.PushMessage;
+import cn.edu.zut.mfs.domain.PushRecord;
 import cn.edu.zut.mfs.domain.Search;
 import cn.edu.zut.mfs.service.InfluxDBService;
 import cn.edu.zut.mfs.service.MeiliSearchService;
@@ -37,7 +37,7 @@ public class QueryController {
 
     @PreAuthorize("hasRole('query')")
     @PostMapping("/queryPush")
-    public Mono<List<PushMessage>> queryPush(@RequestParam String start, @RequestParam String stop) {
+    public Mono<List<PushRecord>> queryPush(@RequestParam String start, @RequestParam String stop) {
         return Mono.just(influxDBService.queryPush(start, stop));
     }
 
@@ -54,7 +54,7 @@ public class QueryController {
             switch (uid) {
                 case "PublishRecord" -> influxDBService.tranPublish(start, stop);
                 case "ConsumeRecord" -> influxDBService.tranConsume(start, stop);
-                case "PushMessage" -> influxDBService.tranPush(start, stop);
+                case "PushRecord" -> influxDBService.tranPush(start, stop);
             }
         });
         return Mono.empty();

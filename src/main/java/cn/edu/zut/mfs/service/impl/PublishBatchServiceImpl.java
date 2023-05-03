@@ -64,7 +64,9 @@ public class PublishBatchServiceImpl implements PublishBatchService {
             Message message = MessageConverter.toMessage((CloudEventV1) cloudEvent);
             batchingRabbitTemplate.send(metadataHeader.getExchange(), metadataHeader.getRoutingKey(), message);
             Thread.startVirtualThread(() -> {
-                PublishRecord publishRecord = new PublishRecord(cloudEvent.getId(), cloudEvent.getSource().toString(), cloudEvent.getType(), (String) cloudEvent.getExtension("appid"), userId, Integer.parseInt((String) Objects.requireNonNull(Objects.requireNonNull(cloudEvent.getExtension("priority")))), (String) cloudEvent.getExtension("expiration"), Integer.parseInt((String) Objects.requireNonNull(cloudEvent.getExtension("delay"))), (String) cloudEvent.getExtension("dataContentType"), (String) cloudEvent.getExtension("contentEncoding"), cloudEvent.getSubject(), new String(Objects.requireNonNull(cloudEvent.getData()).toBytes()), Objects.requireNonNull(cloudEvent.getTime()).toInstant());
+                if (message.getMessageProperties().getDelay() == null)
+                    message.getMessageProperties().setDelay(0);
+                PublishRecord publishRecord = new PublishRecord(cloudEvent.getId(), cloudEvent.getSource().toString(), cloudEvent.getType(), message.getMessageProperties().getAppId(), userId, message.getMessageProperties().getPriority(), message.getMessageProperties().getExpiration(), message.getMessageProperties().getDelay(), message.getMessageProperties().getContentType(), message.getMessageProperties().getContentEncoding(), cloudEvent.getSubject(), new String(Objects.requireNonNull(cloudEvent.getData()).toBytes()), Objects.requireNonNull(cloudEvent.getTime()).toInstant());
                 influxDBService.publish(publishRecord);
             });
         });

@@ -12,6 +12,6 @@ import java.util.UUID;
 public class PushMessage {
     private String userId;
     private String route;
-    private byte[] body;
+    private String body;
     private String id = UUID.randomUUID().toString();
 }

@@ -43,6 +43,7 @@ public class PublishRecord {
     private Boolean submit;
     @Column(timestamp = true)
     private Instant time;
+    private String date;
 
     public PublishRecord(String messageId, String source, String type, String appId, String userId, long publishingId, String dataContentType, String contentEncoding, String subject, String body, Boolean submit, Instant time) {
         this.messageId = messageId;
@@ -72,6 +73,24 @@ public class PublishRecord {
         this.contentEncoding = contentEncoding;
         this.subject = subject;
         this.body = body;
+        this.time = time;
+    }
+
+    public PublishRecord(String messageId, String source, String type, String appId, String userId, int priority, String expiration, int delay, long publishingId, String dataContentType, String contentEncoding, String subject, String body, Boolean submit, Instant time) {
+        this.messageId = messageId;
+        this.source = source;
+        this.type = type;
+        this.appId = appId;
+        this.userId = userId;
+        this.priority = priority;
+        this.expiration = expiration;
+        this.delay = delay;
+        this.publishingId = publishingId;
+        this.dataContentType = dataContentType;
+        this.contentEncoding = contentEncoding;
+        this.subject = subject;
+        this.body = body;
+        this.submit = submit;
         this.time = time;
     }
 }

@@ -2,7 +2,7 @@
 
 | Version              | Update Time         | Status | Author   | Description          |
 |----------------------|---------------------|--------|----------|----------------------|
-| v2023-05-03 03:18:34 | 2023-05-03 03:18:34 | auto   | @yrumily | Created by smart-doc |
+| v2023-05-03 19:59:58 | 2023-05-03 19:59:58 | auto   | @yrumily | Created by smart-doc |
 
 ##  
 
@@ -70,7 +70,7 @@
 
 | Parameter   | Type   | Required | Description        | Since |
 |-------------|--------|----------|--------------------|-------|
-| username    | string | false    | No comments found. | -     |
+| id          | string | false    | No comments found. | -     |
 | oldPassword | string | false    | No comments found. | -     |
 | newPassword | string | false    | No comments found. | -     |
 
@@ -237,7 +237,6 @@
 | data    | string | No comments found. | -     |
 
 ###  
-
 **URL:** /user/updateAccount
 
 **Type:** POST
@@ -271,7 +270,6 @@
 | data    | string | No comments found. | -     |
 
 ###  
-
 **URL:** /user/delete
 
 **Type:** GET
@@ -481,7 +479,6 @@
 | data    | string | No comments found. | -     |
 
 ###  
-
 **URL:** /user/connectList
 
 **Type:** GET
@@ -510,6 +507,7 @@
 | └─deleted        | boolean | No comments found. | -     |
 
 ###  
+
 **URL:** /user/getUserLoginLogList
 
 **Type:** POST
@@ -535,6 +533,7 @@
 | data    | object | No comments found. | -     |
 
 ###  
+
 **URL:** /user/getLinkLogList
 
 **Type:** POST
@@ -560,11 +559,12 @@
 | data    | object | No comments found. | -     |
 
 ##  
+
 ### 推
+
 **URL:** /push
 
 **Type:** POST
-
 
 **Content-Type:** application/json
 
@@ -576,7 +576,7 @@
 |-----------|--------|----------|--------------------|-------|
 | userId    | string | false    | No comments found. | -     |
 | route     | string | false    | No comments found. | -     |
-| body      | array  | false    | No comments found. | -     |
+| body      | string | false    | No comments found. | -     |
 | id        | string | false    | No comments found. | -     |
 
 ##  
@@ -617,8 +617,10 @@
 | body            | string  | No comments found. | -     |
 | submit          | boolean | No comments found. | -     |
 | time            | object  | No comments found. | -     |
+| date            | string  | No comments found. | -     |
 
 ###  
+
 **URL:** /query/queryConsume
 
 **Type:** POST
@@ -644,8 +646,10 @@
 | queue        | string | No comments found. | -     |
 | userId       | string | No comments found. | -     |
 | time         | object | No comments found. | -     |
+| date         | string | No comments found. | -     |
 
 ###  
+
 **URL:** /query/queryPush
 
 **Type:** POST
@@ -667,11 +671,13 @@
 |--------|--------|--------------------|-------|
 | userId | string | No comments found. | -     |
 | route  | string | No comments found. | -     |
-| body   | array  | No comments found. | -     |
+| body   | string | No comments found. | -     |
+| res    | string | No comments found. | -     |
 | id     | string | No comments found. | -     |
+| time   | object | No comments found. | -     |
+| date   | string | No comments found. | -     |
 
 ###  
-
 **URL:** /query/search
 
 **Type:** POST
@@ -752,6 +758,26 @@
 **Content-Type:** application/x-www-form-urlencoded;charset=UTF-8
 
 **Description:** 在线用户
+
+###  
+
+**URL:** /searchOnline/clearConnectCache
+
+**Type:** GET
+
+**Content-Type:** application/x-www-form-urlencoded;charset=UTF-8
+
+**Description:**
+
+###  
+
+**URL:** /searchOnline/clearOnLineCache
+
+**Type:** GET
+
+**Content-Type:** application/x-www-form-urlencoded;charset=UTF-8
+
+**Description:** 
 
 
 

@@ -18,7 +18,7 @@ public class MeiliSearchService {
         String primaryKey = null;
         switch (uid) {
             case "PublishRecord", "ConsumeRecord" -> primaryKey = "messageId";
-            case "PushMessage" -> primaryKey = "id";
+            case "PushRecord" -> primaryKey = "id";
         }
         index.addDocuments(document, primaryKey);
     }
