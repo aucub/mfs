@@ -39,7 +39,9 @@ public class ConsumeStreamServiceImpl implements ConsumeStreamService {
 
     @Override
     public Flux<CloudEventV1> consume(String userId, Consume consume) {
-        if (environment.queryStreamStats(consume.getQueue()) == null) {
+        try {
+            environment.queryStreamStats(consume.getQueue());
+        } catch (Exception e) {
             environment.streamCreator()
                     .stream(consume.getQueue())
                     .maxLengthBytes(ByteCapacity.GB(1))
