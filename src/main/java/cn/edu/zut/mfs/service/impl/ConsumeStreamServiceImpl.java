@@ -64,7 +64,7 @@ public class ConsumeStreamServiceImpl implements ConsumeStreamService {
             consumer =
                     environment.consumerBuilder()
                             .stream(consume.getQueue())
-                            .name(userId)
+                            .name(userId+consume.getQueue())
                             .offset(finalOffsetSpecification)
                             .autoTrackingStrategy()
                             .messageCountBeforeStorage(500)
