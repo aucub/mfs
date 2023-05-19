@@ -79,7 +79,7 @@ spring:
         message-mapping-enabled: false
 
 influx:
-  url: http://localhost:8086/
+  url: http://47.113.201.150:8086/
   username: root
   token: jcwsf_9hqdcC6fi9AiutB9tGmke2jX1QR2raCWHBS3Z5NDhupkMOqJ_NLgq0Vh5GBO3R-Ai_07XlntCEWSYsEA==
   org: example

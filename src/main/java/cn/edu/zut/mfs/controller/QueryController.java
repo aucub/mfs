@@ -10,7 +10,6 @@ import cn.edu.zut.mfs.service.impl.InfluxDBServiceImpl;
 import com.meilisearch.sdk.exceptions.MeilisearchException;
 import com.meilisearch.sdk.model.Searchable;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
@@ -62,7 +61,6 @@ public class QueryController {
 
     @PreAuthorize("hasRole('query')")
     @PostMapping("/tranScheduled")
-    @Scheduled(initialDelay = 1000 * 60 * 60, fixedRate = 1000 * 60 * 60 * 6)
     public Mono<Void> tranScheduled() {
         Thread.startVirtualThread(() -> influxDBService.tranPublish("-6h", "0h"));
         Thread.startVirtualThread(() -> influxDBService.tranConsume("-6h", "0h"));
