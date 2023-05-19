@@ -104,6 +104,44 @@ create table if not exists user_login_log
     id          bigint auto_increment
         primary key,
     user_id     varchar(32) null,
-    create_time datetime null
+    create_time datetime    null
 )
     comment '登录记录' auto_increment = 18;
+
+
+/*CREATE TABLE PublishRecord (
+                               messageId VARCHAR(255),
+                               source VARCHAR(255),
+                               type VARCHAR(255),
+                               appId VARCHAR(255),
+                               userId VARCHAR(255),
+                               priority INT,
+                               expiration VARCHAR(255),
+                               delay INT,
+                               publishingId BIGINT,
+                               dataContentType VARCHAR(255),
+                               contentEncoding VARCHAR(255),
+                               subject VARCHAR(255),
+                               body TEXT,
+                               submit BOOLEAN,
+                               time TIMESTAMP
+);
+
+  CREATE TABLE ConsumeRecord (
+    messageId VARCHAR(255),
+    publishingId BIGINT,
+    offset BIGINT,
+    queue VARCHAR(255),
+    userId VARCHAR(255),
+    time TIMESTAMP
+);
+
+  CREATE TABLE PushRecord (
+    userId VARCHAR(255),
+    route VARCHAR(255),
+    body TEXT,
+    res TEXT,
+    id VARCHAR(255),
+    time TIMESTAMP
+);
+  */
